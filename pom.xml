@@ -14,7 +14,6 @@
 
     <modules>
         <module>mq-entities</module>
-        <module>tmis_finance_webservice</module>
     </modules>
 
     <properties>
@@ -43,12 +42,14 @@
             </activation>
             <modules>
                 <module>tmis_finance_consumer</module>
+                <module>tmis_finance_webservice</module>
             </modules>
         </profile>
         <profile>
             <id>finance</id>
             <modules>
                 <module>tmis_finance_consumer</module>
+                <module>tmis_finance_webservice</module>
             </modules>
         </profile>
     </profiles>

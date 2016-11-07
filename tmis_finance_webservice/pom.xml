@@ -5,11 +5,84 @@
     <parent>
         <artifactId>tmis_mq_integrations</artifactId>
         <groupId>ru.bars_open.medvtr</groupId>
-        <version>1.1</version>
+        <version>${version.parent}</version>
+        <relativePath>../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>tmis_finance_webservice</artifactId>
+    <name>tmis_finance_webservice</name>
+    <description>SOAP WS for consume payment results from 1C</description>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <main-class>ru.bars_open.medvtr.soap.ws.finance.ApplicationConfig</main-class>
+        <!-- Internal libraries version -->
+        <version.mq-entites>1.0</version.mq-entites>
+        <!-- Library Versions -->
+        <version.spring-framework>4.3.3.RELEASE</version.spring-framework>
+    </properties>
+
+    <dependencies>
+        <!-- Логгер -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${version.spring-framework}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${version.spring-framework}</version>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <!-- Copy all used libraries to destination folder -->
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- Build an executable JAR -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>${main-class}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>

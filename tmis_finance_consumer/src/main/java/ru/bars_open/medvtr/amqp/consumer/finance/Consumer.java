@@ -102,7 +102,7 @@ public class Consumer implements com.rabbitmq.client.Consumer {
                 if (Objects.equals(wsResult, invoice.getEvent().getId())) {
                     log.info("#{} End. Successfully.", messageTag);
                 } else {
-                    log.warn("#{} WS result is not correct. Expected[{}], actual[{}}", messageTag, invoice.getEvent().getId(), wsResult);
+                    log.warn("#{} WS result is not correct. Expected[{}], actual[{}]", messageTag, invoice.getEvent().getId(), wsResult);
                     publisher.publishWithDelay(messageTag, "WS result is not correct " + wsResult, properties, body, ThreadLocalRandom.current().nextInt(10000, 45000));
                 }
             } else {
