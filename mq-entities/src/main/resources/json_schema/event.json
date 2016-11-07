@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "event",
+  "description": "Обращение на лечение",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Идентифкатор",
+      "type": "integer"
+    },
+    "setDate": {
+      "description": "дата создания обращения",
+      "type": "string",
+      "format": "date"
+    },
+    "externalId": {
+      "description": "номер обращения",
+      "type": "string"
+    }
+  },
+  "required": ["id"]
+}

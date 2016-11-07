@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "person",
+  "description": "Описание пользователя МИС",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентифкатор МИС",
+      "minimum": 0
+    },
+    "lastName": {
+      "type": "string",
+      "description": "Фамилия"
+    },
+    "firstName": {
+      "type": "string",
+      "description": "Имя"
+    },
+    "patrName": {
+      "type": "string",
+      "description": "Отчество"
+    }
+  },
+  "required": ["id"]
+}

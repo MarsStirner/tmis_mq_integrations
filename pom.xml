@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ru.bars_open.medvtr</groupId>
+    <artifactId>tmis_mq_integrations</artifactId>
+    <version>${version.parent}</version>
+    <packaging>pom</packaging>
+
+    <name>TMIS MQ Integrations aggregator</name>
+    <description>TMIS MQ Integrations aggregator</description>
+
+    <modules>
+        <module>mq-entities</module>
+        <module>tmis_finance_webservice</module>
+    </modules>
+
+    <properties>
+        <!--Версия этого модуля (parent.pom)-->
+        <version.parent>1.1</version.parent>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <!-- Library Versions -->
+        <version.rabbitmq-client>3.6.5</version.rabbitmq-client>
+        <version.joda-time>2.9.4</version.joda-time>
+        <version.commons-lang3>3.4</version.commons-lang3>
+        <version.jackson>2.8.4</version.jackson>
+        <version.logback>1.1.7</version.logback>
+        <version.slf4j>1.7.21</version.slf4j>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>all</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>tmis_finance_consumer</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>finance</id>
+            <modules>
+                <module>tmis_finance_consumer</module>
+            </modules>
+        </profile>
+    </profiles>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Работа с нормальными датами в Java -->
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${version.joda-time}</version>
+            </dependency>
+
+            <!-- RabbitMQ java library -->
+            <dependency>
+                <groupId>com.rabbitmq</groupId>
+                <artifactId>amqp-client</artifactId>
+                <version>${version.rabbitmq-client}</version>
+            </dependency>
+
+            <!-- Jackson 2 - используется как сериализатор \ десериализатор в JSON -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${version.jackson}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${version.jackson}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${version.jackson}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-joda</artifactId>
+                <version>${version.jackson}</version>
+            </dependency>
+
+            <!-- Логгирование -->
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${version.logback}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${version.slf4j}</version>
+            </dependency>
+
+            <!-- Куча утилит -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${version.commons-lang3}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+
+</project>

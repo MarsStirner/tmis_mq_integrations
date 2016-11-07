@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "invoice",
+  "description": "Счет на оплату",
+  "type": "object",
+  "properties": {
+    "event": {
+      "description": "обращение",
+      "$ref": "../event.json"
+    },
+    "invoice_data": {
+      "description": "данные счета",
+      "$ref": "./invoice_data.json"
+    },
+    "client": {
+      "description": "пациент",
+      "$ref": "../person.json"
+    },
+    "payer": {
+      "description": "плательщик",
+      "$ref": "../person.json"
+    }
+  }
+}

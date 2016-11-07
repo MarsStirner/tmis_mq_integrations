@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>ru.bars_open.medvtr</groupId>
+        <artifactId>tmis_mq_integrations</artifactId>
+        <version>${version.parent}</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <name>tmis_finance_consumer</name>
+    <description>AMQP consumer from TMIS and then transform message and send it to 1C finance webservice (SOAP)</description>
+    <artifactId>tmis_finance_consumer</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <main-class>ru.bars_open.medvtr.amqp.consumer.finance.ApplicationConfig</main-class>
+        <!-- Internal libraries version -->
+        <version.mq-entites>1.0</version.mq-entites>
+        <!-- Library Versions -->
+        <version.spring-framework>4.3.3.RELEASE</version.spring-framework>
+    </properties>
+
+    <dependencies>
+        <!-- Логгер -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <!-- Сущности для AMQP -->
+            <groupId>ru.bars_open.medvtr</groupId>
+            <artifactId>mq-entities</artifactId>
+            <version>${version.mq-entites}</version>
+        </dependency>
+
+        <dependency>
+            <!-- RabbitMQ java library -->
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+        </dependency>
+
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${version.spring-framework}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${version.spring-framework}</version>
+        </dependency>
+
+
+        <!-- Jackson 2 - используется как сериализатор \ десериализатор в JSON -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
+        </dependency>
+
+        <!-- Утилиты -->
+        <dependency>
+            <!-- Read yaml config files-->
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.14</version>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <!-- Copy all used libraries to destination folder -->
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- Build an executable JAR -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>${main-class}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- Generate SOAP-client for specified wsdl -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>1.12</version>
+                <executions>
+                    <execution>
+                        <id>wsimport-from-jdk</id>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <wsdlDirectory>${project.basedir}/src/main/resources/</wsdlDirectory>
+                    <wsdlFiles>
+                        <wsdlFile>gnc_finance_external_1C.wsdl</wsdlFile>
+                    </wsdlFiles>
+                    <keep>true</keep>
+                    <packageName>ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance</packageName>
+                    <sourceDestDir>${project.basedir}/src/main/java/</sourceDestDir>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

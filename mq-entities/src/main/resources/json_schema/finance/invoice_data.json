@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "invoice_data",
+  "description": "Данные счета",
+  "type": "object",
+  "properties": {
+    "number": {
+      "description": "номер счета",
+      "type": "string"
+    },
+    "deleted": {
+      "description": "признак удаления счета",
+      "type": "boolean"
+    },
+    "sum": {
+      "description": "сумма счета",
+      "type": "number"
+    }
+  }
+}
