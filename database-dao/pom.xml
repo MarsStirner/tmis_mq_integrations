@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>tmis_mq_integrations</artifactId>
+        <groupId>ru.bars_open.medvtr</groupId>
+        <version>${version.parent}</version>
+        <relativePath>../</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>database-dao</artifactId>
+    <name>[ database-dao ] Spring-annotated DAO</name>
+    <description>Define Spring DAO Repositories</description>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <!-- Library Versions -->
+        <version.spring-framework>4.3.3.RELEASE</version.spring-framework>
+        <version.jta>1.1</version.jta>
+    </properties>
+
+    <dependencies>
+        <!-- Логгер -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!-- Сущности БД -->
+        <dependency>
+            <groupId>ru.bars_open.medvtr</groupId>
+            <artifactId>db-entities</artifactId>
+            <version>LATEST</version>
+        </dependency>
+
+        <!-- Транзакционные аннотации -->
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+            <version>${version.jta}</version>
+        </dependency>
+
+        <!-- Hibernate -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
+
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${version.spring-framework}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${version.spring-framework}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${version.spring-framework}</version>
+        </dependency>
+    </dependencies>
+
+</project>

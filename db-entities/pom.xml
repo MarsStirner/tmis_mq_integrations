@@ -2,34 +2,36 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
     <parent>
-        <groupId>ru.bars_open.medvtr</groupId>
         <artifactId>tmis_mq_integrations</artifactId>
+        <groupId>ru.bars_open.medvtr</groupId>
         <version>${version.parent}</version>
         <relativePath>../</relativePath>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-    <name>[ mq-entities ] MQ POJO structures</name>
-    <description>Define Pojo classes with serialize\deserialize annotations which used in MQ integration</description>
-    <artifactId>mq-entities</artifactId>
+    <artifactId>db-entities</artifactId>
+    <name>[ db-entities ] JPA-only POJO for ORM usage </name>
+    <description>Define POJO classes with JPA annotations for ORM usage</description>
     <version>1.0</version>
     <packaging>jar</packaging>
 
     <dependencies>
-        <!-- Utils -->
+        <!-- В Данном случае JPA -->
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-        </dependency>
+        <!-- Работа с нормальными датами в Java -->
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
         </dependency>
+        <!-- Куча утилит -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
     </dependencies>
+
 </project>

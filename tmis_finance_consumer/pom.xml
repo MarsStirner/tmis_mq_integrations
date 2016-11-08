@@ -19,8 +19,6 @@
 
     <properties>
         <main-class>ru.bars_open.medvtr.amqp.consumer.finance.ApplicationConfig</main-class>
-        <!-- Internal libraries version -->
-        <version.mq-entites>1.0</version.mq-entites>
         <!-- Library Versions -->
         <version.spring-framework>4.3.3.RELEASE</version.spring-framework>
     </properties>
@@ -40,7 +38,7 @@
             <!-- Сущности для AMQP -->
             <groupId>ru.bars_open.medvtr</groupId>
             <artifactId>mq-entities</artifactId>
-            <version>${version.mq-entites}</version>
+            <version>LATEST</version>
         </dependency>
 
         <dependency>

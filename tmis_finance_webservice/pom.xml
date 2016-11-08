@@ -11,78 +11,48 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>tmis_finance_webservice</artifactId>
-    <name>tmis_finance_webservice</name>
+    <name>[ tmis-finance-ws ] SOAP based WS for finance</name>
     <description>SOAP WS for consume payment results from 1C</description>
     <version>1.0</version>
-    <packaging>jar</packaging>
-
-    <properties>
-        <main-class>ru.bars_open.medvtr.soap.ws.finance.ApplicationConfig</main-class>
-        <!-- Internal libraries version -->
-        <version.mq-entites>1.0</version.mq-entites>
-        <!-- Library Versions -->
-        <version.spring-framework>4.3.3.RELEASE</version.spring-framework>
-    </properties>
+    <packaging>war</packaging>
 
     <dependencies>
-        <!-- Логгер -->
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-
-        <!-- Spring -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${version.spring-framework}</version>
+            <groupId>ru.bars_open.medvtr</groupId>
+            <artifactId>database-dao</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>${version.spring-framework}</version>
+            <version>4.3.3.RELEASE</version>
         </dependency>
     </dependencies>
-
 
     <build>
         <plugins>
             <plugin>
-                <!-- Copy all used libraries to destination folder -->
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <!-- Build an executable JAR -->
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.1.1</version>
                 <configuration>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>${main-class}</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <Build-Location>${basedir}</Build-Location>
+                            <Build-Machine>${env.COMPUTERNAME}</Build-Machine>
+                            <Build-Date>${maven.build.timestamp}</Build-Date>
+                        </manifestEntries>
                     </archive>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <attachClasses>true</attachClasses>
+                    <classesClassifier>classes</classesClassifier>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-
 </project>
