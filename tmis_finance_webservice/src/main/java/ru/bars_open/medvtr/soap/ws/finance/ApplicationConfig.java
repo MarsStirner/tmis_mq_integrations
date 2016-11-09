@@ -1,15 +1,16 @@
 package ru.bars_open.medvtr.soap.ws.finance;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import java.lang.management.ManagementFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.ws.config.annotation.EnableWs;
+import org.springframework.ws.config.annotation.WsConfigurerAdapter;
+import org.springframework.ws.transport.http.MessageDispatcherServlet;
+import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
+import org.springframework.xml.xsd.SimpleXsdSchema;
+import org.springframework.xml.xsd.XsdSchema;
 
 /**
  * Author: Upatov Egor <br>
@@ -17,33 +18,24 @@ import java.lang.management.ManagementFactory;
  * Company: Bars Group [ www.bars.open.ru ]
  * Description:
  */
-
+@EnableWs
 @Configuration
 @ComponentScan(basePackages = {"ru.bars_open.medvtr"})
-public class ApplicationConfig implements WebApplicationInitializer {
+public class ApplicationConfig extends WsConfigurerAdapter {
 
-    private static final Logger log = LoggerFactory.getLogger("ROOT");
-
-    private static AnnotationConfigWebApplicationContext context;
-
-    @Override
-    public void onStartup(final ServletContext servletContext) throws ServletException {
-        final String pid = ManagementFactory.getRuntimeMXBean().getName();
-        long startTime = System.currentTimeMillis();
-        log.info("PID {}: Start application with", pid.split("@")[0]);
-        context = new AnnotationConfigWebApplicationContext();
-        context.register(ApplicationConfig.class);
-        context.setServletContext(servletContext);
-        context.refresh();
-        log.info("End initialization of application in {} seconds. Good luck!", (System.currentTimeMillis() - startTime) / 1000f);
+    @Bean(name = "payment-service")
+    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema payments) {
+        final DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
+        wsdl11Definition.setPortTypeName("PaymentServicePort");
+        wsdl11Definition.setLocationUri("/ws/payment-service");
+        wsdl11Definition.setTargetNamespace("ru.bars_open.medvtr.soap.ws.finance");
+        wsdl11Definition.setSchema(payments);
+        return wsdl11Definition;
     }
 
-
-
-
-
-
-
-
+    @Bean
+    public XsdSchema studentsSchema() {
+        return new SimpleXsdSchema(new ClassPathResource("payments.xsd"));
+    }
 
 }

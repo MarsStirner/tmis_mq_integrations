@@ -1,0 +1,27 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="ru.bars_open.medvtr.soap.ws.finance"
+           targetNamespace="ru.bars_open.medvtr.soap.ws.finance" elementFormDefault="qualified">
+    <xs:element name="applyPaymentRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="sum" type="xs:double"/>
+                <xs:element name="trxDatetime" type="xs:dateTime"/>
+                <xs:element name="invoiceNumber" type="xs:string"/>
+                <xs:element name="payType" type="tns:PayType"/>
+                <xs:element name="contragentId" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="applyPaymentResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:simpleType name="PayType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="CASH"/>
+            <xs:enumeration value="CASHLESS"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

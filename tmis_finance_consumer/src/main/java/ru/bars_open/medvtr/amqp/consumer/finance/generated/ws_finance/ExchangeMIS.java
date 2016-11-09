@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.1
  * 
  */
-@WebServiceClient(name = "Exchange_MIS", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", wsdlLocation = "file:/C:/ProjectsMis/tmis_mq_integrations/tmis_finance_consumer/src/main/resources/gnc_finance_external_1C.wsdl")
+@WebServiceClient(name = "Exchange_MIS", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", wsdlLocation = "file:/home/dev/develop/tmis_mq_integrations/tmis_finance_consumer/src/main/resources/gnc_finance_external_1C.wsdl")
 public class ExchangeMIS
     extends Service
 {
@@ -30,9 +30,9 @@ public class ExchangeMIS
         try {
             URL baseUrl;
             baseUrl = ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.ExchangeMIS.class.getResource(".");
-            url = new URL(baseUrl, "file:/C:/ProjectsMis/tmis_mq_integrations/tmis_finance_consumer/src/main/resources/gnc_finance_external_1C.wsdl");
+            url = new URL(baseUrl, "file:/home/dev/develop/tmis_mq_integrations/tmis_finance_consumer/src/main/resources/gnc_finance_external_1C.wsdl");
         } catch (MalformedURLException e) {
-            logger.warning("Failed to create URL for the wsdl Location: 'file:/C:/ProjectsMis/tmis_mq_integrations/tmis_finance_consumer/src/main/resources/gnc_finance_external_1C.wsdl', retrying as a local file");
+            logger.warning("Failed to create URL for the wsdl Location: 'file:/home/dev/develop/tmis_mq_integrations/tmis_finance_consumer/src/main/resources/gnc_finance_external_1C.wsdl', retrying as a local file");
             logger.warning(e.getMessage());
         }
         EXCHANGEMIS_WSDL_LOCATION = url;

@@ -1,7 +1,12 @@
 package ru.bars_open.medvtr.db.dao;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.DetachedCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import ru.bars_open.medvtr.db.PersistenceConfig;
 import ru.bars_open.medvtr.db.entities.Invoice;
@@ -9,6 +14,8 @@ import ru.bars_open.medvtr.db.entities.Invoice;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -24,18 +31,12 @@ public class InvoiceDao{
 
     private static final Logger log = LoggerFactory.getLogger(InvoiceDao.class);
 
-    @PostConstruct
-    public void init(){
-       log.info("INIT!");
-    }
-
-    @PersistenceContext(unitName = PersistenceConfig.PERSISTENCE_UNIT_NAME_HOSPITAL)
-    private EntityManager em;
+   @Autowired
+   @Qualifier("hospital")
+   private SessionFactory sessionFactory
 
     public Invoice getByNumber(final String number) {
-        final List<Invoice> resultList = em.createQuery("SELECT a FROM Invoice a WHERE a.number = :number", Invoice.class)
-                .setParameter("number", number)
-                .getResultList();
+       DetachedCriteria.forClass(this.getClass()).getExecutableCriteria(em.unwrap(Session.class)).list();
         return resultList.iterator().hasNext() ? resultList.iterator().next() : null;
     }
 }

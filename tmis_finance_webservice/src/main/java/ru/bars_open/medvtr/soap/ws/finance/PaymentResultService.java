@@ -3,14 +3,17 @@ package ru.bars_open.medvtr.soap.ws.finance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
+import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import ru.bars_open.medvtr.db.dao.InvoiceDao;
+import ru.bars_open.medvtr.db.entities.Invoice;
+import ru.bars_open.medvtr.soap.ws.finance.generated.ApplyPaymentRequest;
+import ru.bars_open.medvtr.soap.ws.finance.generated.ApplyPaymentResponse;
 
 import javax.annotation.PostConstruct;
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebService;
-import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Author: Upatov Egor <br>
@@ -19,31 +22,23 @@ import java.util.Date;
  * Description:
  */
 
-@Service
-@WebService(
-        targetNamespace = "ru.bars_open.medvtr.soap.ws.finance",
-        name = "payment-results")
+@Endpoint
 public class PaymentResultService {
     private static final Logger log = LoggerFactory.getLogger(PaymentResultService.class);
-
+    private static final AtomicInteger counter = new AtomicInteger(0);
 
     @Autowired
     private InvoiceDao invoiceDao;
 
-    @PostConstruct
-    public void init(){
-         log.info("INIT! , dao = {}", invoiceDao);
-    }
-
-    @WebMethod
-    public int applyPayment(
-            @WebParam(name = "sum",  targetNamespace = "ru.bars_open.medvtr.soap.ws.finance") final double sum,
-            @WebParam(name = "trxDatetime",  targetNamespace = "ru.bars_open.medvtr.soap.ws.finance") final Date trxDateTime,
-            @WebParam(name = "invoice_number",  targetNamespace = "ru.bars_open.medvtr.soap.ws.finance") final String  invoiceNumber,
-            @WebParam(name = "pay_type",  targetNamespace = "ru.bars_open.medvtr.soap.ws.finance") final PayType payType,
-            @WebParam(name = "contragent_id",  targetNamespace = "ru.bars_open.medvtr.soap.ws.finance") int contragentId
-            ){
-        return invoiceDao.getByNumber(invoiceNumber).getId();
+    @PayloadRoot(namespace = "ru.bars_open.medvtr.soap.ws.finance", localPart = "applyPaymentRequest")
+    @ResponsePayload
+    public ApplyPaymentResponse applyPayment(@RequestPayload ApplyPaymentRequest request){
+        final int currentRequestNumber = counter.incrementAndGet();
+        log.info("#{} Call PaymentResultService.applyPayment({})", currentRequestNumber, request);
+        final ApplyPaymentResponse response = new ApplyPaymentResponse();
+        final Invoice invoice = invoiceDao.getByNumber(request.getInvoiceNumber());
+        log.info("#{} End PaymentResultService.applyPayment with result = {}", currentRequestNumber, response);
+        return response;
     }
 
 }
