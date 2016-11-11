@@ -89,6 +89,7 @@
 
 
     <build>
+        <finalName>tmis_finance_consumer</finalName>
         <plugins>
             <plugin>
                 <!-- Copy all used libraries to destination folder -->
@@ -121,6 +122,27 @@
                 </configuration>
             </plugin>
             <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>${main-class}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
                 <!-- Generate SOAP-client for specified wsdl -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxws-maven-plugin</artifactId>
@@ -136,7 +158,7 @@
                 <configuration>
                     <wsdlDirectory>${project.basedir}/src/main/resources/</wsdlDirectory>
                     <wsdlFiles>
-                        <wsdlFile>gnc_finance_external_1C.wsdl</wsdlFile>
+                        <wsdlFile>Exchange_MIS.wsdl</wsdlFile>
                     </wsdlFiles>
                     <keep>true</keep>
                     <packageName>ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance</packageName>

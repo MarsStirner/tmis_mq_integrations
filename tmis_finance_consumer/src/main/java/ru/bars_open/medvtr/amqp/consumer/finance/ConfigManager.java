@@ -7,12 +7,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import ru.bars_open.medvtr.amqp.consumer.finance.util.ObjectConverter;
 import ru.bars_open.medvtr.amqp.consumer.finance.util.TableStringBuilder;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Properties;
+import java.util.TreeMap;
 
 /**
  * Author: Upatov Egor <br>
@@ -88,7 +89,7 @@ public class ConfigManager {
                 log.debug("RAW Response from CCS: {}", rawResponse);
             }
             return true;
-        } catch (final HttpClientErrorException e) {
+        } catch (final Exception e) {
             log.warn("Cant load config from \'{}\'. Cause : {}", url, e.getMessage());
             return false;
         }

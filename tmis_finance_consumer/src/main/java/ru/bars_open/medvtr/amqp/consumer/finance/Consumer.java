@@ -28,13 +28,13 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.ws.handler.Handler;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Author: Upatov Egor <br>
@@ -103,7 +103,7 @@ public class Consumer implements com.rabbitmq.client.Consumer {
                     log.info("#{} End. Successfully.", messageTag);
                 } else {
                     log.warn("#{} WS result is not correct. Expected[{}], actual[{}]", messageTag, invoice.getEvent().getId(), wsResult);
-                    publisher.publishWithDelay(messageTag, "WS result is not correct " + wsResult, properties, body, ThreadLocalRandom.current().nextInt(10000, 45000));
+                    publisher.publishWithDelay(messageTag, "WS result is not correct " + wsResult, properties, body, 60000);
                 }
             } else {
                 log.error("#{} Message has unknown format, Skip it!", messageTag);
@@ -111,7 +111,7 @@ public class Consumer implements com.rabbitmq.client.Consumer {
             }
         } catch (final Exception e) {
             log.error("#{} Exception occurred:", messageTag, e);
-            publisher.publishWithDelay(messageTag, "Exception occurred " + e.getMessage(), properties, body, ThreadLocalRandom.current().nextInt(10000, 45000));
+            publisher.publishWithDelay(messageTag, "Exception occurred " + e.getMessage(), properties, body, 120000);
         }
     }
 
@@ -148,7 +148,7 @@ public class Consumer implements com.rabbitmq.client.Consumer {
         final Person client = invoice.getClient();
         final Person payer = invoice.getPayer();
         final ExchangeMISPortType financeWebService = createFinanceWebService();
-        final int result = financeWebService.putTreatment(
+        final BigInteger result = financeWebService.putTreatment(
                 event.getId(),
                 wrapDate(event.getSetDate()),
                 event.getExternalId(),
@@ -161,7 +161,7 @@ public class Consumer implements com.rabbitmq.client.Consumer {
                 invoiceData.getDeleted() ? 1 : 0
         );
         log.info("#{} WebService answer - {}", messageTag, result);
-        return result;
+        return result.intValue();
     }
 
 

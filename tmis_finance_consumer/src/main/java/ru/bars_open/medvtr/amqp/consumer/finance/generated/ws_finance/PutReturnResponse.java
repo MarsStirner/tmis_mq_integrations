@@ -1,7 +1,6 @@
 
 package ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance;
 
-import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -19,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="return" type="{http://www.w3.org/2001/XMLSchema}integer"/>
+ *         &lt;element name="return" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -32,21 +31,21 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "", propOrder = {
     "_return"
 })
-@XmlRootElement(name = "putTreatmentResponse")
-public class PutTreatmentResponse {
+@XmlRootElement(name = "putReturnResponse")
+public class PutReturnResponse {
 
     @XmlElement(name = "return", required = true)
-    protected BigInteger _return;
+    protected String _return;
 
     /**
      * Gets the value of the return property.
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public BigInteger getReturn() {
+    public String getReturn() {
         return _return;
     }
 
@@ -55,10 +54,10 @@ public class PutTreatmentResponse {
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public void setReturn(BigInteger value) {
+    public void setReturn(String value) {
         this._return = value;
     }
 

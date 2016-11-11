@@ -1,6 +1,7 @@
 
 package ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance;
 
+import java.math.BigInteger;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -37,13 +38,13 @@ public interface ExchangeMISPortType {
      * @param codePatient
      * @param codePayer
      * @return
-     *     returns int
+     *     returns java.math.BigInteger
      */
     @WebMethod(action = "http://schemas.xmlsoap.org/soap/envelope#Exchange_MIS:putTreatment")
     @WebResult(targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
     @RequestWrapper(localName = "putTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", className = "ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.PutTreatment")
     @ResponseWrapper(localName = "putTreatmentResponse", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", className = "ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.PutTreatmentResponse")
-    public int putTreatment(
+    public BigInteger putTreatment(
         @WebParam(name = "idTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
         int idTreatment,
         @WebParam(name = "dateTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
@@ -67,22 +68,22 @@ public interface ExchangeMISPortType {
 
     /**
      * 
-     * @param listServiceComplete
+     * @param numInvoice
      * @param idTreatment
-     * @param paidName
+     * @param sumReturn
      * @return
      *     returns java.lang.String
      */
-    @WebMethod(action = "http://schemas.xmlsoap.org/soap/envelope#Exchange_MIS:putService")
+    @WebMethod(action = "http://schemas.xmlsoap.org/soap/envelope#Exchange_MIS:putReturn")
     @WebResult(targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
-    @RequestWrapper(localName = "putService", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", className = "ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.PutService")
-    @ResponseWrapper(localName = "putServiceResponse", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", className = "ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.PutServiceResponse")
-    public String putService(
+    @RequestWrapper(localName = "putReturn", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", className = "ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.PutReturn")
+    @ResponseWrapper(localName = "putReturnResponse", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", className = "ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.PutReturnResponse")
+    public String putReturn(
         @WebParam(name = "idTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
         int idTreatment,
-        @WebParam(name = "paidName", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
-        PersonName paidName,
-        @WebParam(name = "listServiceComplete", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
-        ServiceCompleteInfo listServiceComplete);
+        @WebParam(name = "numInvoice", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+        String numInvoice,
+        @WebParam(name = "sumReturn", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+        int sumReturn);
 
 }
