@@ -6,7 +6,6 @@ import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 
-import javax.servlet.Registration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
@@ -25,13 +24,13 @@ public class WebAppInitializer implements WebApplicationInitializer {
         context.setId("TMIS Finance WS");
         context.register(ApplicationConfig.class);
         context.setServletContext(servletContext);
-
         final MessageDispatcherServlet servlet = new MessageDispatcherServlet();
         servlet.setApplicationContext(context);
         servlet.setTransformWsdlLocations(true);
-        final ServletRegistration.Dynamic dynamic = servletContext.addServlet("spring-ws",servlet);
+           final ServletRegistration.Dynamic dynamic = servletContext.addServlet("spring-ws",servlet);
         dynamic.addMapping("/*");
         dynamic.setLoadOnStartup(1);
         log.info("[{}] End initialization of application. Good luck!", context.getId());
     }
+
 }

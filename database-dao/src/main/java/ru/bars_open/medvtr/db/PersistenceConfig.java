@@ -7,13 +7,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jndi.JndiTemplate;
-import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
-import org.springframework.orm.jpa.JpaVendorAdapter;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.Database;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -26,6 +22,7 @@ import java.util.Properties;
  * Description:
  */
 @Configuration
+@EnableTransactionManagement
 public class PersistenceConfig {
 
     public static final String PU_NAME_HOSPITAL = "hospital";
@@ -54,7 +51,7 @@ public class PersistenceConfig {
         result.put("hibernate.show_sql", "true");
         result.put("hibernate.format_sql", "true");
         result.put("hibernate.max_fetch_depth", "3");
-        result.put("hibernate.hbm2ddl.auto", "NONE");
+        result.put("hibernate.hbm2ddl.auto", ""); // means "NONE"
         return result;
     }
 
