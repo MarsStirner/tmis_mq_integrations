@@ -42,4 +42,35 @@ public abstract class EditableByPersonEntity extends DeletableEntity {
     protected Person modifyPerson;
 
 
+    public LocalDateTime getCreateDatetime() {
+        return createDatetime;
+    }
+
+    public void setCreateDatetime(LocalDateTime createDatetime) {
+        this.createDatetime = createDatetime;
+    }
+
+    public Person getCreatePerson() {
+        return createPerson;
+    }
+
+    public void setCreatePerson(Person createPerson) {
+        this.createPerson = createPerson;
+    }
+
+    public LocalDateTime getModifyDatetime() {
+        return modifyDatetime;
+    }
+
+    public void setModifyDatetime(LocalDateTime modifyDatetime) {
+        this.modifyDatetime = modifyDatetime;
+    }
+
+    public Person getModifyPerson() {
+        return modifyPerson;
+    }
+
+    public void setModifyPerson(Person modifyPerson) {
+        this.modifyPerson = modifyPerson;
+    }
 }
