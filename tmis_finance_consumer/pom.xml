@@ -11,7 +11,7 @@
         <relativePath>../</relativePath>
     </parent>
 
-    <name>tmis_finance_consumer</name>
+    <name>[tmis_finance_consumer] AMQP finance consumer </name>
     <description>AMQP consumer from TMIS and then transform message and send it to 1C finance webservice (SOAP)</description>
     <artifactId>tmis_finance_consumer</artifactId>
     <version>1.0</version>

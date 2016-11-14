@@ -14,7 +14,7 @@ public class RbPayType extends ReferenceBookEntity{
     //Наличный расчет
     public static final String CODE_CASH = "cash";
     //Безналичный расчет
-    public static final String CODE_CASHLESS = "non cash";
+    public static final String CODE_CASHLESS = "non_cash";
 
     @Override
     public String toString() {

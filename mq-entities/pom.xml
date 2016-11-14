@@ -11,7 +11,7 @@
         <relativePath>../</relativePath>
     </parent>
 
-    <name>[ mq-entities ] MQ POJO structures</name>
+    <name>[mq-entities] MQ POJO structures</name>
     <description>Define Pojo classes with serialize\deserialize annotations which used in MQ integration</description>
     <artifactId>mq-entities</artifactId>
     <version>1.0</version>

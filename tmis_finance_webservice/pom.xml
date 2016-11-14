@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>tmis_finance_webservice</artifactId>
-    <name>[ tmis-finance-ws ] SOAP based WS for finance</name>
+    <name>[tmis-finance-ws] SOAP based WS for finance</name>
     <description>SOAP WS for consume payment results from 1C</description>
     <version>1.0</version>
     <packaging>war</packaging>

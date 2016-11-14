@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>database-dao</artifactId>
-    <name>[ database-dao ] Spring-annotated DAO</name>
+    <name>[database-dao] Spring-annotated DAO</name>
     <description>Define Spring DAO Repositories</description>
     <version>1.0</version>
     <packaging>jar</packaging>

@@ -1,31 +1,21 @@
 package ru.bars_open.medvtr.db.dao.impl;
 
+
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-import ru.bars_open.medvtr.db.PersistenceConfig;
+import ru.bars_open.medvtr.db.dao.AbstractDao;
 import ru.bars_open.medvtr.db.dao.interfaces.ContractContragentDao;
+import ru.bars_open.medvtr.db.entities.Client;
 import ru.bars_open.medvtr.db.entities.ContractContragent;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
-@Transactional
 @Repository("contractContragentDao")
-public class ContractContragentDaoImpl implements ContractContragentDao{
-    private static final Logger log = LoggerFactory.getLogger(ContractContragentDao.class);
-
-    @Autowired
-    @Qualifier(PersistenceConfig.HOSPITAL_SESSION_FACTORY)
-    private SessionFactory sessionFactory;
+public class ContractContragentDaoImpl extends AbstractDao<ContractContragent> implements ContractContragentDao{
 
     @Override
     public Class<ContractContragent> getEntityClass() {
@@ -41,11 +31,30 @@ public class ContractContragentDaoImpl implements ContractContragentDao{
     }
 
     @Override
-    public ContractContragent get(Integer id) {
-        final DetachedCriteria criteria = getEntityCriteria();
-        criteria.add(Restrictions.idEq(id));
+    public ContractContragent getByClient(final Integer clientId) {
+        if (clientId == null) {
+            return null;
+        }
+        final DetachedCriteria criteria = getEntityCriteria().add(Restrictions.eq("client.id", clientId));
         final Session session = sessionFactory.getCurrentSession();
+
         final List<ContractContragent> resultList = criteria.getExecutableCriteria(session).list();
-        return resultList.iterator().hasNext() ? resultList.iterator().next() : null;
+        switch(resultList.size()){
+            case 0: {
+                return null;
+            }
+            case 1: {
+                return resultList.iterator().next();
+            }
+            default: {
+                log.warn("By Client[{}] founded {} rows. Return first", clientId, resultList.size());
+                return resultList.iterator().next();
+            }
+        }
+    }
+
+    @Override
+    public ContractContragent getByClient(final Client client) {
+        return client == null ? null : getByClient(client.getId());
     }
 }

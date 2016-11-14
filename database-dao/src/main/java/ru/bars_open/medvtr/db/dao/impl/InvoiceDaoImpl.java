@@ -1,21 +1,14 @@
 package ru.bars_open.medvtr.db.dao.impl;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-import ru.bars_open.medvtr.db.PersistenceConfig;
+import ru.bars_open.medvtr.db.dao.AbstractDeletableDao;
 import ru.bars_open.medvtr.db.dao.interfaces.InvoiceDao;
 import ru.bars_open.medvtr.db.entities.Invoice;
 
-import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -26,23 +19,10 @@ import java.util.List;
  */
 
 @SuppressWarnings("unchecked")
-@Transactional
 @Repository("invoiceDao")
-public class InvoiceDaoImpl implements InvoiceDao {
-    private static final Logger log = LoggerFactory.getLogger(InvoiceDao.class);
-
-    @Autowired
-    @Qualifier(PersistenceConfig.HOSPITAL_SESSION_FACTORY)
-    private SessionFactory sessionFactory;
-
-    @PostConstruct
-    public void init() {
-        log.info("Initialized [@{}] with SessionFactory[@{}]",
-                Integer.toHexString(this.hashCode()),
-                Integer.toHexString(sessionFactory.hashCode())
-        );
-    }
-
+public class InvoiceDaoImpl
+        extends AbstractDeletableDao<Invoice>
+        implements InvoiceDao {
     @Override
     public Class<Invoice> getEntityClass() {
         return Invoice.class;
