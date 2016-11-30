@@ -33,6 +33,7 @@
         <version.rabbitmq-client>3.6.5</version.rabbitmq-client>
         <version.joda-time>2.9.4</version.joda-time>
         <version.commons-lang3>3.4</version.commons-lang3>
+        <version.guava>20.0</version.guava>
         <version.jackson>2.8.4</version.jackson>
         <version.logback>1.1.7</version.logback>
         <version.slf4j>1.7.21</version.slf4j>
@@ -133,6 +134,12 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${version.commons-lang3}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${version.guava}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -38,6 +38,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link PutTreatmentResponse }
+     * 
+     */
+    public PutTreatmentResponse createPutTreatmentResponse() {
+        return new PutTreatmentResponse();
+    }
+
+    /**
      * Create an instance of {@link ServiceCompleteInfo }
      * 
      */
@@ -67,14 +75,6 @@ public class ObjectFactory {
      */
     public PutTreatment createPutTreatment() {
         return new PutTreatment();
-    }
-
-    /**
-     * Create an instance of {@link PutTreatmentResponse }
-     * 
-     */
-    public PutTreatmentResponse createPutTreatmentResponse() {
-        return new PutTreatmentResponse();
     }
 
 }

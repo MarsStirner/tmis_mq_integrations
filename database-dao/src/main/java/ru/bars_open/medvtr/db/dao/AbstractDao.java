@@ -64,10 +64,16 @@ public abstract class AbstractDao<T extends IdentifiedEntity> implements ru.bars
     }
 
     @Override
-    public T save(T entity) {
+    public Integer save(T entity) {
         final Serializable assignedID = sessionFactory.getCurrentSession().save(entity);
-        log.debug("{} assingnedID = {} ", entity, assignedID);
-        return entity;
+        log.debug("Save entity[assignedID={}]: {}", assignedID, entity);
+        return (Integer) assignedID;
+    }
+
+    @Override
+    public void update(T entity){
+        sessionFactory.getCurrentSession().update(entity);
+        log.debug("Update entity: {}", entity);
     }
 
 

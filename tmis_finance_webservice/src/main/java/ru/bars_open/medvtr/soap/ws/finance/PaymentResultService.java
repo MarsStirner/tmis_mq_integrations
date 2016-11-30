@@ -1,5 +1,6 @@
 package ru.bars_open.medvtr.soap.ws.finance;
 
+import com.google.common.collect.ImmutableSet;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import ru.bars_open.medvtr.soap.ws.finance.generated.PayType;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -65,6 +67,8 @@ public class PaymentResultService {
                         "sum={}, trxDateTime='{}', invoiceNumber='{}', payType={}, contragentId={})", logTag,
                 request.getSum(), request.getTrxDatetime(), request.getInvoiceNumber(), request.getPayType(), request.getContragentId()
         );
+        final LocalDateTime transactionDateTime = new LocalDateTime(request.getTrxDatetime().toGregorianCalendar());
+
         final ApplyPaymentResponse response = new ApplyPaymentResponse();
 
         final Invoice invoice = invoiceDao.getByNumber(request.getInvoiceNumber());
@@ -85,14 +89,14 @@ public class PaymentResultService {
         }
         log.info("#{} found {}", logTag, contragent);
 
-        final RbFinanceTransactionType transactionType = referenceBookDao.getByCode(
+        final Map<String, RbFinanceTransactionType> transactionTypes = referenceBookDao.getMapByCodes(
                 RbFinanceTransactionType.class,
-                RbFinanceTransactionType.CODE_PAYER_BALANCE_OUT
+                ImmutableSet.of(RbFinanceTransactionType.CODE_PAYER_BALANCE_IN, RbFinanceTransactionType.CODE_PAYER_BALANCE_OUT)
         );
 
-        final RbFinanceOperationType financeOperationType = referenceBookDao.getByCode(
+        final Map<String, RbFinanceOperationType> financeOperationTypes = referenceBookDao.getMapByCodes(
                 RbFinanceOperationType.class,
-                RbFinanceOperationType.CODE_INVOICE_PAY
+                ImmutableSet.of(RbFinanceOperationType.CODE_INVOICE_PAY, RbFinanceOperationType.CODE_PAYER_BALANCE_IN)
         );
 
         final RbPayType payType = referenceBookDao.getByCode(
@@ -100,19 +104,33 @@ public class PaymentResultService {
                 PayType.CASH.equals(request.getPayType()) ? RbPayType.CODE_CASH : RbPayType.CODE_CASHLESS
         );
 
-        FinanceTransaction transaction = EntityFactory.createFinanceTransaction(
+        final FinanceTransaction payerIncomeMoneyTransaction = EntityFactory.createFinanceTransaction(
                 null,
-                new LocalDateTime(request.getTrxDatetime().toGregorianCalendar()),
-                transactionType,
-                financeOperationType,
+                transactionDateTime,
+                transactionTypes.get(RbFinanceTransactionType.CODE_PAYER_BALANCE_IN),
+                financeOperationTypes.get(RbFinanceOperationType.CODE_PAYER_BALANCE_IN),
                 contragent,
                 invoice,
                 payType,
                 request.getSum()
         );
-        financeTransactionDao.save(transaction);
+        financeTransactionDao.save(payerIncomeMoneyTransaction);
 
 
+        final FinanceTransaction payTransaction = EntityFactory.createFinanceTransaction(
+                null,
+                transactionDateTime,
+                transactionTypes.get(RbFinanceTransactionType.CODE_PAYER_BALANCE_OUT),
+                financeOperationTypes.get(RbFinanceOperationType.CODE_INVOICE_PAY),
+                contragent,
+                invoice,
+                payType,
+                request.getSum()
+        );
+        financeTransactionDao.save(payTransaction);
+
+        invoice.setSettleDate(transactionDateTime.toLocalDate());
+        invoiceDao.update(invoice);
 
         log.info("#{} End PaymentResultService.applyPayment with result = {}", logTag, response.getResult());
         return response;

@@ -13,6 +13,7 @@ public interface AbstractDao<T extends IdentifiedEntity> {
 
     T get(Integer id);
 
-    T save(T entity);
+    Integer save(T entity);
 
+    void update(T entity);
 }
