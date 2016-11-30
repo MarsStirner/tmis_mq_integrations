@@ -1,8 +1,10 @@
 {
+  "id": "http://bars-open.ru/medvtr/json-schema/event.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "event",
   "description": "Обращение на лечение",
   "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.Event",
   "properties": {
     "id": {
       "description": "Идентифкатор",
@@ -11,7 +13,7 @@
     "setDate": {
       "description": "дата создания обращения",
       "type": "string",
-      "format": "date"
+      "format": "date-time"
     },
     "externalId": {
       "description": "номер обращения",

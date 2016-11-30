@@ -1,8 +1,10 @@
 {
+  "id": "http://bars-open.ru/medvtr/json-schema/finance/invoice.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "invoice",
   "description": "Счет на оплату",
   "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.finance.Invoice",
   "properties": {
     "event": {
       "description": "обращение",
@@ -10,7 +12,7 @@
     },
     "invoice_data": {
       "description": "данные счета",
-      "$ref": "./invoice_data.json"
+      "$ref": "invoice_data.json"
     },
     "client": {
       "description": "пациент",
@@ -19,6 +21,10 @@
     "payer": {
       "description": "плательщик",
       "$ref": "../person.json"
+    },
+    "parent":{
+      "description": "Счет-родитель (текущий счет перевыставлен для счета ...)",
+      "$ref": "invoice.json"
     }
   }
 }

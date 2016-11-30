@@ -1,8 +1,10 @@
 {
+  "id": "http://bars-open.ru/medvtr/json-schema/finance/invoice_data.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "invoice_data",
   "description": "Данные счета",
   "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.finance.InvoiceData",
   "properties": {
     "number": {
       "description": "номер счета",

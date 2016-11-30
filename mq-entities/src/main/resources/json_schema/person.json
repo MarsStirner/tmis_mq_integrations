@@ -1,8 +1,10 @@
 {
+  "id": "http://bars-open.ru/medvtr/json-schema/person.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "type": "object",
   "title": "person",
   "description": "Описание пользователя МИС",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.Person",
   "properties": {
     "id": {
       "type": "integer",

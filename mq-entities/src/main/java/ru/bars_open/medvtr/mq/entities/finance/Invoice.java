@@ -1,90 +1,244 @@
+
 package ru.bars_open.medvtr.mq.entities.finance;
 
 import com.fasterxml.jackson.annotation.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import ru.bars_open.medvtr.mq.entities.Event;
 import ru.bars_open.medvtr.mq.entities.Person;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
 
 /**
  * invoice
  * <p>
  * Счет на оплату
+ * 
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Invoice {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "event",
+    "invoice_data",
+    "client",
+    "payer",
+    "parent"
+})
+public class Invoice implements Serializable
+{
 
-    @JsonProperty(value = "event", required = true)
-    @JsonPropertyDescription("Обращение")
+    /**
+     * event
+     * <p>
+     * Обращение на лечение
+     * 
+     */
+    @JsonProperty("event")
+    @JsonPropertyDescription("")
     private Event event;
-
-    @JsonProperty(value = "invoice_data", required = true)
-    @JsonPropertyDescription("инофрмация о счете")
+    /**
+     * invoice_data
+     * <p>
+     * Данные счета
+     * 
+     */
+    @JsonProperty("invoice_data")
+    @JsonPropertyDescription("")
     private InvoiceData invoiceData;
-
-    @JsonProperty(value = "client")
-    @JsonPropertyDescription("Пациент")
+    /**
+     * person
+     * <p>
+     * Описание пользователя МИС
+     * 
+     */
+    @JsonProperty("client")
+    @JsonPropertyDescription("")
     private Person client;
-
-    @JsonProperty(value = "payer", required = true)
-    @JsonPropertyDescription("плательщик")
+    /**
+     * person
+     * <p>
+     * Описание пользователя МИС
+     * 
+     */
+    @JsonProperty("payer")
+    @JsonPropertyDescription("")
     private Person payer;
-
+    /**
+     * invoice
+     * <p>
+     * Счет на оплату
+     * 
+     */
+    @JsonProperty("parent")
+    @JsonPropertyDescription("")
+    private Invoice parent;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private final static long serialVersionUID = -1629993400540786475L;
 
-    public Invoice() {
-    }
-
+    /**
+     * event
+     * <p>
+     * Обращение на лечение
+     * 
+     * @return
+     *     The event
+     */
+    @JsonProperty("event")
     public Event getEvent() {
         return event;
     }
 
-    public void setEvent(final Event event) {
+    /**
+     * event
+     * <p>
+     * Обращение на лечение
+     * 
+     * @param event
+     *     The event
+     */
+    @JsonProperty("event")
+    public void setEvent(Event event) {
         this.event = event;
     }
 
+    /**
+     * invoice_data
+     * <p>
+     * Данные счета
+     * 
+     * @return
+     *     The invoiceData
+     */
+    @JsonProperty("invoice_data")
     public InvoiceData getInvoiceData() {
         return invoiceData;
     }
 
-    public void setInvoiceData(final InvoiceData invoiceData) {
+    /**
+     * invoice_data
+     * <p>
+     * Данные счета
+     * 
+     * @param invoiceData
+     *     The invoice_data
+     */
+    @JsonProperty("invoice_data")
+    public void setInvoiceData(InvoiceData invoiceData) {
         this.invoiceData = invoiceData;
     }
 
+    /**
+     * person
+     * <p>
+     * Описание пользователя МИС
+     * 
+     * @return
+     *     The client
+     */
+    @JsonProperty("client")
     public Person getClient() {
         return client;
     }
 
-    public void setClient(final Person client) {
+    /**
+     * person
+     * <p>
+     * Описание пользователя МИС
+     * 
+     * @param client
+     *     The client
+     */
+    @JsonProperty("client")
+    public void setClient(Person client) {
         this.client = client;
     }
 
+    /**
+     * person
+     * <p>
+     * Описание пользователя МИС
+     * 
+     * @return
+     *     The payer
+     */
+    @JsonProperty("payer")
     public Person getPayer() {
         return payer;
     }
 
-    public void setPayer(final Person payer) {
+    /**
+     * person
+     * <p>
+     * Описание пользователя МИС
+     * 
+     * @param payer
+     *     The payer
+     */
+    @JsonProperty("payer")
+    public void setPayer(Person payer) {
         this.payer = payer;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return additionalProperties;
+    /**
+     * invoice
+     * <p>
+     * Счет на оплату
+     * 
+     * @return
+     *     The parent
+     */
+    @JsonProperty("parent")
+    public Invoice getParent() {
+        return parent;
     }
 
-    public void setAdditionalProperties(final Map<String, Object> additionalProperties) {
-        this.additionalProperties = additionalProperties;
+    /**
+     * invoice
+     * <p>
+     * Счет на оплату
+     * 
+     * @param parent
+     *     The parent
+     */
+    @JsonProperty("parent")
+    public void setParent(Invoice parent) {
+        this.parent = parent;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Invoice{");
-        sb.append("event=").append(event);
-        sb.append(", invoiceData=").append(invoiceData);
-        sb.append(", client=").append(client);
-        sb.append(", payer=").append(payer);
-        sb.append('}');
-        return sb.toString();
+        return ToStringBuilder.reflectionToString(this);
     }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(event).append(invoiceData).append(client).append(payer).append(parent).append(additionalProperties).toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if ((other instanceof Invoice) == false) {
+            return false;
+        }
+        Invoice rhs = ((Invoice) other);
+        return new EqualsBuilder().append(event, rhs.event).append(invoiceData, rhs.invoiceData).append(client, rhs.client).append(payer, rhs.payer).append(parent, rhs.parent).append(additionalProperties, rhs.additionalProperties).isEquals();
+    }
+
 }
