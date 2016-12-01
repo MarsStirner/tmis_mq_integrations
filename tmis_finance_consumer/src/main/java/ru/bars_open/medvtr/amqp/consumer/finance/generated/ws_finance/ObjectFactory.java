@@ -30,14 +30,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link PutTreatmentResponse }
-     * 
-     */
-    public PutTreatmentResponse createPutTreatmentResponse() {
-        return new PutTreatmentResponse();
-    }
-
-    /**
      * Create an instance of {@link ServiceCompleteInfo }
      * 
      */
@@ -46,11 +38,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link PutReturnResponse }
+     * Create an instance of {@link PersonName }
      * 
      */
-    public PutReturnResponse createPutReturnResponse() {
-        return new PutReturnResponse();
+    public PersonName createPersonName() {
+        return new PersonName();
     }
 
     /**
@@ -62,19 +54,27 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link PutReturn }
+     * Create an instance of {@link PutTreatmentResponse }
      * 
      */
-    public PutReturn createPutReturn() {
-        return new PutReturn();
+    public PutTreatmentResponse createPutTreatmentResponse() {
+        return new PutTreatmentResponse();
     }
 
     /**
-     * Create an instance of {@link PersonName }
+     * Create an instance of {@link PutService }
      * 
      */
-    public PersonName createPersonName() {
-        return new PersonName();
+    public PutService createPutService() {
+        return new PutService();
+    }
+
+    /**
+     * Create an instance of {@link PutServiceResponse }
+     * 
+     */
+    public PutServiceResponse createPutServiceResponse() {
+        return new PutServiceResponse();
     }
 
 }

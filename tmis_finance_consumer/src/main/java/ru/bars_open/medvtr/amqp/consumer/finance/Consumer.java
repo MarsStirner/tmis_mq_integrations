@@ -28,7 +28,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.ws.handler.Handler;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -148,7 +147,7 @@ public class Consumer implements com.rabbitmq.client.Consumer {
         final Person client = invoice.getClient();
         final Person payer = invoice.getPayer();
         final ExchangeMISPortType financeWebService = createFinanceWebService();
-        final BigInteger result = financeWebService.putTreatment(
+        final int result = financeWebService.putTreatment(
                 event.getId(),
                 wrapDate(event.getSetDate()),
                 event.getExternalId(),
@@ -161,7 +160,7 @@ public class Consumer implements com.rabbitmq.client.Consumer {
                 invoiceData.getDeleted() ? 1 : 0
         );
         log.info("#{} WebService answer - {}", messageTag, result);
-        return result.intValue();
+        return result;
     }
 
 

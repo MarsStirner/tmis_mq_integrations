@@ -2,11 +2,11 @@ package ru.bars_open.medvtr.amqp.consumer.finance.util;
 
 import ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.ExchangeMISPortType;
 import ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.PersonName;
+import ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.ServiceCompleteInfo;
 
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.math.BigInteger;
 
 /**
  * Author: Upatov Egor <br>
@@ -35,7 +35,7 @@ public class MockFinanceWebService implements ExchangeMISPortType {
      * @return returns java.math.BigInteger
      */
     @Override
-    public BigInteger putTreatment(
+    public int putTreatment(
             @WebParam(name = "idTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int idTreatment,
             @WebParam(name = "dateTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final XMLGregorianCalendar dateTreatment,
             @WebParam(name = "numTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final String numTreatment,
@@ -47,12 +47,15 @@ public class MockFinanceWebService implements ExchangeMISPortType {
             @WebParam(name = "payerName", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final PersonName payerName,
             @WebParam(name = "remove", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int remove
     ) {
-        return BigInteger.valueOf(idTreatment);
+        return idTreatment;
     }
 
     @Override
-    public String putReturn(@WebParam(name = "idTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") int idTreatment, @WebParam(name = "numInvoice", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") String numInvoice, @WebParam(name = "sumReturn", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") int sumReturn) {
-        return "It's a mock!";
+    public String putService(
+            @WebParam(name = "idTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int idTreatment,
+            @WebParam(name = "paidName", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final PersonName paidName,
+            @WebParam(name = "listServiceComplete", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final ServiceCompleteInfo listServiceComplete
+    ) {
+        return "It's a Mock";
     }
-
 }
