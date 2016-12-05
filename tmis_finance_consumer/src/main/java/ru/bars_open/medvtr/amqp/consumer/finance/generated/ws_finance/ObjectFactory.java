@@ -30,35 +30,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ServiceCompleteInfo }
-     * 
-     */
-    public ServiceCompleteInfo createServiceCompleteInfo() {
-        return new ServiceCompleteInfo();
-    }
-
-    /**
-     * Create an instance of {@link PersonName }
-     * 
-     */
-    public PersonName createPersonName() {
-        return new PersonName();
-    }
-
-    /**
      * Create an instance of {@link PutTreatment }
      * 
      */
     public PutTreatment createPutTreatment() {
         return new PutTreatment();
-    }
-
-    /**
-     * Create an instance of {@link PutTreatmentResponse }
-     * 
-     */
-    public PutTreatmentResponse createPutTreatmentResponse() {
-        return new PutTreatmentResponse();
     }
 
     /**
@@ -70,11 +46,35 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link ServiceCompleteInfo }
+     * 
+     */
+    public ServiceCompleteInfo createServiceCompleteInfo() {
+        return new ServiceCompleteInfo();
+    }
+
+    /**
      * Create an instance of {@link PutServiceResponse }
      * 
      */
     public PutServiceResponse createPutServiceResponse() {
         return new PutServiceResponse();
+    }
+
+    /**
+     * Create an instance of {@link PersonName }
+     * 
+     */
+    public PersonName createPersonName() {
+        return new PersonName();
+    }
+
+    /**
+     * Create an instance of {@link PutTreatmentResponse }
+     * 
+     */
+    public PutTreatmentResponse createPutTreatmentResponse() {
+        return new PutTreatmentResponse();
     }
 
 }

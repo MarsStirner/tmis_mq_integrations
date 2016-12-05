@@ -30,7 +30,7 @@
         <!-- Library Versions -->
         <version.jee-api>7.0</version.jee-api>
         <version.hibernate>5.2.4.Final</version.hibernate>
-        <version.rabbitmq-client>3.6.5</version.rabbitmq-client>
+        <version.rabbitmq-client>4.0.0</version.rabbitmq-client>
         <version.joda-time>2.9.4</version.joda-time>
         <version.commons-lang3>3.4</version.commons-lang3>
         <version.guava>20.0</version.guava>

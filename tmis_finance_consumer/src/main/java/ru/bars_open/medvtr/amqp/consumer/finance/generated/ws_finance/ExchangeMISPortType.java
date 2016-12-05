@@ -32,10 +32,12 @@ public interface ExchangeMISPortType {
      * @param idTreatment
      * @param numTreatment
      * @param payerName
+     * @param parentInvoiceNumber
      * @param dateTreatment
      * @param remove
      * @param codePatient
      * @param codePayer
+     * @param refund
      * @return
      *     returns int
      */
@@ -63,7 +65,11 @@ public interface ExchangeMISPortType {
         @WebParam(name = "payerName", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
         PersonName payerName,
         @WebParam(name = "remove", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
-        int remove);
+        int remove,
+        @WebParam(name = "refund", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+        int refund,
+        @WebParam(name = "parentInvoiceNumber", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+        String parentInvoiceNumber);
 
     /**
      * 

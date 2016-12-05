@@ -40,6 +40,8 @@
                         <xs:element name="codePayer" type="xs:string"/>
                         <xs:element name="payerName" type="tns:PersonName"/>
                         <xs:element name="remove" type="xs:int"/>
+                        <xs:element name="refund" type="xs:int"/>
+                        <xs:element name="parentInvoiceNumber" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>

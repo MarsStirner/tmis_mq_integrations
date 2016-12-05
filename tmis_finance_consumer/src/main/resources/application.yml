@@ -1,7 +1,11 @@
-CONFIG_SERVICE_BASE_URL: "http://10.128.225.200:6602"     # Define remote Config URL for ConfigManager.java
-APP_NAME: "TMIS_FINANCE_CONSUMER"                         # used for ConfigManager.java
-BALALAIKA: "VODKA, Гладиолус"                             # test UTF-8
-EXCHANGE_NAME: "TMIS_FINANCE_EXCHANGE"
+CONFIG_URL: "http://127.0.0.1:6602"     # Define remote Config URL for ConfigManager.java
+APP_NAME: "mq_integration_finance"                        # used for ConfigManager.java
+
+consumer:
+  tag: "TMIS_FINANCE_CONSUMER"
+  uuid: "CAFEBABE-2016-1202-2057-DF45F05FB801"
+
+# THIS PART SHOULD BE OVVERIDEN BY CCS (Central ConfigService)
 
 financeWebservice:
   url: "http://dnosov-nb:8080/Mock_1Cwebservice?wsdl"
@@ -9,18 +13,18 @@ financeWebservice:
   name: "Exchange_MIS"
 
 amqp:                                                     # Define AMQP connection properties
-  host: "10.1.2.12"
-  port: "5672"
-  user: "tmis_finance"
-  password: "rabbitrules!"
-  consumeQueue:
-    name: "queue.tmis.finance.invoice"
-    durable: "true"
-    autoDelete: "false"
-    exclusive: "false"
-    arguments: null
-  consumer:
-    tag: "TMIS_FINANCE_CONSUMER"
-    prefetchCount: "5"
-    uuid: "CAFEBABE-8126-4D33-BCD0-DF45F05FB8E8"
+  server:
+    host: "10.1.2.12"
+    port: "5672"
+  user:
+    username: "tmis_finance"
+    password: "rabbitrules!"
+  queue.refund: "queue.tmis.finance.invoice.refund"
+  queue.deleted: "queue.tmis.finance.invoice.deleted"
+  queue.created: "queue.tmis.finance.invoice.created"
+  error:
+    queue: "queue.tmis.finance.invoice.error"
+    routing_key: "error"
+    exchange: "exchange.tmis.finance.invoice"
+
 

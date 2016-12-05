@@ -21,19 +21,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
         portName = "Exchange_MISSoap"
 )
 public class MockFinanceWebService implements ExchangeMISPortType {
-    /**
-     * @param idTreatment
-     * @param dateTreatment
-     * @param numTreatment
-     * @param numInvoice
-     * @param sumInvoice
-     * @param codePatient
-     * @param patientName
-     * @param codePayer
-     * @param payerName
-     * @param remove
-     * @return returns java.math.BigInteger
-     */
+
+
     @Override
     public int putTreatment(
             @WebParam(name = "idTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int idTreatment,
@@ -45,7 +34,9 @@ public class MockFinanceWebService implements ExchangeMISPortType {
             @WebParam(name = "patientName", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final PersonName patientName,
             @WebParam(name = "codePayer", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final String codePayer,
             @WebParam(name = "payerName", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final PersonName payerName,
-            @WebParam(name = "remove", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int remove
+            @WebParam(name = "remove", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int remove,
+            @WebParam(name = "refund", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int refund,
+            @WebParam(name = "parentInvoiceNumber", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final String parentInvoiceNumber
     ) {
         return idTreatment;
     }

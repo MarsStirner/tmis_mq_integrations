@@ -8,10 +8,8 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import ru.bars_open.medvtr.amqp.consumer.finance.util.amqp.Exchange;
-import ru.bars_open.medvtr.amqp.consumer.finance.util.amqp.Queue;
+
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -26,7 +24,7 @@ import java.util.UUID;
  * Description:
  */
 @Component
-public class Publisher {
+public class ErrorPublisher {
 
     private static final Logger log = LoggerFactory.getLogger("PUBLISHER");
     private static final int ATTEMPS_LIMIT = 5;
@@ -39,29 +37,41 @@ public class Publisher {
     private Channel channel;
 
     @Autowired
-    private Exchange exchange;
+    private ConfigManager cfg;
 
-    @Autowired
-    @Qualifier("errorQueue")
-    private Queue queue;
 
-    public void publish(final long messageTag, final String routingKey, final AMQP.BasicProperties props, final byte[] body) throws IOException {
-        log.info("#{} Start publish to Exchange[{}] with KEY[{}]", messageTag, exchange.getName(), routingKey);
+    public void publish(
+            final long messageTag,
+            final String exchange,
+            final String routingKey,
+            final AMQP.BasicProperties props,
+            final byte[] body
+    ) throws IOException {
+        log.info("#{} Start publish to Exchange[{}] with KEY[{}]", messageTag, exchange, routingKey);
         if (log.isDebugEnabled()) {
             final StringBuilder sb = new StringBuilder("#").append(messageTag).append(" MessageProperties");
             props.appendPropertyDebugStringTo(sb);
-            log.debug("#{} {}", messageTag, sb.toString());
+            log.debug("{}", sb.toString());
         }
-        channel.basicPublish(exchange.getName(), routingKey, props, body);
+        channel.basicPublish(exchange, routingKey, props, body);
         log.info("#{} Published", messageTag);
     }
 
-    public void publishWithDelay(final long messageTag, final String note, final AMQP.BasicProperties props, final byte[] body, final int delay) throws IOException {
+    public void publishWithDelay(
+            final long messageTag,
+            final String exchange,
+            final String routingKey,
+            final AMQP.BasicProperties props,
+            final byte[] body,
+            final String note,
+            final int delay
+    ) throws IOException {
         final Map<String, Object> headers = new HashMap<>(props.getHeaders());
         headers.put(HEADER_NOTE, note);
         headers.put(HEADER_DELAY, delay);
         int attempts = (int) headers.getOrDefault(HEADER_ATTEMPTS, 0);
         headers.put(HEADER_ATTEMPTS, ++attempts);
+
         final AMQP.BasicProperties publishProperties = new AMQP.BasicProperties.Builder()
                 .contentType(props.getContentType())
                 .contentEncoding(StringUtils.isNotEmpty(props.getContentEncoding()) ? props.getContentEncoding() : StandardCharsets.UTF_8.name())
@@ -79,13 +89,20 @@ public class Publisher {
                 .build();
         if(ATTEMPS_LIMIT < attempts){
             log.warn("#{} Message reach attempts limit", messageTag);
-            publishToErrorQueue(messageTag, "Message reach attempts limit", publishProperties, body);
+            publishToErrorQueue(messageTag, exchange, routingKey, publishProperties, body, "Message reach attempts limit");
         } else {
-            publish(messageTag, "", publishProperties, body);
+            publish(messageTag,  cfg.getValue(ConfigManager.ERROR_EXCHANGE), "" , publishProperties, body);
         }
     }
 
-    public void publishToErrorQueue(final long messageTag, final String note, final AMQP.BasicProperties props, final byte[] body) throws IOException {
+    public void publishToErrorQueue(
+            final long messageTag,
+            final String exchange,
+            final String routingKey,
+            final AMQP.BasicProperties props,
+            final byte[] body,
+            final String note
+    ) throws IOException {
         final Map<String, Object> headers = new HashMap<>(props.getHeaders());
         headers.put(HEADER_ERROR_NOTE, note);
         headers.remove(HEADER_DELAY);
@@ -104,6 +121,6 @@ public class Publisher {
                 .appId(props.getAppId())
                 .clusterId(props.getClusterId())
                 .build();
-        publish(messageTag, queue.getName(), publishProperties, body);
+        publish(messageTag, exchange,  routingKey, publishProperties, body);
     }
 }

@@ -30,6 +30,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="codePayer" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="payerName" type="{http://schemas.xmlsoap.org/soap/envelope}PersonName"/>
  *         &lt;element name="remove" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="refund" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="parentInvoiceNumber" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -49,7 +51,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "patientName",
     "codePayer",
     "payerName",
-    "remove"
+    "remove",
+    "refund",
+    "parentInvoiceNumber"
 })
 @XmlRootElement(name = "putTreatment")
 public class PutTreatment {
@@ -72,6 +76,9 @@ public class PutTreatment {
     @XmlElement(required = true)
     protected PersonName payerName;
     protected int remove;
+    protected int refund;
+    @XmlElement(required = true)
+    protected String parentInvoiceNumber;
 
     /**
      * Gets the value of the idTreatment property.
@@ -287,6 +294,46 @@ public class PutTreatment {
      */
     public void setRemove(int value) {
         this.remove = value;
+    }
+
+    /**
+     * Gets the value of the refund property.
+     * 
+     */
+    public int getRefund() {
+        return refund;
+    }
+
+    /**
+     * Sets the value of the refund property.
+     * 
+     */
+    public void setRefund(int value) {
+        this.refund = value;
+    }
+
+    /**
+     * Gets the value of the parentInvoiceNumber property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getParentInvoiceNumber() {
+        return parentInvoiceNumber;
+    }
+
+    /**
+     * Sets the value of the parentInvoiceNumber property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setParentInvoiceNumber(String value) {
+        this.parentInvoiceNumber = value;
     }
 
 }
