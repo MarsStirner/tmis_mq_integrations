@@ -6,7 +6,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.springframework.stereotype.Repository;
-import ru.bars_open.medvtr.db.dao.AbstractDao;
+import ru.bars_open.medvtr.db.dao.impl.mapped.AbstractDaoImpl;
 import ru.bars_open.medvtr.db.dao.interfaces.ContractContragentDao;
 import ru.bars_open.medvtr.db.entities.Client;
 import ru.bars_open.medvtr.db.entities.ContractContragent;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @SuppressWarnings("unchecked")
 @Repository("contractContragentDao")
-public class ContractContragentDaoImpl extends AbstractDao<ContractContragent> implements ContractContragentDao{
+public class ContractContragentDaoImpl extends AbstractDaoImpl<ContractContragent> implements ContractContragentDao {
 
     @Override
     public Class<ContractContragent> getEntityClass() {
@@ -32,20 +32,14 @@ public class ContractContragentDaoImpl extends AbstractDao<ContractContragent> i
 
     @Override
     public ContractContragent getByClient(final Integer clientId) {
-        if (clientId == null) {
-            return null;
-        }
+        if (clientId == null) { return null; }
         final DetachedCriteria criteria = getEntityCriteria().add(Restrictions.eq("client.id", clientId));
         final Session session = sessionFactory.getCurrentSession();
 
         final List<ContractContragent> resultList = criteria.getExecutableCriteria(session).list();
-        switch(resultList.size()){
-            case 0: {
-                return null;
-            }
-            case 1: {
-                return resultList.iterator().next();
-            }
+        switch (resultList.size()) {
+            case 0: { return null; }
+            case 1: { return resultList.iterator().next(); }
             default: {
                 log.warn("By Client[{}] founded {} rows. Return first", clientId, resultList.size());
                 return resultList.iterator().next();

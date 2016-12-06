@@ -65,7 +65,7 @@ public class PersistenceConfig {
         result.setDataSource(dataSource);
         result.setPackagesToScan("ru.bars_open.medvtr.db.entities");
         result.setHibernateProperties(props);
-        log.info("Initialized \'hospitalSessionFactory\'[@{}]", Integer.toHexString(result.hashCode()));
+        log.info("Initialized 'hospitalSessionFactory'[@{}]", Integer.toHexString(result.hashCode()));
         return result;
     }
 
@@ -73,7 +73,7 @@ public class PersistenceConfig {
     public HibernateTransactionManager hospitalTransactionManager(
             @Qualifier(HOSPITAL_SESSION_FACTORY) final SessionFactory sessionFactory) {
         final HibernateTransactionManager result = new HibernateTransactionManager(sessionFactory);
-        log.info("Initialized \'hospitalTransactionManager\'[@{}]", Integer.toHexString(result.hashCode()));
+        log.info("Initialized 'hospitalTransactionManager'[@{}]", Integer.toHexString(result.hashCode()));
         return result;
     }
 }

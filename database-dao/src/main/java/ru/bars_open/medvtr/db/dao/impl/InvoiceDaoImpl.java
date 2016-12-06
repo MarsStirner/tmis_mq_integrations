@@ -5,7 +5,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.springframework.stereotype.Repository;
-import ru.bars_open.medvtr.db.dao.AbstractDeletableDao;
+import ru.bars_open.medvtr.db.dao.impl.mapped.AbstractDeletableDaoImpl;
 import ru.bars_open.medvtr.db.dao.interfaces.InvoiceDao;
 import ru.bars_open.medvtr.db.entities.Invoice;
 
@@ -20,9 +20,7 @@ import java.util.List;
 
 @SuppressWarnings("unchecked")
 @Repository("invoiceDao")
-public class InvoiceDaoImpl
-        extends AbstractDeletableDao<Invoice>
-        implements InvoiceDao {
+public class InvoiceDaoImpl extends AbstractDeletableDaoImpl<Invoice> implements InvoiceDao {
     @Override
     public Class<Invoice> getEntityClass() {
         return Invoice.class;
@@ -37,7 +35,7 @@ public class InvoiceDaoImpl
         final Session session = sessionFactory.getCurrentSession();
 
         final List<Invoice> resultList = criteria.getExecutableCriteria(session).list();
-        switch(resultList.size()){
+        switch (resultList.size()) {
             case 0: {
                 return null;
             }

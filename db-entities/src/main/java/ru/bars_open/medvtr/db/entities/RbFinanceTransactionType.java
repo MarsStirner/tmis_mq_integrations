@@ -12,9 +12,9 @@ import javax.persistence.Table;
 @Table(name = "rbFinanceTransactionType")
 public class RbFinanceTransactionType extends ReferenceBookEntity{
     //Движение средств на счёте плательщика
-    public static final String CODE_PAYER_BALANCE_IN = "payer_balance";
+    public static final String CODE_PAYER_BALANCE = "payer_balance";
     //Движение средств по выставленным счетам
-    public static final String CODE_PAYER_BALANCE_OUT = "invoice";
+    public static final String CODE_INVOICE = "invoice";
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("RbFinanceTransactionType[").append(id);

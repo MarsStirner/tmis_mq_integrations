@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>ru.bars_open.medvtr</groupId>
+        <artifactId>tmis_mq_integrations</artifactId>
+        <version>${version.parent}</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <name>[business-dao] DAO with BLogic based on db-dao</name>
+    <description>Define Business Logic DAO based on db-dao (simple crud), less lightweight solution then db-dao</description>
+    <artifactId>business-dao</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>ru.bars_open.medvtr</groupId>
+            <artifactId>database-dao</artifactId>
+            <version>LATEST</version>
+        </dependency>
+    </dependencies>
+</project>

@@ -8,6 +8,7 @@
                 <xs:element name="invoiceNumber" type="xs:string"/>
                 <xs:element name="payType" type="tns:PayType"/>
                 <xs:element name="contragentId" type="xs:int"/>
+                <xs:element name="refund" type="xs:boolean"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

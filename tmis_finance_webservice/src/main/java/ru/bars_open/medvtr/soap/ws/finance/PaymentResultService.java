@@ -1,6 +1,5 @@
 package ru.bars_open.medvtr.soap.ws.finance;
 
-import com.google.common.collect.ImmutableSet;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,19 +8,18 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+import ru.bars_open.medvtr.business.interfaces.InvoiceBusinessLogic;
 import ru.bars_open.medvtr.db.dao.interfaces.ContractContragentDao;
-import ru.bars_open.medvtr.db.dao.interfaces.FinanceTransactionDao;
 import ru.bars_open.medvtr.db.dao.interfaces.InvoiceDao;
-import ru.bars_open.medvtr.db.dao.interfaces.ReferenceBookDao;
-import ru.bars_open.medvtr.db.entities.*;
-import ru.bars_open.medvtr.db.entities.util.EntityFactory;
+import ru.bars_open.medvtr.db.dao.interfaces.mapped.ReferenceBookDao;
+import ru.bars_open.medvtr.db.entities.ContractContragent;
+import ru.bars_open.medvtr.db.entities.Invoice;
+import ru.bars_open.medvtr.db.entities.RbPayType;
 import ru.bars_open.medvtr.soap.ws.finance.generated.ApplyPaymentRequest;
 import ru.bars_open.medvtr.soap.ws.finance.generated.ApplyPaymentResponse;
 import ru.bars_open.medvtr.soap.ws.finance.generated.PayType;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -40,37 +38,31 @@ public class PaymentResultService {
     private InvoiceDao invoiceDao;
 
     @Autowired
-    private ContractContragentDao contractContragentDao;
+    private InvoiceBusinessLogic invoiceBusinessLogic;
 
     @Autowired
     private ReferenceBookDao referenceBookDao;
 
     @Autowired
-    private FinanceTransactionDao financeTransactionDao;
+    private ContractContragentDao contractContragentDao;
 
-
-    @PostConstruct
-    public void init() {
-        log.info("Initialized [@{}] with InvoiceDao[@{}], ContractContragentDao[@{}]",
-                Integer.toHexString(this.hashCode()),
-                invoiceDao == null ? "NULL" : Integer.toHexString(invoiceDao.hashCode()),
-                contractContragentDao == null ? "NULL" : Integer.toHexString(contractContragentDao.hashCode())
-        );
-    }
 
     @PayloadRoot(namespace = "ru.bars_open.medvtr.soap.ws.finance", localPart = "applyPaymentRequest")
     @ResponsePayload
     @Transactional
     public ApplyPaymentResponse applyPayment(@RequestPayload ApplyPaymentRequest request) {
         final int logTag = counter.incrementAndGet();
-        log.info("#{} Call PaymentResultService.applyPayment(" +
-                        "sum={}, trxDateTime='{}', invoiceNumber='{}', payType={}, contragentId={})", logTag,
-                request.getSum(), request.getTrxDatetime(), request.getInvoiceNumber(), request.getPayType(), request.getContragentId()
+        log.info("#{} Call PaymentResultService.applyPayment(sum={}, trxDateTime='{}', invoiceNumber='{}', payType={}, contragentId={})",
+                 logTag,
+                 request.getSum(),
+                 request.getTrxDatetime(),
+                 request.getInvoiceNumber(),
+                 request.getPayType(),
+                 request.getContragentId()
         );
         final LocalDateTime transactionDateTime = new LocalDateTime(request.getTrxDatetime().toGregorianCalendar());
-
         final ApplyPaymentResponse response = new ApplyPaymentResponse();
-
+        // Ищем счет по номеру
         final Invoice invoice = invoiceDao.getByNumber(request.getInvoiceNumber());
         if (invoice == null) {
             log.error("#{} Error: no Invoice[number='{}'] found", logTag, request.getInvoiceNumber());
@@ -79,7 +71,7 @@ public class PaymentResultService {
             return response;
         }
         log.info("#{} found {}", logTag, invoice);
-
+        // Ищем плательщика
         final ContractContragent contragent = contractContragentDao.getByClient(request.getContragentId());
         if (contragent == null) {
             log.error("#{} Error: no ContractContragent[with Client[{}]] found", logTag, request.getContragentId());
@@ -88,50 +80,16 @@ public class PaymentResultService {
             return response;
         }
         log.info("#{} found {}", logTag, contragent);
-
-        final Map<String, RbFinanceTransactionType> transactionTypes = referenceBookDao.getMapByCodes(
-                RbFinanceTransactionType.class,
-                ImmutableSet.of(RbFinanceTransactionType.CODE_PAYER_BALANCE_IN, RbFinanceTransactionType.CODE_PAYER_BALANCE_OUT)
+        final RbPayType payType = referenceBookDao.getByCode(RbPayType.class,
+                                                             PayType.CASH.equals(request.getPayType()) ? RbPayType.CODE_CASH : RbPayType.CODE_CASHLESS
         );
-
-        final Map<String, RbFinanceOperationType> financeOperationTypes = referenceBookDao.getMapByCodes(
-                RbFinanceOperationType.class,
-                ImmutableSet.of(RbFinanceOperationType.CODE_INVOICE_PAY, RbFinanceOperationType.CODE_PAYER_BALANCE_IN)
-        );
-
-        final RbPayType payType = referenceBookDao.getByCode(
-                RbPayType.class,
-                PayType.CASH.equals(request.getPayType()) ? RbPayType.CODE_CASH : RbPayType.CODE_CASHLESS
-        );
-
-        final FinanceTransaction payerIncomeMoneyTransaction = EntityFactory.createFinanceTransaction(
-                null,
-                transactionDateTime,
-                transactionTypes.get(RbFinanceTransactionType.CODE_PAYER_BALANCE_IN),
-                financeOperationTypes.get(RbFinanceOperationType.CODE_PAYER_BALANCE_IN),
-                contragent,
-                invoice,
-                payType,
-                request.getSum()
-        );
-        financeTransactionDao.save(payerIncomeMoneyTransaction);
-
-
-        final FinanceTransaction payTransaction = EntityFactory.createFinanceTransaction(
-                null,
-                transactionDateTime,
-                transactionTypes.get(RbFinanceTransactionType.CODE_PAYER_BALANCE_OUT),
-                financeOperationTypes.get(RbFinanceOperationType.CODE_INVOICE_PAY),
-                contragent,
-                invoice,
-                payType,
-                request.getSum()
-        );
-        financeTransactionDao.save(payTransaction);
-
-        invoice.setSettleDate(transactionDateTime.toLocalDate());
-        invoiceDao.update(invoice);
-
+        final boolean payed = invoiceBusinessLogic.pay(invoice, request.isRefund(), contragent, request.getSum(), payType, transactionDateTime);
+        if(!payed){
+            log.error("#{} Error: not payed", logTag, request.getContragentId());
+            response.setResult(-3);
+            log.info("#{} End PaymentResultService.applyPayment with result = {}", logTag, response.getResult());
+            return response;
+        }
         log.info("#{} End PaymentResultService.applyPayment with result = {}", logTag, response.getResult());
         return response;
     }

@@ -14,7 +14,7 @@
     <name>[tmis_finance_consumer] AMQP finance consumer </name>
     <description>AMQP consumer from TMIS and then transform message and send it to 1C finance webservice (SOAP)</description>
     <artifactId>tmis_finance_consumer</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
 
     <properties>

@@ -26,7 +26,7 @@ public class Invoice extends EditableByPersonEntity{
      * {Invoice} - родительский счёт (для возвратов)
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
+    @JoinColumn(name = "parent_id", nullable = true)
     private Invoice parent;
 
     /**

@@ -16,6 +16,7 @@
         <module>mq-entities</module>
         <module>db-entities</module>
         <module>database-dao</module>
+        <module>business-dao</module>
     </modules>
 
     <properties>

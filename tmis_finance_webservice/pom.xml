@@ -19,8 +19,8 @@
     <dependencies>
         <dependency>
             <groupId>ru.bars_open.medvtr</groupId>
-            <artifactId>database-dao</artifactId>
-            <version>1.0</version>
+            <artifactId>business-dao</artifactId>
+            <version>LATEST</version>
             <type>jar</type>
         </dependency>
         <dependency>
