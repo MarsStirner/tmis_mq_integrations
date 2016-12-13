@@ -5,6 +5,8 @@ import ru.bars_open.medvtr.db.entities.ContractContragent;
 import ru.bars_open.medvtr.db.entities.Invoice;
 import ru.bars_open.medvtr.db.entities.RbPayType;
 
+import java.util.Objects;
+
 /**
  * Author: Upatov Egor <br>
  * Date: 05.12.2016, 20:09 <br>
@@ -44,4 +46,10 @@ public interface InvoiceBusinessLogic {
             return pay(invoice, contragent, sum, payType, transactionDateTime);
         }
     }
+
+    default boolean isFullSumm(final Invoice invoice, final Double sum, final boolean isRefund) {
+        return Objects.equals(sum, getFullSumm(invoice, isRefund));
+    }
+
+    Double getFullSumm(Invoice invoice, boolean isRefund);
 }

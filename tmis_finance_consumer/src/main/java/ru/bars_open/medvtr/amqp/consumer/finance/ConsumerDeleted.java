@@ -84,7 +84,7 @@ public class ConsumerDeleted extends com.rabbitmq.client.DefaultConsumer {
                 if( !invoice.getInvoiceData().getDeleted()){
                     log.warn("#{} Invoice is not marked as DELETED, but stored in this queue['{}']", tag, queueName);
                 }
-                final int wsResult = webservice.sendInvoice(tag, invoice, true, false);
+                final int wsResult = webservice.sendInvoice(tag, invoice, true);
                 if (Objects.equals(wsResult, invoice.getEvent().getId())) {
                     log.info("#{} End. Successfully.", tag);
                 } else {

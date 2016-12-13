@@ -13,7 +13,6 @@ import ru.bars_open.medvtr.db.entities.util.EntityFactory;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Author: Upatov Egor <br>
@@ -153,11 +152,8 @@ public class InvoiceBusinessLogicImpl implements InvoiceBusinessLogic {
         return true;
     }
 
-    public boolean isFullSumm(final Invoice invoice, final Double sum, final boolean isRefund) {
-        return Objects.equals(sum, getFullSumm(invoice, isRefund));
-    }
-
-    private Double getFullSumm(final Invoice invoice, final boolean isRefund) {
+    @Override
+    public Double getFullSumm(final Invoice invoice, final boolean isRefund) {
         //Сумма учитывается только если возврат или если услуга - не явялется компонентом другой услуги
 
         // return invoiceItemDao.getByInvoice(invoice, isRefund)

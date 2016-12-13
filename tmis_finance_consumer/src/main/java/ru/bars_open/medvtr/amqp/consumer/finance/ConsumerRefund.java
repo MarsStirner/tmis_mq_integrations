@@ -14,7 +14,6 @@ import ru.bars_open.medvtr.mq.entities.finance.Invoice;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 /**
  * Author: Upatov Egor <br>
@@ -84,13 +83,8 @@ public class ConsumerRefund extends com.rabbitmq.client.DefaultConsumer {
                 if( invoice.getParent() == null){
                     log.warn("#{} Invoice hasnt Parent, but stored in this queue['{}']", tag, queueName);
                 }
-                final int wsResult = webservice.sendInvoice(tag, invoice, false, true);
-                if (Objects.equals(wsResult, invoice.getEvent().getId())) {
-                    log.info("#{} End. Successfully.", tag);
-                } else {
-                    log.warn("#{} WS result is not correct. Expected[{}], actual[{}]", tag, invoice.getEvent().getId(), wsResult);
-                    publisher.publishWithDelay(tag, errorExchange, envelope.getRoutingKey(), properties, body, "WS result is not correct: " + wsResult,  60000);
-                }
+                final String wsResult = webservice.sendRefund(tag, invoice);
+                log.info("#{} End. Successfully.", tag);
             } else {
                 log.error("#{} Message has unknown format, Skip it!", tag);
                 publisher.publishToErrorQueue(tag, errorExchange, errorRoutingKey, properties, body, "Message has unknown format");

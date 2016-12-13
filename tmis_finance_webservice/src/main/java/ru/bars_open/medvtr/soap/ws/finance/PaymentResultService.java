@@ -50,7 +50,7 @@ public class PaymentResultService {
     @PayloadRoot(namespace = "ru.bars_open.medvtr.soap.ws.finance", localPart = "applyPaymentRequest")
     @ResponsePayload
     @Transactional
-    public ApplyPaymentResponse applyPayment(@RequestPayload ApplyPaymentRequest request) {
+    public ApplyPaymentResponse applyPayment(@RequestPayload ApplyPaymentRequest request) throws Exception {
         final int logTag = counter.incrementAndGet();
         log.info("#{} Call PaymentResultService.applyPayment(sum={}, trxDateTime='{}', invoiceNumber='{}', payType={}, contragentId={})",
                  logTag,
@@ -66,18 +66,14 @@ public class PaymentResultService {
         final Invoice invoice = invoiceDao.getByNumber(request.getInvoiceNumber());
         if (invoice == null) {
             log.error("#{} Error: no Invoice[number='{}'] found", logTag, request.getInvoiceNumber());
-            response.setResult(-1);
-            log.info("#{} End PaymentResultService.applyPayment with result = {}", logTag, response.getResult());
-            return response;
+            throw new Exception("Error: no Invoice[number='"+request.getInvoiceNumber()+"'] found");
         }
         log.info("#{} found {}", logTag, invoice);
         // Ищем плательщика
         final ContractContragent contragent = contractContragentDao.getByClient(request.getContragentId());
         if (contragent == null) {
             log.error("#{} Error: no ContractContragent[with Client[{}]] found", logTag, request.getContragentId());
-            response.setResult(-2);
-            log.info("#{} End PaymentResultService.applyPayment with result = {}", logTag, response.getResult());
-            return response;
+            throw new Exception("Error: no ContractContragent[with Client["+request.getContragentId()+"]] found");
         }
         log.info("#{} found {}", logTag, contragent);
         final RbPayType payType = referenceBookDao.getByCode(RbPayType.class,
@@ -86,9 +82,8 @@ public class PaymentResultService {
         final boolean payed = invoiceBusinessLogic.pay(invoice, request.isRefund(), contragent, request.getSum(), payType, transactionDateTime);
         if(!payed){
             log.error("#{} Error: not payed", logTag, request.getContragentId());
-            response.setResult(-3);
-            log.info("#{} End PaymentResultService.applyPayment with result = {}", logTag, response.getResult());
-            return response;
+            final Double fullSumm = invoiceBusinessLogic.getFullSumm(invoice, request.isRefund());
+            throw new Exception("Error: reject partial pay. Full sum is "+fullSumm);
         }
         log.info("#{} End PaymentResultService.applyPayment with result = {}", logTag, response.getResult());
         return response;

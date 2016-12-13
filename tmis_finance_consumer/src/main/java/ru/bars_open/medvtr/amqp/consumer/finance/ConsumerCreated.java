@@ -81,7 +81,7 @@ public class ConsumerCreated extends com.rabbitmq.client.DefaultConsumer {
         try {
             final Invoice invoice = parseInvoiceFromText(tag, message);
             if (invoice != null) {
-                final int wsResult = webservice.sendInvoice(tag, invoice, false, false);
+                final int wsResult = webservice.sendInvoice(tag, invoice, false);
                 if (Objects.equals(wsResult, invoice.getEvent().getId())) {
                     log.info("#{} End. Successfully.", tag);
                 } else {

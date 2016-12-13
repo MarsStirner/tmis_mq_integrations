@@ -2,11 +2,11 @@ package ru.bars_open.medvtr.amqp.consumer.finance.util;
 
 import ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.ExchangeMISPortType;
 import ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.PersonName;
-import ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.ServiceCompleteInfo;
 
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.math.BigInteger;
 
 /**
  * Author: Upatov Egor <br>
@@ -24,29 +24,28 @@ public class MockFinanceWebService implements ExchangeMISPortType {
 
 
     @Override
-    public int putTreatment(
+    public BigInteger putTreatment(
             @WebParam(name = "idTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int idTreatment,
             @WebParam(name = "dateTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final XMLGregorianCalendar dateTreatment,
             @WebParam(name = "numTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final String numTreatment,
             @WebParam(name = "numInvoice", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final String numInvoice,
-            @WebParam(name = "sumInvoice", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int sumInvoice,
+            @WebParam(name = "sumInvoice", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final double sumInvoice,
             @WebParam(name = "codePatient", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final String codePatient,
             @WebParam(name = "patientName", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final PersonName patientName,
             @WebParam(name = "codePayer", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final String codePayer,
             @WebParam(name = "payerName", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final PersonName payerName,
-            @WebParam(name = "remove", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int remove,
-            @WebParam(name = "refund", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int refund,
-            @WebParam(name = "parentInvoiceNumber", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final String parentInvoiceNumber
+            @WebParam(name = "remove", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int remove
     ) {
-        return idTreatment;
+        return BigInteger.valueOf(idTreatment);
     }
 
     @Override
-    public String putService(
-            @WebParam(name = "idTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int idTreatment,
-            @WebParam(name = "paidName", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final PersonName paidName,
-            @WebParam(name = "listServiceComplete", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final ServiceCompleteInfo listServiceComplete
+    public String putReturn(
+            @WebParam(name = "parentNumInvoice", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final String parentNumInvoice,
+            @WebParam(name = "numInvoice", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final String numInvoice,
+            @WebParam(name = "sumReturn", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final double sumReturn,
+            @WebParam(name = "remove", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int remove
     ) {
-        return "It's a Mock";
+        return numInvoice;
     }
 }

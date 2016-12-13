@@ -27,7 +27,7 @@ import java.util.UUID;
 public class ErrorPublisher {
 
     private static final Logger log = LoggerFactory.getLogger("PUBLISHER");
-    private static final int ATTEMPS_LIMIT = 5;
+    private static final int ATTEMPS_LIMIT = 3;
     private static final String HEADER_DELAY = "x-delay";
     private static final String HEADER_ATTEMPTS = "ATTEMPTS";
     private static final String HEADER_NOTE = "NOTE";
@@ -91,7 +91,7 @@ public class ErrorPublisher {
             log.warn("#{} Message reach attempts limit", messageTag);
             publishToErrorQueue(messageTag, exchange, routingKey, publishProperties, body, "Message reach attempts limit");
         } else {
-            publish(messageTag,  cfg.getValue(ConfigManager.ERROR_EXCHANGE), "" , publishProperties, body);
+            publish(messageTag,  cfg.getValue(ConfigManager.ERROR_EXCHANGE), routingKey , publishProperties, body);
         }
     }
 

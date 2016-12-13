@@ -18,9 +18,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="idTreatment" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="parentNumInvoice" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="numInvoice" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="sumReturn" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="sumReturn" type="{http://www.w3.org/2001/XMLSchema}double"/>
+ *         &lt;element name="remove" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -31,32 +32,43 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "idTreatment",
+    "parentNumInvoice",
     "numInvoice",
-    "sumReturn"
+    "sumReturn",
+    "remove"
 })
 @XmlRootElement(name = "putReturn")
 public class PutReturn {
 
-    protected int idTreatment;
+    @XmlElement(required = true)
+    protected String parentNumInvoice;
     @XmlElement(required = true)
     protected String numInvoice;
-    protected int sumReturn;
+    protected double sumReturn;
+    protected int remove;
 
     /**
-     * Gets the value of the idTreatment property.
+     * Gets the value of the parentNumInvoice property.
      * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public int getIdTreatment() {
-        return idTreatment;
+    public String getParentNumInvoice() {
+        return parentNumInvoice;
     }
 
     /**
-     * Sets the value of the idTreatment property.
+     * Sets the value of the parentNumInvoice property.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setIdTreatment(int value) {
-        this.idTreatment = value;
+    public void setParentNumInvoice(String value) {
+        this.parentNumInvoice = value;
     }
 
     /**
@@ -87,7 +99,7 @@ public class PutReturn {
      * Gets the value of the sumReturn property.
      * 
      */
-    public int getSumReturn() {
+    public double getSumReturn() {
         return sumReturn;
     }
 
@@ -95,8 +107,24 @@ public class PutReturn {
      * Sets the value of the sumReturn property.
      * 
      */
-    public void setSumReturn(int value) {
+    public void setSumReturn(double value) {
         this.sumReturn = value;
+    }
+
+    /**
+     * Gets the value of the remove property.
+     * 
+     */
+    public int getRemove() {
+        return remove;
+    }
+
+    /**
+     * Sets the value of the remove property.
+     * 
+     */
+    public void setRemove(int value) {
+        this.remove = value;
     }
 
 }
