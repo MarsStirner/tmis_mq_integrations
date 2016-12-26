@@ -1,0 +1,29 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/message/HospitalizationFinishMessage.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "HospitalizationFinishMessage",
+  "description": "Сообщения содержащее даные о закрытом обращении",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.message.HospitalizationFinishMessage",
+  "properties": {
+    "event": {
+      "description": "обращение",
+      "$ref": "../base/Event.json"
+    },
+    "leaved": {
+      "description": "Экшен-выписка",
+      "$ref": "../action/StationaryLeaved.json"
+    },
+    "moves": {
+      "type": "array",
+      "description": "Движения между отделениями",
+      "items": {
+        "$ref": "../action/StationaryMoving.json"
+      }
+    }
+  },
+  "required": [
+    "event",
+    "leaved"
+  ]
+}

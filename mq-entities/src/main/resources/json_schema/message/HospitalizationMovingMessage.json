@@ -1,0 +1,22 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/message/HospitalizationMovingMessage.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "HospitalizationMovingMessage",
+  "description": "Сообщения содержащее даные о созданном обращении",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.message.HospitalizationMovingMessage",
+  "properties": {
+    "event": {
+      "description": "обращение",
+      "$ref": "../base/Event.json"
+    },
+    "moving": {
+      "description": "Экшен-движение пациента между отделениями",
+      "$ref": "../action/StationaryMoving.json"
+    }
+  },
+  "required": [
+    "event",
+    "moving"
+  ]
+}

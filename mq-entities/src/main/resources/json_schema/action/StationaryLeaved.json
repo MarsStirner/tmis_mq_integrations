@@ -1,0 +1,37 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/action/StationaryLeaved.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "StationaryLeaved",
+  "description": "Экшен-выписка в стационаре",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.action.StationaryLeaved",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентификатор экшена",
+      "minimum": 0
+    },
+    "status": {
+      "enum": [
+        "STARTED",
+        "WAIT",
+        "FINISHED"
+      ],
+      "description": "Статус экшена"
+    },
+    "begDate": {
+      "description": "Дата начала работы",
+      "type": "string",
+      "format": "date-time"
+    },
+    "endDate": {
+      "description": "Дата окончания работы",
+      "type": "string",
+      "format": "date-time"
+    },
+    "hospOutcome": {
+      "type": "string",
+      "description": "Исход госпитализации"
+    }
+  }
+}
