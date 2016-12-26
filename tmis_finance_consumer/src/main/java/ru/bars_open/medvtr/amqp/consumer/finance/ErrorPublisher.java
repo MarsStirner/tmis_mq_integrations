@@ -89,7 +89,7 @@ public class ErrorPublisher {
                 .build();
         if(ATTEMPS_LIMIT < attempts){
             log.warn("#{} Message reach attempts limit", messageTag);
-            publishToErrorQueue(messageTag, exchange, routingKey, publishProperties, body, "Message reach attempts limit");
+            publishToErrorQueue(messageTag, exchange, publishProperties, body, "Message reach attempts limit");
         } else {
             publish(messageTag,  cfg.getValue(ConfigManager.ERROR_EXCHANGE), routingKey , publishProperties, body);
         }
@@ -98,7 +98,6 @@ public class ErrorPublisher {
     public void publishToErrorQueue(
             final long messageTag,
             final String exchange,
-            final String routingKey,
             final AMQP.BasicProperties props,
             final byte[] body,
             final String note
@@ -121,6 +120,6 @@ public class ErrorPublisher {
                 .appId(props.getAppId())
                 .clusterId(props.getClusterId())
                 .build();
-        publish(messageTag, exchange,  routingKey, publishProperties, body);
+        publish(messageTag, exchange, cfg.getValue(ConfigManager.ERROR_ROUTING_KEY), publishProperties, body);
     }
 }

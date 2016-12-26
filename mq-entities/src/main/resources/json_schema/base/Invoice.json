@@ -1,0 +1,34 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/Invoice.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Invoice",
+  "description": "Счет на оплату",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.Invoice",
+  "properties": {
+    "number": {
+      "description": "номер счета",
+      "type": "string"
+    },
+    "deleted": {
+      "description": "признак удаления счета",
+      "type": "boolean"
+    },
+    "contract":{
+      "description": "Контракт в рамках которого создан счет",
+      "$ref": "Contract.json"
+    },
+    "sum": {
+      "description": "сумма счета",
+      "type": "number"
+    },
+    "parent": {
+      "description": "Счет-родитель (текущий счет перевыставлен для счета ...)",
+      "$ref": "Invoice.json"
+    }
+  },
+  "required": [
+    "number",
+    "deleted"
+  ]
+}

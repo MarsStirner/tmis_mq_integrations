@@ -1,0 +1,22 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/message/InvoiceMessage.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "InvoiceMessage",
+  "description": "Сообщения содержащее даные о счете",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.message.InvoiceMessage",
+  "properties": {
+    "event": {
+      "description": "обращение",
+      "$ref": "../base/Event.json"
+    },
+    "invoice": {
+      "description": "данные счета",
+      "$ref": "../base/Invoice.json"
+    }
+  },
+  "required": [
+    "event",
+    "invoice"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/Event.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Event",
+  "description": "Обращение на лечение",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.Event",
+  "properties": {
+    "id": {
+      "description": "Идентифкатор",
+      "type": "integer"
+    },
+    "setDate": {
+      "description": "дата создания обращения",
+      "type": "string",
+      "format": "date-time"
+    },
+    "externalId": {
+      "description": "номер обращения",
+      "type": "string"
+    },
+    "endDate": {
+      "description": "дата закрытия обращения",
+      "type": "string",
+      "format": "date-time"
+    },
+    "client": {
+      "type": "object",
+      "$ref": "Person.json",
+      "description": "пациент из обращения"
+    },
+    "contract":{
+      "type": "object",
+      "$ref": "Contract.json",
+      "description": "договор на лечение (контракт)"
+    }
+  },
+  "required": [
+    "id",
+    "externalId"
+  ]
+}

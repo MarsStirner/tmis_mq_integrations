@@ -1,0 +1,27 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/orgStructure.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "OrgStructure",
+  "description": "Отделение больницы",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.OrgStructure",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентифкатор МИС",
+      "minimum": 0
+    },
+    "code": {
+      "type": "string",
+      "description": "Код записи справочника"
+    },
+    "name": {
+      "type": "string",
+      "description": "Наименование записи справочника"
+    }
+  },
+  "required": [
+    "id",
+    "code"
+  ]
+}

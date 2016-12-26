@@ -5,15 +5,19 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.ShutdownSignalException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.bars_open.medvtr.mq.entities.finance.Invoice;
+import ru.bars_open.medvtr.mq.entities.message.InvoiceMessage;
+import ru.bars_open.medvtr.mq.util.DeserializationFactory;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.charset.UnsupportedCharsetException;
 
 /**
  * Author: Upatov Egor <br>
@@ -28,7 +32,6 @@ public class ConsumerRefund extends com.rabbitmq.client.DefaultConsumer {
     private final String queueName;
 
     private final String errorExchange;
-    private final String errorRoutingKey;
 
     @Autowired
     private ObjectMapper mapper;
@@ -51,7 +54,6 @@ public class ConsumerRefund extends com.rabbitmq.client.DefaultConsumer {
         log.info("Start init Consumer [@{}]", Integer.toHexString(this.hashCode()));
         this.queueName = cfg.getValue(ConfigManager.QUEUE_REFUND);
         this.errorExchange = cfg.getValue(ConfigManager.ERROR_EXCHANGE);
-        this.errorRoutingKey = cfg.getValue(ConfigManager.ERROR_ROUTING_KEY);
     }
 
     @PostConstruct
@@ -70,44 +72,74 @@ public class ConsumerRefund extends com.rabbitmq.client.DefaultConsumer {
             final String consumerTag, final Envelope envelope, final AMQP.BasicProperties properties, final byte[] body
     ) throws IOException {
         final long tag = envelope.getDeliveryTag();
-        final String message = new String(body, StandardCharsets.UTF_8);
-        log.info("#{} Receive new message: '{}'", tag, message);
+        final Charset encoding = getEncoding(tag, properties.getContentEncoding());
+        log.info("#{} Receive new message[{}]: '{}'", tag, encoding.displayName(), new String(body, encoding));
         if (log.isDebugEnabled()) {
             final StringBuilder sb = new StringBuilder("#").append(tag).append(" MessageProperties");
             properties.appendPropertyDebugStringTo(sb);
             log.debug("{}", sb.toString());
         }
         try {
-            final Invoice invoice = parseInvoiceFromText(tag, message);
-            if (invoice != null) {
-                if( invoice.getParent() == null){
-                    log.warn("#{} Invoice hasnt Parent, but stored in this queue['{}']", tag, queueName);
-                }
-                final String wsResult = webservice.sendRefund(tag, invoice);
+            final InvoiceMessage message = DeserializationFactory.parse(body,
+                                                                        properties.getContentType(),
+                                                                        properties.getContentEncoding(),
+                                                                        InvoiceMessage.class
+            );
+            if (validateMessage(tag, message)) {
+                final String wsResult = webservice.sendRefund(tag, message);
                 log.info("#{} End. Successfully.", tag);
             } else {
-                log.error("#{} Message has unknown format, Skip it!", tag);
-                publisher.publishToErrorQueue(tag, errorExchange, errorRoutingKey, properties, body, "Message has unknown format");
+                log.error("#{} Message is not valid. Skip it!", tag);
+                publisher.publishToErrorQueue(tag, errorExchange, properties, body, "Message is not valid");
             }
         } catch (final Exception e) {
             log.error("#{} Exception occurred:", tag, e);
-            publisher.publishWithDelay(tag, errorExchange, envelope.getRoutingKey(), properties, body, "Exception occurred " + e.getMessage(), 120000);
+            publisher.publishWithDelay(
+                    tag,
+                    errorExchange,
+                    envelope.getRoutingKey(),
+                    properties,
+                    body,
+                    "Exception occurred " + e.getMessage(),
+                    120000
+            );
         }
     }
 
-
-    private Invoice parseInvoiceFromText(final long messageTag, final String message) {
-        try {
-            final Invoice result = mapper.readValue(message, Invoice.class);
-            if (result.getEvent() == null || result.getClient() == null || result.getPayer() == null || result.getInvoiceData() == null) {
-                log.error("#{} Cannot parse Message to Invoice", messageTag);
-                return null;
+    private Charset getEncoding(final long tag, final String contentEncoding) {
+        if (StringUtils.isNotEmpty(contentEncoding)) {
+            try {
+                return Charset.forName(contentEncoding);
+            } catch (UnsupportedCharsetException e) {
+                log.warn("#{}: Encoding with name '{}' is not supported, will use UTF-8", tag, contentEncoding);
+                return StandardCharsets.UTF_8;
             }
-            log.info("#{} Parsed: {}", messageTag, result);
-            return result;
-        } catch (IOException e) {
-            log.error("#{} Exception while parse JSON from text", messageTag, e.getMessage(), message);
-            return null;
         }
+        log.warn("#{}: Encoding not set, will use UTF-8", tag, contentEncoding);
+        return StandardCharsets.UTF_8;
+    }
+
+
+    private boolean validateMessage(final long messageTag, final InvoiceMessage message) {
+        if (message == null) {
+            log.warn("#{}: message is null", messageTag);
+            return false;
+        } else if (message.getEvent() == null) {
+            log.warn("#{}: message has empty Event", messageTag);
+            return false;
+        } else if (message.getEvent().getClient() == null) {
+            log.warn("#{}: message has empty Event.Client", messageTag);
+            return false;
+        } else if (message.getInvoice() == null) {
+            log.warn("#{}: message has empty Invoice", messageTag);
+            return false;
+        } else if (message.getInvoice().getContract() == null) {
+            log.warn("#{}: message has empty Invoice.Contract", messageTag);
+            return false;
+        } else if (message.getInvoice().getContract().getPayer() == null) {
+            log.warn("#{}: message has empty Invoice.Contract.Payer", messageTag);
+            return false;
+        }
+        return true;
     }
 }

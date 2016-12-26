@@ -1,0 +1,43 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/action/StationaryReceived.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "StationaryReceived",
+  "description": "Экшен-поступления в стационаре",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.action.StationaryReceived",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентификатор экшена",
+      "minimum": 0
+    },
+    "status": {
+      "enum": [
+        "STARTED",
+        "WAIT",
+        "FINISHED"
+      ],
+      "description": "Статус экшена"
+    },
+    "begDate": {
+      "description": "Дата начала работы",
+      "type": "string",
+      "format": "date-time"
+    },
+    "endDate": {
+      "description": "Дата окончания работы",
+      "type": "string",
+      "format": "date-time"
+    },
+    "orgStructStay": {
+      "type": "object",
+      "$ref": "../base/OrgStructure.json",
+      "description": "Отделение поступления"
+    },
+    "orgStructDirection": {
+      "type": "object",
+      "$ref": "../base/OrgStructure.json",
+      "description": "Направлен в отделение"
+    }
+  }
+}

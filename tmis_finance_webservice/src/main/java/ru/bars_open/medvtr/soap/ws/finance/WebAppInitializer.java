@@ -27,7 +27,7 @@ public class WebAppInitializer implements WebApplicationInitializer {
         final MessageDispatcherServlet servlet = new MessageDispatcherServlet();
         servlet.setApplicationContext(context);
         servlet.setTransformWsdlLocations(true);
-           final ServletRegistration.Dynamic dynamic = servletContext.addServlet("spring-ws",servlet);
+        final ServletRegistration.Dynamic dynamic = servletContext.addServlet("spring-ws",servlet);
         dynamic.addMapping("/*");
         dynamic.setLoadOnStartup(1);
         log.info("[{}] End initialization of application. Good luck!", context.getId());

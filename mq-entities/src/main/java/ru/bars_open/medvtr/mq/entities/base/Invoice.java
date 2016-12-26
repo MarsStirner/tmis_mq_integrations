@@ -1,5 +1,5 @@
 
-package ru.bars_open.medvtr.mq.entities.finance;
+package ru.bars_open.medvtr.mq.entities.base;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -17,50 +17,71 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 
 /**
- * invoice_data
+ * Invoice
  * <p>
- * Данные счета
+ * Счет на оплату
  * 
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "number",
     "deleted",
-    "sum"
+    "contract",
+    "sum",
+    "parent"
 })
-public class InvoiceData implements Serializable
+public class Invoice implements Serializable
 {
 
     /**
      * номер счета
+     * (Required)
      * 
      */
     @JsonProperty("number")
-    @JsonPropertyDescription("")
+    @JsonPropertyDescription("\u043d\u043e\u043c\u0435\u0440 \u0441\u0447\u0435\u0442\u0430")
     private String number;
     /**
      * признак удаления счета
+     * (Required)
      * 
      */
     @JsonProperty("deleted")
-    @JsonPropertyDescription("")
+    @JsonPropertyDescription("\u043f\u0440\u0438\u0437\u043d\u0430\u043a \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u044f \u0441\u0447\u0435\u0442\u0430")
     private Boolean deleted;
+    /**
+     * Contract
+     * <p>
+     * Договор на лечение (контракт)
+     * 
+     */
+    @JsonProperty("contract")
+    @JsonPropertyDescription("\u0414\u043e\u0433\u043e\u0432\u043e\u0440 \u043d\u0430 \u043b\u0435\u0447\u0435\u043d\u0438\u0435 (\u043a\u043e\u043d\u0442\u0440\u0430\u043a\u0442)")
+    private Contract contract;
     /**
      * сумма счета
      * 
      */
     @JsonProperty("sum")
-    @JsonPropertyDescription("")
+    @JsonPropertyDescription("\u0441\u0443\u043c\u043c\u0430 \u0441\u0447\u0435\u0442\u0430")
     private Double sum;
+    /**
+     * Invoice
+     * <p>
+     * Счет на оплату
+     * 
+     */
+    @JsonProperty("parent")
+    @JsonPropertyDescription("\u0421\u0447\u0435\u0442 \u043d\u0430 \u043e\u043f\u043b\u0430\u0442\u0443")
+    private Invoice parent;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = 5259556197277165239L;
+    private final static long serialVersionUID = 6579423106579045452L;
 
     /**
      * номер счета
+     * (Required)
      * 
-     * @return
-     *     The number
      */
     @JsonProperty("number")
     public String getNumber() {
@@ -69,9 +90,8 @@ public class InvoiceData implements Serializable
 
     /**
      * номер счета
+     * (Required)
      * 
-     * @param number
-     *     The number
      */
     @JsonProperty("number")
     public void setNumber(String number) {
@@ -80,9 +100,8 @@ public class InvoiceData implements Serializable
 
     /**
      * признак удаления счета
+     * (Required)
      * 
-     * @return
-     *     The deleted
      */
     @JsonProperty("deleted")
     public Boolean getDeleted() {
@@ -91,9 +110,8 @@ public class InvoiceData implements Serializable
 
     /**
      * признак удаления счета
+     * (Required)
      * 
-     * @param deleted
-     *     The deleted
      */
     @JsonProperty("deleted")
     public void setDeleted(Boolean deleted) {
@@ -101,10 +119,30 @@ public class InvoiceData implements Serializable
     }
 
     /**
+     * Contract
+     * <p>
+     * Договор на лечение (контракт)
+     * 
+     */
+    @JsonProperty("contract")
+    public Contract getContract() {
+        return contract;
+    }
+
+    /**
+     * Contract
+     * <p>
+     * Договор на лечение (контракт)
+     * 
+     */
+    @JsonProperty("contract")
+    public void setContract(Contract contract) {
+        this.contract = contract;
+    }
+
+    /**
      * сумма счета
      * 
-     * @return
-     *     The sum
      */
     @JsonProperty("sum")
     public Double getSum() {
@@ -114,12 +152,32 @@ public class InvoiceData implements Serializable
     /**
      * сумма счета
      * 
-     * @param sum
-     *     The sum
      */
     @JsonProperty("sum")
     public void setSum(Double sum) {
         this.sum = sum;
+    }
+
+    /**
+     * Invoice
+     * <p>
+     * Счет на оплату
+     * 
+     */
+    @JsonProperty("parent")
+    public Invoice getParent() {
+        return parent;
+    }
+
+    /**
+     * Invoice
+     * <p>
+     * Счет на оплату
+     * 
+     */
+    @JsonProperty("parent")
+    public void setParent(Invoice parent) {
+        this.parent = parent;
     }
 
     @Override
@@ -139,7 +197,7 @@ public class InvoiceData implements Serializable
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(number).append(deleted).append(sum).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(number).append(deleted).append(contract).append(sum).append(parent).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -147,11 +205,11 @@ public class InvoiceData implements Serializable
         if (other == this) {
             return true;
         }
-        if ((other instanceof InvoiceData) == false) {
+        if ((other instanceof Invoice) == false) {
             return false;
         }
-        InvoiceData rhs = ((InvoiceData) other);
-        return new EqualsBuilder().append(number, rhs.number).append(deleted, rhs.deleted).append(sum, rhs.sum).append(additionalProperties, rhs.additionalProperties).isEquals();
+        Invoice rhs = ((Invoice) other);
+        return new EqualsBuilder().append(number, rhs.number).append(deleted, rhs.deleted).append(contract, rhs.contract).append(sum, rhs.sum).append(parent, rhs.parent).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

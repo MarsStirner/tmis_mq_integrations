@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.bars_open.medvtr.mq.entities.finance.Invoice;
+import ru.bars_open.medvtr.mq.entities.message.InvoiceMessage;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -29,7 +29,6 @@ public class ConsumerCreated extends com.rabbitmq.client.DefaultConsumer {
     private final String queueName;
 
     private final String errorExchange;
-    private final String errorRoutingKey;
 
     @Autowired
     private ObjectMapper mapper;
@@ -52,7 +51,6 @@ public class ConsumerCreated extends com.rabbitmq.client.DefaultConsumer {
         log.info("Start init Consumer [@{}]", Integer.toHexString(this.hashCode()));
         this.queueName = cfg.getValue(ConfigManager.QUEUE_CREATED);
         this.errorExchange = cfg.getValue(ConfigManager.ERROR_EXCHANGE);
-        this.errorRoutingKey = cfg.getValue(ConfigManager.ERROR_ROUTING_KEY);
     }
 
     @PostConstruct
@@ -71,26 +69,26 @@ public class ConsumerCreated extends com.rabbitmq.client.DefaultConsumer {
             final String consumerTag, final Envelope envelope, final AMQP.BasicProperties properties, final byte[] body
     ) throws IOException {
         final long tag = envelope.getDeliveryTag();
-        final String message = new String(body, StandardCharsets.UTF_8);
-        log.info("#{} Receive new message: '{}'", tag, message);
+        final String messageAsText = new String(body, StandardCharsets.UTF_8);
+        log.info("#{} Receive new messageAsText: '{}'", tag, messageAsText);
         if (log.isDebugEnabled()) {
             final StringBuilder sb = new StringBuilder("#").append(tag).append(" MessageProperties");
             properties.appendPropertyDebugStringTo(sb);
             log.debug("{}", sb.toString());
         }
         try {
-            final Invoice invoice = parseInvoiceFromText(tag, message);
-            if (invoice != null) {
-                final int wsResult = webservice.sendInvoice(tag, invoice, false);
-                if (Objects.equals(wsResult, invoice.getEvent().getId())) {
+            final InvoiceMessage message = parseInvoiceFromText(tag, messageAsText);
+            if (message != null) {
+                final int wsResult = webservice.sendInvoice(tag, message, false);
+                if (Objects.equals(wsResult, message.getEvent().getId())) {
                     log.info("#{} End. Successfully.", tag);
                 } else {
-                    log.warn("#{} WS result is not correct. Expected[{}], actual[{}]", tag, invoice.getEvent().getId(), wsResult);
+                    log.warn("#{} WS result is not correct. Expected[{}], actual[{}]", tag, message.getEvent().getId(), wsResult);
                     publisher.publishWithDelay(tag, errorExchange, envelope.getRoutingKey(), properties, body, "WS result is not correct: " + wsResult,  60000);
                 }
             } else {
                 log.error("#{} Message has unknown format, Skip it!", tag);
-                publisher.publishToErrorQueue(tag, errorExchange, errorRoutingKey, properties, body, "Message has unknown format");
+                publisher.publishToErrorQueue(tag, errorExchange, properties, body, "Message has unknown format");
             }
         } catch (final Exception e) {
             log.error("#{} Exception occurred:", tag, e);
@@ -99,10 +97,10 @@ public class ConsumerCreated extends com.rabbitmq.client.DefaultConsumer {
     }
 
 
-    private Invoice parseInvoiceFromText(final long messageTag, final String message) {
+    private InvoiceMessage parseInvoiceFromText(final long messageTag, final String message) {
         try {
-            final Invoice result = mapper.readValue(message, Invoice.class);
-            if (result.getEvent() == null || result.getClient() == null || result.getPayer() == null || result.getInvoiceData() == null) {
+            final InvoiceMessage result = mapper.readValue(message, InvoiceMessage.class);
+            if (result.getEvent() == null || result.getEvent().getClient() == null || result.getEvent().getContract().getPayer() == null || result.getInvoice() == null) {
                 log.error("#{} Cannot parse Message to Invoice", messageTag);
                 return null;
             }

@@ -1,0 +1,22 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/message/HospitalizationCreateMessage.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "HospitalizationCreatedMessage",
+  "description": "Сообщения содержащее даные о созданном обращении",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.message.HospitalizationCreateMessage",
+  "properties": {
+    "event": {
+      "description": "обращение",
+      "$ref": "../base/Event.json"
+    },
+    "received": {
+      "description": "Экшен-поступление",
+      "$ref": "../action/StationaryReceived.json"
+    }
+  },
+  "required": [
+    "event",
+    "received"
+  ]
+}

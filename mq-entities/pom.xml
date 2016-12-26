@@ -24,12 +24,30 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!-- Jackson 2 - используется как сериализатор \ десериализатор в JSON -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
         </dependency>
         <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -37,7 +55,7 @@
             <plugin>
                 <groupId>org.jsonschema2pojo</groupId>
                 <artifactId>jsonschema2pojo-maven-plugin</artifactId>
-                <version>0.4.27</version>
+                <version>0.4.29</version>
                 <configuration>
                     <sourceDirectory>${basedir}/src/main/resources/json_schema/</sourceDirectory>
                     <targetPackage>ru.bars_open.medvtr.mq.entities</targetPackage>
@@ -51,7 +69,7 @@
                     <serializable>true</serializable>
 
                     <outputEncoding>UTF-8</outputEncoding>
-                    <removeOldOutput>true</removeOldOutput>
+                    <removeOldOutput>false</removeOldOutput>
                     <outputDirectory>${project.basedir}/src/main/java</outputDirectory>
                 </configuration>
                 <executions>

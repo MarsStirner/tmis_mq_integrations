@@ -11,7 +11,7 @@ import ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.ExchangeMI
 import ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.ObjectFactory;
 import ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.PersonName;
 import ru.bars_open.medvtr.amqp.consumer.finance.util.SHandler;
-import ru.bars_open.medvtr.mq.entities.Person;
+import ru.bars_open.medvtr.mq.entities.base.Person;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;

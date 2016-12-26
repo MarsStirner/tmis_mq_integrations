@@ -1,0 +1,37 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/Action.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Action",
+  "description": "Экшен",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.Action",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентификатор экшена",
+      "minimum": 0
+    },
+    "status": {
+      "enum": [
+        "STARTED",
+        "WAIT",
+        "FINISHED"
+      ],
+      "description": "Статус экшена"
+    },
+    "begDate": {
+      "description": "Дата начала работы",
+      "type": "string",
+      "format": "date-time"
+    },
+    "endDate": {
+      "description": "Дата окончания работы",
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "code"
+  ]
+}
