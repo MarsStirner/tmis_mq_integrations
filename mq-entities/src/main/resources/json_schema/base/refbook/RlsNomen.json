@@ -1,0 +1,51 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/refbook/RlsNomen.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "RlsNomen",
+  "description": "Справочник РЛС",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.RlsNomen",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентифкатор МИС",
+      "minimum": 0
+    },
+    "actMatters": {
+      "description": "Действующие вещества",
+      "$ref": "RlsActMatters.json"
+    },
+    "tradeName": {
+      "description": "Торговое название",
+      "$ref": "RlsTradeName.json"
+    },
+    "form": {
+      "description": "Вид лекарственной формы",
+      "$ref": "RlsForm.json"
+    },
+    "packaging": {
+      "description": "Упаковка",
+      "$ref": "RlsPackaging.json"
+    },
+    "filling": {
+      "description": "Фасовка",
+      "$ref": "RlsFilling.json"
+    },
+    "unit": {
+      "description": "Единица измерения",
+      "$ref": "RbUnit.json"
+    },
+    "dose": {
+      "description": "дозировка",
+      "$ref": "../util/ValueAndUnit.json"
+    },
+    "drugLifeTime": {
+      "description": "Срок годности препарата в месяцах",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "id",
+    "tradeName"
+  ]
+}

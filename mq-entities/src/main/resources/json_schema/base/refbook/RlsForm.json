@@ -1,0 +1,23 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/refbook/RlsForm.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "RlsForm",
+  "description": "РЛС Форма выпуска ЛС",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.RlsForm",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентифкатор МИС",
+      "minimum": 0
+    },
+    "name": {
+      "type": "string",
+      "description": "наименование"
+    }
+  },
+  "required": [
+    "id",
+    "name"
+  ]
+}

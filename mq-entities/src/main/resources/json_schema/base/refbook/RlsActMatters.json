@@ -1,0 +1,26 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/refbook/RlsActMatters.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "RlsActMatters",
+  "description": "РЛС Наименование Действующих Средств",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.RlsActMatters",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентифкатор МИС",
+      "minimum": 0
+    },
+    "name": {
+      "type": "string",
+      "description": "Международное наименование"
+    },
+    "localName": {
+      "type": "string",
+      "description": "Локальное наименование"
+    }
+  },
+  "required": [
+    "id"
+  ]
+}

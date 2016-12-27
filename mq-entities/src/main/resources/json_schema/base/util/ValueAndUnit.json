@@ -1,0 +1,22 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/util/ValueAndUnit.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ValueAndUnit",
+  "description": "Структура содержащая единицу измерения и само значение",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.util.ValueAndUnit",
+  "properties": {
+    "value": {
+      "type": "number",
+      "description": "Значение"
+    },
+    "unit": {
+      "description": "Единица измерения",
+      "$ref": "../refbook/RbUnit.json"
+    }
+  },
+  "required": [
+    "value",
+    "unit"
+  ]
+}

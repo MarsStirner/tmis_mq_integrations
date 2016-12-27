@@ -1,0 +1,22 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/message/PrescriptionListMessage.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "PrescriptionListMessage",
+  "description": "Сообщения содержащее даные о ЛН",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.message.PrescriptionListMessage",
+  "properties": {
+    "event": {
+      "description": "обращение",
+      "$ref": "../base/Event.json"
+    },
+    "prescription": {
+      "description": "экшен с ЛН",
+      "$ref": "../action/PrescriptionAction.json"
+    }
+  },
+  "required": [
+    "event",
+    "invoice"
+  ]
+}

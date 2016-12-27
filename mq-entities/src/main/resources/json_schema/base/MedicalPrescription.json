@@ -1,0 +1,59 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/MedicalPrescription.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "MedicalPrescription",
+  "description": "Лекарственное назначение (ЛН)",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.MedicalPrescription",
+  "properties": {
+    "id": {
+      "description": "Идентифкатор",
+      "type": "integer"
+    },
+    "rls": {
+      "description": "Назначенный препарат",
+      "$ref": "refbook/RlsNomen.json"
+    },
+    "status": {
+      "description": "Статус назначения",
+      "enum": [
+        "STARTED",
+        "WAIT",
+        "FINISHED"
+      ]
+    },
+    "dose": {
+      "description": "дозировка",
+      "$ref": "util/ValueAndUnit.json"
+    },
+    "frequency": {
+      "description": "частота ввдения препарата",
+      "$ref": "util/ValueAndUnit.json"
+    },
+    "duration": {
+      "description": "Длительность",
+      "$ref": "util/ValueAndUnit.json"
+    },
+    "begDate": {
+      "description": "Дата начала ЛН",
+      "type": "string",
+      "format": "date-time"
+    },
+    "note": {
+      "type": "string",
+      "description": "Примечание"
+    },
+    "reasonOfCancel": {
+      "type": "string",
+      "description": "Причина отмены"
+    }
+  },
+  "required": [
+    "id",
+    "action",
+    "rls",
+    "dose",
+    "frequency",
+    "duration"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/refbook/RlsTradeName.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "RlsTradeName",
+  "description": "РЛС Торговые наименования препаратов",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.RlsTradeName",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентифкатор МИС",
+      "minimum": 0
+    },
+    "name": {
+      "type": "string",
+      "description": "Международное наименование"
+    },
+    "localName": {
+      "type": "string",
+      "description": "Локальное наименование"
+    }
+  },
+  "required": [
+    "id"
+  ]
+}

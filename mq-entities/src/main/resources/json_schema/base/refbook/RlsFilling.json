@@ -1,0 +1,23 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/refbook/RlsFilling.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "RlsFilling",
+  "description": "РЛС Форма фасовки ЛС",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.RlsFilling",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентифкатор МИС",
+      "minimum": 0
+    },
+    "name": {
+      "type": "string",
+      "description": "наименование"
+    }
+  },
+  "required": [
+    "id",
+    "name"
+  ]
+}

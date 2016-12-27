@@ -1,0 +1,23 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/refbook/RlsPackaging.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "RlsPackaging",
+  "description": "РЛС Форма упаковки",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.RlsPackaging",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентифкатор МИС",
+      "minimum": 0
+    },
+    "name": {
+      "type": "string",
+      "description": "наименование"
+    }
+  },
+  "required": [
+    "id",
+    "name"
+  ]
+}

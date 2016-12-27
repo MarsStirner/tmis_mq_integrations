@@ -1,0 +1,40 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/action/PrescriptionAction.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "PrescriptionAction",
+  "description": "Экшен cо списком ЛН",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.action.PrescriptionAction",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентификатор экшена",
+      "minimum": 0
+    },
+    "status": {
+      "enum": [
+        "STARTED",
+        "WAIT",
+        "FINISHED"
+      ],
+      "description": "Статус экшена"
+    },
+    "begDate": {
+      "description": "Дата начала работы",
+      "type": "string",
+      "format": "date-time"
+    },
+    "endDate": {
+      "description": "Дата окончания работы",
+      "type": "string",
+      "format": "date-time"
+    },
+    "prescriptions": {
+      "type": "array",
+      "description": "список ЛН",
+      "items": {
+         "$ref": "../base/MedicalPrescription.json"
+      }
+    }
+  }
+}

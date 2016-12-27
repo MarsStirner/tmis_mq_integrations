@@ -1,0 +1,31 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/refbook/RbUnit.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "RbUnit",
+  "description": "Справочник Единиц Измерения",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.RbUnit",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентифкатор МИС",
+      "minimum": 0
+    },
+    "code": {
+      "type": "string",
+      "description": "Код записи справочника"
+    },
+    "name": {
+      "type": "string",
+      "description": "Наименование записи справочника"
+    },
+    "shortName": {
+      "type": "string",
+      "description": "Краткое наименование записи справочника"
+    }
+  },
+  "required": [
+    "id",
+    "code"
+  ]
+}
