@@ -3,7 +3,7 @@ APP_NAME: "mq_integration_finance"                        # used for ConfigManag
 
 consumer:
   tag: "TMIS_FINANCE_CONSUMER"
-  uuid: "CAFEBABE-2016-1216-1631-DF45F05FB807"
+  uuid: "CAFEBABE-2016-1228-1657-DF45F05FB808"
 
 # THIS PART SHOULD BE OVVERIDEN BY CCS (Central ConfigService)
 

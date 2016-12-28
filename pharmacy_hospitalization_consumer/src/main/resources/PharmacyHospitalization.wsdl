@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap12bind="http://schemas.xmlsoap.org/wsdl/soap12/"
+             xmlns:soapbind="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://schemas.xmlsoap.org/soap/envelope"
+             name="PharmacyHospitalization"
+             targetNamespace="http://schemas.xmlsoap.org/soap/envelope">
+    <types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   targetNamespace="http://schemas.xmlsoap.org/soap/envelope"
+                   attributeFormDefault="unqualified"
+                   elementFormDefault="qualified">
+            <!--Пол-->
+            <xs:simpleType name="Sex">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="MALE"/>
+                    <xs:enumeration value="FEMALE"/>
+                    <xs:enumeration value="UNKNOWN"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <!--Тип адреса-->
+            <xs:simpleType name="AddressType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="REGISTRATION"/>
+                    <xs:enumeration value="LIVING"/>
+                    <xs:enumeration value="UNKNOWN"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <!--Статус экшена-->
+            <xs:simpleType name="Status">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="STARTED"/>
+                    <xs:enumeration value="WAIT"/>
+                    <xs:enumeration value="FINISHED"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <!--Отделение-->
+            <xs:complexType name="OrgStructure">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Код записи справочника -->
+                    <xs:element name="code" type="xs:string"/>
+                    <!--Наименование записи справочника -->
+                    <xs:element name="name" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Экшен-поступление-->
+            <xs:complexType name="StationaryReceived">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Тип адреса -->
+                    <xs:element name="status" type="tns:Status"/>
+                    <!--дата+время начала-->
+                    <xs:element name="begDate" type="xs:date"/>
+                    <!--дата+время окончания-->
+                    <xs:element name="endDate" type="xs:date"/>
+                    <!--Отделение поступления-->
+                    <xs:element name="orgStructStay" type="tns:OrgStructure"/>
+                    <!--Направлен в отделение-->
+                    <xs:element name="orgStructDirection" type="tns:OrgStructure"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Экшен-движение (перевод между отделениями)-->
+            <xs:complexType name="StationaryMoving">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Тип адреса -->
+                    <xs:element name="status" type="tns:Status"/>
+                    <!--дата+время начала-->
+                    <xs:element name="begDate" type="xs:date"/>
+                    <!--дата+время окончания-->
+                    <xs:element name="endDate" type="xs:date"/>
+                    <!--Переведен из отделения-->
+                    <xs:element name="orgStructReceived" type="tns:OrgStructure"/>
+                    <!--Отделение пребывания-->
+                    <xs:element name="orgStructStay" type="tns:OrgStructure"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Экшен-выписка-->
+            <xs:complexType name="StationaryLeaved">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Тип адреса -->
+                    <xs:element name="status" type="tns:Status"/>
+                    <!--дата+время начала-->
+                    <xs:element name="begDate" type="xs:date"/>
+                    <!--дата+время окончания-->
+                    <xs:element name="endDate" type="xs:date"/>
+                    <!--Исход госпитализации-->
+                    <xs:element name="hospOutcome" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Адрес-->
+            <xs:complexType name="Address">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Тип адреса -->
+                    <xs:element name="addressType" type="tns:AddressType"/>
+                    <!--Значение адреса -->
+                    <xs:element name="value" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Пациент-->
+            <xs:complexType name="Person">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Фамилия -->
+                    <xs:element name="lastName" type="xs:string"/>
+                    <!--Имя -->
+                    <xs:element name="firstName" type="xs:string"/>
+                    <!--Отчество -->
+                    <xs:element name="patrName" type="xs:string"/>
+                    <!--Пол -->
+                    <xs:element name="sex" type="tns:Sex"/>
+                    <!--Дата рождения -->
+                    <xs:element name="birthDate" type="xs:date"/>
+                    <!--Адреса -->
+                    <xs:element name="addresses" maxOccurs="unbounded" type="tns:Address"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Контракт-->
+            <xs:complexType name="RbFinance">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Код записи справочника -->
+                    <xs:element name="code" type="xs:string"/>
+                    <!--Наименование записи справочника -->
+                    <xs:element name="name" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Контракт-->
+            <xs:complexType name="Contract">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--плательщик -->
+                    <xs:element name="payer" type="tns:Person"/>
+                    <!--номер договора -->
+                    <xs:element name="number" type="xs:string"/>
+                    <!--дата+врем подписания договора-->
+                    <xs:element name="signDate" type="xs:date"/>
+                    <!--дата+время начала действия договора-->
+                    <xs:element name="begDate" type="xs:date"/>
+                    <!--дата+время окончания действия договора-->
+                    <xs:element name="endDate" type="xs:date"/>
+                    <!--Источник финансирования договора-->
+                    <xs:element name="finance" type="tns:RbFinance"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Обращение (Госпитализация)-->
+            <xs:complexType name="Event">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Дата/время создания обращения -->
+                    <xs:element name="setDate" type="xs:date"/>
+                    <!--Номер ИБ (истории болезни)-->
+                    <xs:element name="externalId" type="xs:string"/>
+                    <!--Дата/время закрытия обращения -->
+                    <xs:element name="endDate" type="xs:date"/>
+                    <!--Пациент (к которому привязано Обращение) -->
+                    <xs:element name="client" type="tns:Person"/>
+                    <!--Контракт, в рамках которого проводится лечение в этом обращении (счета могут выставляться на доп контракты)-->
+                    <xs:element name="contract" type="tns:Contract"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="createHospitalization">
+                <xs:complexType>
+                    <xs:sequence>
+                        <!--Обращение (Госпитализация)-->
+                        <xs:element name="event" type="tns:Event"/>
+                        <!--Поступление-->
+                        <xs:element name="received" type="tns:StationaryReceived"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createHospitalizationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="return" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addMoving">
+                <xs:complexType>
+                    <xs:sequence>
+                        <!--Обращение (Госпитализация)-->
+                        <xs:element name="event" type="tns:Event"/>
+                        <!--Движение-->
+                        <xs:element name="moving" type="tns:StationaryMoving"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addMovingResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="return" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="closeHospitalization">
+                <xs:complexType>
+                    <xs:sequence>
+                        <!--Обращение (Госпитализация)-->
+                        <xs:element name="event" type="tns:Event"/>
+                        <!--Выписка-->
+                        <xs:element name="leaved" type="tns:StationaryLeaved"/>
+                        <!--Список движений на момент выписки-->
+                        <xs:element name="moves" type="tns:StationaryMoving" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="closeHospitalizationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="return" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </types>
+    <message name="createHospitalizationRequestMessage">
+        <part name="parameters" element="tns:createHospitalization"/>
+    </message>
+    <message name="createHospitalizationResponseMessage">
+        <part name="parameters" element="tns:createHospitalizationResponse"/>
+    </message>
+    <message name="addMovingRequestMessage">
+        <part name="parameters" element="tns:addMoving"/>
+    </message>
+    <message name="addMovingResponseMessage">
+        <part name="parameters" element="tns:addMovingResponse"/>
+    </message>
+    <message name="closeHospitalizationRequestMessage">
+        <part name="parameters" element="tns:closeHospitalization"/>
+    </message>
+    <message name="closeHospitalizationResponseMessage">
+        <part name="parameters" element="tns:closeHospitalizationResponse"/>
+    </message>
+    <portType name="PharmacyHospitalizationPortType">
+        <operation name="createHospitalization">
+            <input message="tns:createHospitalizationRequestMessage"/>
+            <output message="tns:createHospitalizationResponseMessage"/>
+        </operation>
+        <operation name="addMoving">
+            <input message="tns:addMovingRequestMessage"/>
+            <output message="tns:addMovingResponseMessage"/>
+        </operation>
+        <operation name="closeHospitalization">
+            <input message="tns:closeHospitalizationRequestMessage"/>
+            <output message="tns:closeHospitalizationResponseMessage"/>
+        </operation>
+    </portType>
+    <binding name="PharmacyHospitalizationSoapBinding" type="tns:PharmacyHospitalizationPortType">
+        <soapbind:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="createHospitalization">
+            <soapbind:operation style="document" soapAction="http://schemas.xmlsoap.org/soap/envelope#PharmacyHospitalization:createHospitalization"/>
+            <input>
+                <soapbind:body use="literal"/>
+            </input>
+            <output>
+                <soapbind:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="addMoving">
+            <soapbind:operation style="document" soapAction="http://schemas.xmlsoap.org/soap/envelope#PharmacyHospitalization:addMoving"/>
+            <input>
+                <soapbind:body use="literal"/>
+            </input>
+            <output>
+                <soapbind:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="closeHospitalization">
+            <soapbind:operation style="document" soapAction="http://schemas.xmlsoap.org/soap/envelope#PharmacyHospitalization:closeHospitalization"/>
+            <input>
+                <soapbind:body use="literal"/>
+            </input>
+            <output>
+                <soapbind:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <binding name="PharmacyHospitalizationSoap12Binding" type="tns:PharmacyHospitalizationPortType">
+        <soap12bind:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="createHospitalization">
+            <soap12bind:operation style="document"
+                                  soapAction="http://schemas.xmlsoap.org/soap/envelope#PharmacyHospitalization:createHospitalization"/>
+            <input>
+                <soap12bind:body use="literal"/>
+            </input>
+            <output>
+                <soap12bind:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="addMoving">
+            <soap12bind:operation style="document" soapAction="http://schemas.xmlsoap.org/soap/envelope#PharmacyHospitalization:addMoving"/>
+            <input>
+                <soap12bind:body use="literal"/>
+            </input>
+            <output>
+                <soap12bind:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="closeHospitalization">
+            <soap12bind:operation style="document"
+                                  soapAction="http://schemas.xmlsoap.org/soap/envelope#PharmacyHospitalization:closeHospitalization"/>
+            <input>
+                <soap12bind:body use="literal"/>
+            </input>
+            <output>
+                <soap12bind:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="PharmacyHospitalization">
+        <port name="PharmacyHospitalizationSoap" binding="tns:PharmacyHospitalizationSoapBinding">
+            <soapbind:address location="http://127.0.0.1/PharmacyHospitalization/ws/PharmacyHospitalization"/>
+        </port>
+        <port name="PharmacyHospitalizationSoap12" binding="tns:PharmacyHospitalizationSoap12Binding">
+            <soap12bind:address location="http://127.0.0.1/PharmacyHospitalization/ws/PharmacyHospitalization"/>
+        </port>
+    </service>
+</definitions>

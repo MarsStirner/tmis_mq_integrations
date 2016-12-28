@@ -7,7 +7,7 @@
     <parent>
         <groupId>ru.bars_open.medvtr</groupId>
         <artifactId>tmis_mq_integrations</artifactId>
-        <version>${version.parent}</version>
+        <version>LATEST</version>
         <relativePath>../</relativePath>
     </parent>
 

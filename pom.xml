@@ -49,6 +49,8 @@
             <modules>
                 <module>tmis_finance_consumer</module>
                 <module>tmis_finance_webservice</module>
+                <module>pharmacy_hospitalization_consumer</module>
+                <module>pharmacy_medical_prescriptions_consumer</module>
             </modules>
         </profile>
         <profile>
@@ -56,6 +58,13 @@
             <modules>
                 <module>tmis_finance_consumer</module>
                 <module>tmis_finance_webservice</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>1C_pharmacy</id>
+            <modules>
+                <module>pharmacy_hospitalization_consumer</module>
+                <module>pharmacy_medical_prescriptions_consumer</module>
             </modules>
         </profile>
     </profiles>
@@ -144,7 +153,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-
-
 </project>

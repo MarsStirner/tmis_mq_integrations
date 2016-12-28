@@ -2,16 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>tmis_mq_integrations</artifactId>
         <groupId>ru.bars_open.medvtr</groupId>
-        <version>${version.parent}</version>
+        <version>LATEST</version>
         <relativePath>../</relativePath>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
     <artifactId>tmis_finance_webservice</artifactId>
-    <name>[tmis-finance-ws] SOAP based WS for finance</name>
+    <name>[tmis-finance-ws] SOAP WS for finance</name>
     <description>SOAP WS for consume payment results from 1C</description>
     <version>1.0</version>
     <packaging>war</packaging>
