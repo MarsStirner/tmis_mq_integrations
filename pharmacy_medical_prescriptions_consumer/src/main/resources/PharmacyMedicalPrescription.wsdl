@@ -3,137 +3,308 @@
              xmlns:soap12bind="http://schemas.xmlsoap.org/wsdl/soap12/"
              xmlns:soapbind="http://schemas.xmlsoap.org/wsdl/soap/"
              xmlns:tns="http://schemas.xmlsoap.org/soap/envelope"
-             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-             xmlns:xsd1="http://schemas.xmlsoap.org/soap/envelope"
-             name="Exchange_MIS"
+             name="PharmacyMedicalPrescription"
              targetNamespace="http://schemas.xmlsoap.org/soap/envelope">
     <types>
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                   xmlns:xs1="http://schemas.xmlsoap.org/soap/envelope"
                    targetNamespace="http://schemas.xmlsoap.org/soap/envelope"
                    attributeFormDefault="unqualified"
                    elementFormDefault="qualified">
-            <xs:complexType name="PersonName">
+            <!--Пол-->
+            <xs:simpleType name="Sex">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="MALE"/>
+                    <xs:enumeration value="FEMALE"/>
+                    <xs:enumeration value="UNKNOWN"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <!--Тип адреса-->
+            <xs:simpleType name="AddressType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="REGISTRATION"/>
+                    <xs:enumeration value="LIVING"/>
+                    <xs:enumeration value="UNKNOWN"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <!--Статус экшена-->
+            <xs:simpleType name="Status">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="STARTED"/>
+                    <xs:enumeration value="WAIT"/>
+                    <xs:enumeration value="FINISHED"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <!--Источник финансирования-->
+            <xs:complexType name="RbUnit">
                 <xs:sequence>
-                    <xs:element name="family"
-                                type="xs:string"/>
-                    <xs:element name="given"
-                                type="xs:string"/>
-                    <xs:element name="partName"
-                                type="xs:string"/>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Код записи справочника -->
+                    <xs:element name="code" type="xs:string"/>
+                    <!--Наименование записи справочника -->
+                    <xs:element name="name" type="xs:string"/>
+                    <!--Краткое Наименование записи справочника -->
+                    <xs:element name="shortName" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
-            <xs:complexType name="ServiceCompleteInfo">
+            <!--РЛС Наименование Действующих Средств-->
+            <xs:complexType name="RlsActMatters">
                 <xs:sequence>
-                    <xs:element name="idAction"
-                                type="xs:int"/>
-                    <xs:element name="endDate"
-                                type="xs:date"/>
-                    <xs:element name="codeOfService"
-                                type="xs:string"/>
-                    <xs:element name="nameOfService"
-                                type="xs:string"/>
-                    <xs:element name="codeOfStruct"
-                                type="xs:int"/>
-                    <xs:element name="nameOfStruct"
-                                type="xs:string"/>
-                    <xs:element name="amount"
-                                type="xs:double"/>
-                    <xs:element name="isService"
-                                type="xs:boolean"/>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Международное наименование -->
+                    <xs:element name="name" type="xs:string"/>
+                    <!--Локальное наименование -->
+                    <xs:element name="localName" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
-            <xs:element name="putTreatment">
+            <!--РЛС Торговые наименования препаратов-->
+            <xs:complexType name="RlsTradeName">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Международное наименование -->
+                    <xs:element name="name" type="xs:string"/>
+                    <!--Локальное наименование -->
+                    <xs:element name="localName" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--РЛС Форма выпуска ЛС-->
+            <xs:complexType name="RlsForm">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--наименование -->
+                    <xs:element name="name" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--РЛС Форма упаковки-->
+            <xs:complexType name="RlsPackaging">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--наименование -->
+                    <xs:element name="name" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--РЛС Форма фасовки ЛС-->
+            <xs:complexType name="RlsFilling">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--наименование -->
+                    <xs:element name="name" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Справочник РЛС-->
+            <xs:complexType name="RlsNomen">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Действующие вещества-->
+                    <xs:element name="actMatters" type="tns:RlsActMatters"/>
+                    <!--Торговое название -->
+                    <xs:element name="tradeName" type="tns:RlsTradeName"/>
+                    <!--Вид лекарственной формы-->
+                    <xs:element name="form" type="tns:RlsForm"/>
+                    <!--Упаковка-->
+                    <xs:element name="packaging" type="tns:RlsPackaging"/>
+                    <!--Фасовка-->
+                    <xs:element name="filling" type="tns:RlsFilling"/>
+                    <!--Единица измерения-->
+                    <xs:element name="unit" type="tns:RbUnit"/>
+                    <!--дозировка-->
+                    <xs:element name="dose" type="tns:ValueAndUnit"/>
+                    <!--Срок годности препарата в месяцах-->
+                    <xs:element name="drugLifeTime" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Значение с единицей измерения-->
+            <xs:complexType name="ValueAndUnit">
+                <xs:sequence>
+                    <!--Значение -->
+                    <xs:element name="value" type="xs:double"/>
+                    <!--Значение -->
+                    <xs:element name="unit" type="tns:RbUnit"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Лекарственное назначение-->
+            <xs:complexType name="MedicalPrescription">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Назначенный препарат-->
+                    <xs:element name="rls" type="tns:RlsNomen"/>
+                    <!--Статус -->
+                    <xs:element name="status" type="tns:Status"/>
+                    <!--дозировка-->
+                    <xs:element name="dose" type="tns:ValueAndUnit"/>
+                    <!--частота ввдения препарата-->
+                    <xs:element name="frequency" type="tns:ValueAndUnit"/>
+                    <!--Длительность-->
+                    <xs:element name="duration" type="tns:ValueAndUnit"/>
+                    <!--Дата начала ЛН-->
+                    <xs:element name="begDate" type="xs:date"/>
+                    <!--Примечание-->
+                    <xs:element name="note" type="xs:string"/>
+                    <!--Причина отмены-->
+                    <xs:element name="reasonOfCancel" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Экшен со списком назначений-->
+            <xs:complexType name="PrescriptionAction">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Статус -->
+                    <xs:element name="status" type="tns:Status"/>
+                    <!--дата+время начала-->
+                    <xs:element name="begDate" type="xs:date"/>
+                    <!--дата+время окончания-->
+                    <xs:element name="endDate" type="xs:date"/>
+                    <!--Список ЛН-->
+                    <xs:element name="prescriptions" type="tns:MedicalPrescription" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Адрес-->
+            <xs:complexType name="Address">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Тип адреса -->
+                    <xs:element name="addressType" type="tns:AddressType"/>
+                    <!--Значение адреса -->
+                    <xs:element name="value" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Пациент-->
+            <xs:complexType name="Person">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Фамилия -->
+                    <xs:element name="lastName" type="xs:string"/>
+                    <!--Имя -->
+                    <xs:element name="firstName" type="xs:string"/>
+                    <!--Отчество -->
+                    <xs:element name="patrName" type="xs:string"/>
+                    <!--Пол -->
+                    <xs:element name="sex" type="tns:Sex"/>
+                    <!--Дата рождения -->
+                    <xs:element name="birthDate" type="xs:date"/>
+                    <!--Адреса -->
+                    <xs:element name="addresses" maxOccurs="unbounded" type="tns:Address"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Источник финансирования-->
+            <xs:complexType name="RbFinance">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Код записи справочника -->
+                    <xs:element name="code" type="xs:string"/>
+                    <!--Наименование записи справочника -->
+                    <xs:element name="name" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Контракт-->
+            <xs:complexType name="Contract">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--плательщик -->
+                    <xs:element name="payer" type="tns:Person"/>
+                    <!--номер договора -->
+                    <xs:element name="number" type="xs:string"/>
+                    <!--дата+врем подписания договора-->
+                    <xs:element name="signDate" type="xs:date"/>
+                    <!--дата+время начала действия договора-->
+                    <xs:element name="begDate" type="xs:date"/>
+                    <!--дата+время окончания действия договора-->
+                    <xs:element name="endDate" type="xs:date"/>
+                    <!--Источник финансирования договора-->
+                    <xs:element name="finance" type="tns:RbFinance"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Обращение (Госпитализация)-->
+            <xs:complexType name="Event">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Дата/время создания обращения -->
+                    <xs:element name="setDate" type="xs:date"/>
+                    <!--Номер ИБ (истории болезни)-->
+                    <xs:element name="externalId" type="xs:string"/>
+                    <!--Дата/время закрытия обращения -->
+                    <xs:element name="endDate" type="xs:date"/>
+                    <!--Пациент (к которому привязано Обращение) -->
+                    <xs:element name="client" type="tns:Person"/>
+                    <!--Контракт, в рамках которого проводится лечение в этом обращении (счета могут выставляться на доп контракты)-->
+                    <xs:element name="contract" type="tns:Contract"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="createRequest">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="idTreatment"
-                                    type="xs:int"/>
-                        <xs:element name="dateTreatment"
-                                    type="xs:date"/>
-                        <xs:element name="numTreatment"
-                                    type="xs:string"/>
-                        <xs:element name="numInvoice"
-                                    type="xs:string"/>
-                        <xs:element name="sumInvoice"
-                                    type="xs:double"/>
-                        <xs:element name="codePatient"
-                                    type="xs:string"/>
-                        <xs:element name="patientName"
-                                    type="tns:PersonName"/>
-                        <xs:element name="codePayer"
-                                    type="xs:string"/>
-                        <xs:element name="payerName"
-                                    type="tns:PersonName"/>
-                        <xs:element name="remove"
-                                    type="xs:int"/>
+                        <!--Обращение (Госпитализация)-->
+                        <xs:element name="event" type="tns:Event"/>
+                        <!--Экшен с ЛН-->
+                        <xs:element name="prescription" type="tns:PrescriptionAction"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="putTreatmentResponse">
+            <xs:element name="createResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="return"
-                                    type="xs:integer"/>
+                        <xs:element name="return" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="putReturn">
+            <xs:element name="closeRequest">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="parentNumInvoice"
-                                    type="xs:string"/>
-                        <xs:element name="numInvoice"
-                                    type="xs:string"/>
-                        <xs:element name="sumReturn"
-                                    type="xs:double"/>
-                        <xs:element name="remove"
-                                    type="xs:int"/>
+                        <!--Обращение (Госпитализация)-->
+                        <xs:element name="event" type="tns:Event"/>
+                        <!--Экшен с ЛН-->
+                        <xs:element name="prescription" type="tns:PrescriptionAction"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="putReturnResponse">
+            <xs:element name="closeResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="return"
-                                    type="xs:string"/>
+                        <xs:element name="return" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
         </xs:schema>
     </types>
-    <message name="putTreatmentRequestMessage">
-        <part name="parameters"
-              element="tns:putTreatment"/>
+    <message name="createRequestMessage">
+        <part name="parameters" element="tns:createRequest"/>
     </message>
-    <message name="putTreatmentResponseMessage">
-        <part name="parameters"
-              element="tns:putTreatmentResponse"/>
+    <message name="createResponseMessage">
+        <part name="parameters" element="tns:createResponse"/>
     </message>
-    <message name="putReturnRequestMessage">
-        <part name="parameters"
-              element="tns:putReturn"/>
+    <message name="closeRequestMessage">
+        <part name="parameters" element="tns:closeRequest"/>
     </message>
-    <message name="putReturnResponseMessage">
-        <part name="parameters"
-              element="tns:putReturnResponse"/>
+    <message name="closeResponseMessage">
+        <part name="parameters" element="tns:closeResponse"/>
     </message>
-    <portType name="Exchange_MISPortType">
-        <operation name="putTreatment">
-            <input message="tns:putTreatmentRequestMessage"/>
-            <output message="tns:putTreatmentResponseMessage"/>
+    <portType name="PharmacyMedicalPrescriptionPortType">
+        <operation name="create">
+            <input message="tns:createRequestMessage"/>
+            <output message="tns:createResponseMessage"/>
         </operation>
-        <operation name="putReturn">
-            <input message="tns:putReturnRequestMessage"/>
-            <output message="tns:putReturnResponseMessage"/>
+        <operation name="close">
+            <input message="tns:closeRequestMessage"/>
+            <output message="tns:closeResponseMessage"/>
         </operation>
     </portType>
-    <binding name="Exchange_MISSoapBinding"
-             type="tns:Exchange_MISPortType">
-        <soapbind:binding style="document"
-                          transport="http://schemas.xmlsoap.org/soap/http"/>
-        <operation name="putTreatment">
-            <soapbind:operation style="document"
-                                soapAction="http://schemas.xmlsoap.org/soap/envelope#Exchange_MIS:putTreatment"/>
+    <binding name="PharmacyMedicalPrescriptionSoapBinding" type="tns:PharmacyMedicalPrescriptionPortType">
+        <soapbind:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="create">
+            <soapbind:operation style="document" soapAction="http://schemas.xmlsoap.org/soap/envelope#PharmacyMedicalPrescription:create"/>
             <input>
                 <soapbind:body use="literal"/>
             </input>
@@ -141,9 +312,8 @@
                 <soapbind:body use="literal"/>
             </output>
         </operation>
-        <operation name="putReturn">
-            <soapbind:operation style="document"
-                                soapAction="http://schemas.xmlsoap.org/soap/envelope#Exchange_MIS:putReturn"/>
+        <operation name="close">
+            <soapbind:operation style="document" soapAction="http://schemas.xmlsoap.org/soap/envelope#PharmacyMedicalPrescription:close"/>
             <input>
                 <soapbind:body use="literal"/>
             </input>
@@ -152,13 +322,10 @@
             </output>
         </operation>
     </binding>
-    <binding name="Exchange_MISSoap12Binding"
-             type="tns:Exchange_MISPortType">
-        <soap12bind:binding style="document"
-                            transport="http://schemas.xmlsoap.org/soap/http"/>
-        <operation name="putTreatment">
-            <soap12bind:operation style="document"
-                                  soapAction="http://schemas.xmlsoap.org/soap/envelope#Exchange_MIS:putTreatment"/>
+    <binding name="PharmacyMedicalPrescriptionSoap12Binding" type="tns:PharmacyMedicalPrescriptionPortType">
+        <soap12bind:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="create">
+            <soap12bind:operation style="document" soapAction="http://schemas.xmlsoap.org/soap/envelope#PharmacyMedicalPrescription:create"/>
             <input>
                 <soap12bind:body use="literal"/>
             </input>
@@ -166,9 +333,8 @@
                 <soap12bind:body use="literal"/>
             </output>
         </operation>
-        <operation name="putReturn">
-            <soap12bind:operation style="document"
-                                  soapAction="http://schemas.xmlsoap.org/soap/envelope#Exchange_MIS:putReturn"/>
+        <operation name="close">
+            <soap12bind:operation style="document" soapAction="http://schemas.xmlsoap.org/soap/envelope#PharmacyMedicalPrescription:close"/>
             <input>
                 <soap12bind:body use="literal"/>
             </input>
@@ -177,18 +343,12 @@
             </output>
         </operation>
     </binding>
-    <service name="Exchange_MIS">
-        <port name="Exchange_MISSoap"
-              binding="tns:Exchange_MISSoapBinding">
-            <documentation>
-                <wsi:Claim xmlns:wsi="http://ws-i.org/schemas/conformanceClaim/"
-                           conformsTo="http://ws-i.org/profiles/basic/1.1"/>
-            </documentation>
-            <soapbind:address location="http://10.1.0.108/AS06_bgu/ws/Exchange_MIS"/>
+    <service name="PharmacyMedicalPrescription">
+        <port name="PharmacyMedicalPrescriptionSoap" binding="tns:PharmacyMedicalPrescriptionSoapBinding">
+            <soapbind:address location="http://127.0.0.1/PharmacyMedicalPrescription/ws/PharmacyMedicalPrescription"/>
         </port>
-        <port name="Exchange_MISSoap12"
-              binding="tns:Exchange_MISSoap12Binding">
-            <soap12bind:address location="http://10.1.0.108/AS06_bgu/ws/Exchange_MIS"/>
+        <port name="PharmacyMedicalPrescriptionSoap12" binding="tns:PharmacyMedicalPrescriptionSoap12Binding">
+            <soap12bind:address location="http://127.0.0.1/PharmacyMedicalPrescription/ws/PharmacyMedicalPrescription"/>
         </port>
     </service>
 </definitions>

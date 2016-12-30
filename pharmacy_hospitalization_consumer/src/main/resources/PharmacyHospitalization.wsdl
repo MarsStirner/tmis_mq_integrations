@@ -171,7 +171,7 @@
                     <xs:element name="contract" type="tns:Contract"/>
                 </xs:sequence>
             </xs:complexType>
-            <xs:element name="createHospitalization">
+            <xs:element name="createHospitalizationRequest">
                 <xs:complexType>
                     <xs:sequence>
                         <!--Обращение (Госпитализация)-->
@@ -188,7 +188,7 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="addMoving">
+            <xs:element name="addMovingRequest">
                 <xs:complexType>
                     <xs:sequence>
                         <!--Обращение (Госпитализация)-->
@@ -205,7 +205,7 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="closeHospitalization">
+            <xs:element name="closeHospitalizationRequest">
                 <xs:complexType>
                     <xs:sequence>
                         <!--Обращение (Госпитализация)-->
@@ -227,19 +227,19 @@
         </xs:schema>
     </types>
     <message name="createHospitalizationRequestMessage">
-        <part name="parameters" element="tns:createHospitalization"/>
+        <part name="parameters" element="tns:createHospitalizationRequest"/>
     </message>
     <message name="createHospitalizationResponseMessage">
         <part name="parameters" element="tns:createHospitalizationResponse"/>
     </message>
     <message name="addMovingRequestMessage">
-        <part name="parameters" element="tns:addMoving"/>
+        <part name="parameters" element="tns:addMovingRequest"/>
     </message>
     <message name="addMovingResponseMessage">
         <part name="parameters" element="tns:addMovingResponse"/>
     </message>
     <message name="closeHospitalizationRequestMessage">
-        <part name="parameters" element="tns:closeHospitalization"/>
+        <part name="parameters" element="tns:closeHospitalizationRequest"/>
     </message>
     <message name="closeHospitalizationResponseMessage">
         <part name="parameters" element="tns:closeHospitalizationResponse"/>

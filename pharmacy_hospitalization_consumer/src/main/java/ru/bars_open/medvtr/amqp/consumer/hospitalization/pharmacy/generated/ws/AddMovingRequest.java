@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="event" type="{http://schemas.xmlsoap.org/soap/envelope}Event"/>
- *         &lt;element name="received" type="{http://schemas.xmlsoap.org/soap/envelope}StationaryReceived"/>
+ *         &lt;element name="moving" type="{http://schemas.xmlsoap.org/soap/envelope}StationaryMoving"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -31,15 +31,15 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "event",
-    "received"
+    "moving"
 })
-@XmlRootElement(name = "createHospitalization")
-public class CreateHospitalization {
+@XmlRootElement(name = "addMovingRequest")
+public class AddMovingRequest {
 
     @XmlElement(required = true)
     protected Event event;
     @XmlElement(required = true)
-    protected StationaryReceived received;
+    protected StationaryMoving moving;
 
     /**
      * Gets the value of the event property.
@@ -66,27 +66,27 @@ public class CreateHospitalization {
     }
 
     /**
-     * Gets the value of the received property.
+     * Gets the value of the moving property.
      * 
      * @return
      *     possible object is
-     *     {@link StationaryReceived }
+     *     {@link StationaryMoving }
      *     
      */
-    public StationaryReceived getReceived() {
-        return received;
+    public StationaryMoving getMoving() {
+        return moving;
     }
 
     /**
-     * Sets the value of the received property.
+     * Sets the value of the moving property.
      * 
      * @param value
      *     allowed object is
-     *     {@link StationaryReceived }
+     *     {@link StationaryMoving }
      *     
      */
-    public void setReceived(StationaryReceived value) {
-        this.received = value;
+    public void setMoving(StationaryMoving value) {
+        this.moving = value;
     }
 
 }
