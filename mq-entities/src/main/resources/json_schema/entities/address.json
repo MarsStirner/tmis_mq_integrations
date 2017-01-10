@@ -1,0 +1,30 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/address.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Address",
+  "description": "Адрес",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.Address",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентифкатор МИС",
+      "minimum": 0
+    },
+    "addressType": {
+      "enum": [
+        "REGISTRATION",
+        "LIVING",
+        "UNKNOWN"
+      ],
+      "description": "Тип адреса"
+    },
+    "value": {
+      "type": "string",
+      "description": "Текстовое представление адреса"
+    }
+  },
+  "required": [
+    "id"
+  ]
+}

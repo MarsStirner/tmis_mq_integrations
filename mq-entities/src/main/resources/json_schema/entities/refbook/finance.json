@@ -1,0 +1,27 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/refbook/finance.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "rbFinance",
+  "description": "Справочник источников финансирования",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.refbook.RbFinance",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентифкатор МИС",
+      "minimum": 0
+    },
+    "code": {
+      "type": "string",
+      "description": "Код записи справочника"
+    },
+    "name": {
+      "type": "string",
+      "description": "Наименование записи справочника"
+    }
+  },
+  "required": [
+    "id",
+    "code"
+  ]
+}
