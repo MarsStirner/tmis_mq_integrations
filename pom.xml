@@ -17,6 +17,7 @@
         <module>db-entities</module>
         <module>database-dao</module>
         <module>business-dao</module>
+        <module>configuration_loader</module>
     </modules>
 
     <properties>

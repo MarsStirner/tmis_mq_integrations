@@ -30,27 +30,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link StationaryLeaved }
+     * Create an instance of {@link CreateHospitalizationRequest }
      * 
      */
-    public StationaryLeaved createStationaryLeaved() {
-        return new StationaryLeaved();
+    public CreateHospitalizationRequest createCreateHospitalizationRequest() {
+        return new CreateHospitalizationRequest();
     }
 
     /**
-     * Create an instance of {@link OrgStructure }
+     * Create an instance of {@link CloseHospitalizationRequest }
      * 
      */
-    public OrgStructure createOrgStructure() {
-        return new OrgStructure();
-    }
-
-    /**
-     * Create an instance of {@link Person }
-     * 
-     */
-    public Person createPerson() {
-        return new Person();
+    public CloseHospitalizationRequest createCloseHospitalizationRequest() {
+        return new CloseHospitalizationRequest();
     }
 
     /**
@@ -62,51 +54,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Event }
-     * 
-     */
-    public Event createEvent() {
-        return new Event();
-    }
-
-    /**
-     * Create an instance of {@link CloseHospitalizationResponse }
-     * 
-     */
-    public CloseHospitalizationResponse createCloseHospitalizationResponse() {
-        return new CloseHospitalizationResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateHospitalizationResponse }
-     * 
-     */
-    public CreateHospitalizationResponse createCreateHospitalizationResponse() {
-        return new CreateHospitalizationResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateHospitalizationRequest }
-     * 
-     */
-    public CreateHospitalizationRequest createCreateHospitalizationRequest() {
-        return new CreateHospitalizationRequest();
-    }
-
-    /**
      * Create an instance of {@link StationaryReceived }
      * 
      */
     public StationaryReceived createStationaryReceived() {
         return new StationaryReceived();
-    }
-
-    /**
-     * Create an instance of {@link AddMovingRequest }
-     * 
-     */
-    public AddMovingRequest createAddMovingRequest() {
-        return new AddMovingRequest();
     }
 
     /**
@@ -118,11 +70,35 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link StationaryMoving }
+     * Create an instance of {@link StationaryLeaved }
      * 
      */
-    public StationaryMoving createStationaryMoving() {
-        return new StationaryMoving();
+    public StationaryLeaved createStationaryLeaved() {
+        return new StationaryLeaved();
+    }
+
+    /**
+     * Create an instance of {@link CloseHospitalizationResponse }
+     * 
+     */
+    public CloseHospitalizationResponse createCloseHospitalizationResponse() {
+        return new CloseHospitalizationResponse();
+    }
+
+    /**
+     * Create an instance of {@link OrgStructure }
+     * 
+     */
+    public OrgStructure createOrgStructure() {
+        return new OrgStructure();
+    }
+
+    /**
+     * Create an instance of {@link CreateHospitalizationResponse }
+     * 
+     */
+    public CreateHospitalizationResponse createCreateHospitalizationResponse() {
+        return new CreateHospitalizationResponse();
     }
 
     /**
@@ -134,6 +110,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link StationaryMoving }
+     * 
+     */
+    public StationaryMoving createStationaryMoving() {
+        return new StationaryMoving();
+    }
+
+    /**
      * Create an instance of {@link Address }
      * 
      */
@@ -142,11 +126,27 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link CloseHospitalizationRequest }
+     * Create an instance of {@link AddMovingRequest }
      * 
      */
-    public CloseHospitalizationRequest createCloseHospitalizationRequest() {
-        return new CloseHospitalizationRequest();
+    public AddMovingRequest createAddMovingRequest() {
+        return new AddMovingRequest();
+    }
+
+    /**
+     * Create an instance of {@link Event }
+     * 
+     */
+    public Event createEvent() {
+        return new Event();
+    }
+
+    /**
+     * Create an instance of {@link Person }
+     * 
+     */
+    public Person createPerson() {
+        return new Person();
     }
 
 }

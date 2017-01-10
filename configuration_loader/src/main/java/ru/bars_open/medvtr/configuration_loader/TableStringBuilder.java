@@ -1,4 +1,4 @@
-package ru.bars_open.medvtr.amqp.consumer.finance.util;
+package ru.bars_open.medvtr.configuration_loader;
 
 import java.util.ArrayList;
 import java.util.List;

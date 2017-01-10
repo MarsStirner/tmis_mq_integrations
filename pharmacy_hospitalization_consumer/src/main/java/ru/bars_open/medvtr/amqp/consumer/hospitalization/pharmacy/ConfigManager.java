@@ -1,7 +1,9 @@
-package ru.bars_open.medvtr.amqp.consumer.finance;
+package ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpMethod;
@@ -9,10 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
-import ru.bars_open.medvtr.configuration_loader.ConfigurationLoader;
 import ru.bars_open.medvtr.mq.util.ObjectConverter;
 
+import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 
 /**
  * Author: Upatov Egor <br>
@@ -22,7 +25,9 @@ import java.util.Properties;
  */
 @Component("ConfigManager")
 @Scope("singleton")
-public class ConfigManager extends ConfigurationLoader {
+public class ConfigManager {
+    private static final Logger log = LoggerFactory.getLogger("CONFIG");
+
     // Внутренние настройки (не должны перетираться ЦСК)
     public static final String CONSUMER_TAG = "consumer.tag";
     public static final String CONSUMER_UUID = "consumer.uuid";
@@ -50,8 +55,10 @@ public class ConfigManager extends ConfigurationLoader {
     public static final String ERROR_EXCHANGE="amqp.error.exchange";
     public static final String ERROR_ROUTING_KEY="amqp.error.routing_key";
 
+    private final Map<String, String> parameterMap;
 
     public ConfigManager(@Qualifier("yaml_properties_application") final Properties props) {
+        parameterMap =  new TreeMap<>();
         for (final String name : props.stringPropertyNames()) {
             parameterMap.put(name, props.getProperty(name));
         }
@@ -130,7 +137,5 @@ public class ConfigManager extends ConfigurationLoader {
             }
         }
     }
-
-
 
 }
