@@ -1,4 +1,4 @@
-package ru.bars_open.medvtr.amqp.consumer.finance.util;
+package ru.bars_open.medvtr.mq.util;
 
 /*
  * net/balusc/util/ObjectConverter.java

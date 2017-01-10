@@ -1,21 +1,16 @@
 
 package ru.bars_open.medvtr.mq.entities.base;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.DateTime;
 import ru.bars_open.medvtr.mq.entities.base.refbook.RbFinance;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -56,6 +51,7 @@ public class Contract implements Serializable
     private Person payer;
     /**
      * номер договора
+     * (Required)
      * 
      */
     @JsonProperty("number")
@@ -139,6 +135,7 @@ public class Contract implements Serializable
 
     /**
      * номер договора
+     * (Required)
      * 
      */
     @JsonProperty("number")
@@ -148,6 +145,7 @@ public class Contract implements Serializable
 
     /**
      * номер договора
+     * (Required)
      * 
      */
     @JsonProperty("number")

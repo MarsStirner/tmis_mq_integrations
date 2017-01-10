@@ -14,7 +14,7 @@
       "description": "Экшен-выписка",
       "$ref": "../action/StationaryLeaved.json"
     },
-    "moves": {
+    "movings": {
       "type": "array",
       "description": "Движения между отделениями",
       "items": {

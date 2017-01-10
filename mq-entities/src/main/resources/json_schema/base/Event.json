@@ -33,6 +33,11 @@
       "type": "object",
       "$ref": "Contract.json",
       "description": "договор на лечение (контракт)"
+    },
+    "vmpTicket":{
+      "type": "object",
+      "$ref": "VMPTicket.json",
+      "description": "Талон ВМП в рамках обращения"
     }
   },
   "required": [

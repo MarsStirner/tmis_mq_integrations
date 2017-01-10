@@ -31,7 +31,7 @@ import ru.bars_open.medvtr.mq.entities.base.Event;
 @JsonPropertyOrder({
     "event",
     "leaved",
-    "moves"
+    "movings"
 })
 public class HospitalizationFinishMessage implements Serializable
 {
@@ -60,12 +60,12 @@ public class HospitalizationFinishMessage implements Serializable
      * Движения между отделениями
      * 
      */
-    @JsonProperty("moves")
+    @JsonProperty("movings")
     @JsonPropertyDescription("\u0414\u0432\u0438\u0436\u0435\u043d\u0438\u044f \u043c\u0435\u0436\u0434\u0443 \u043e\u0442\u0434\u0435\u043b\u0435\u043d\u0438\u044f\u043c\u0438")
-    private List<StationaryMoving> moves = new ArrayList<StationaryMoving>();
+    private List<StationaryMoving> movings = new ArrayList<StationaryMoving>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = -1498213919000527190L;
+    private final static long serialVersionUID = -4067559815109026134L;
 
     /**
      * Event
@@ -119,18 +119,18 @@ public class HospitalizationFinishMessage implements Serializable
      * Движения между отделениями
      * 
      */
-    @JsonProperty("moves")
-    public List<StationaryMoving> getMoves() {
-        return moves;
+    @JsonProperty("movings")
+    public List<StationaryMoving> getMovings() {
+        return movings;
     }
 
     /**
      * Движения между отделениями
      * 
      */
-    @JsonProperty("moves")
-    public void setMoves(List<StationaryMoving> moves) {
-        this.moves = moves;
+    @JsonProperty("movings")
+    public void setMovings(List<StationaryMoving> movings) {
+        this.movings = movings;
     }
 
     @Override
@@ -150,7 +150,7 @@ public class HospitalizationFinishMessage implements Serializable
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(event).append(leaved).append(moves).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(event).append(leaved).append(movings).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -162,7 +162,7 @@ public class HospitalizationFinishMessage implements Serializable
             return false;
         }
         HospitalizationFinishMessage rhs = ((HospitalizationFinishMessage) other);
-        return new EqualsBuilder().append(event, rhs.event).append(leaved, rhs.leaved).append(moves, rhs.moves).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(event, rhs.event).append(leaved, rhs.leaved).append(movings, rhs.movings).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

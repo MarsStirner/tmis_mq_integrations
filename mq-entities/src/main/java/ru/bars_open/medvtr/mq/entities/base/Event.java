@@ -30,7 +30,8 @@ import org.joda.time.DateTime;
     "externalId",
     "endDate",
     "client",
-    "contract"
+    "contract",
+    "vmpTicket"
 })
 public class Event implements Serializable
 {
@@ -83,9 +84,18 @@ public class Event implements Serializable
     @JsonProperty("contract")
     @JsonPropertyDescription("\u0414\u043e\u0433\u043e\u0432\u043e\u0440 \u043d\u0430 \u043b\u0435\u0447\u0435\u043d\u0438\u0435 (\u043a\u043e\u043d\u0442\u0440\u0430\u043a\u0442)")
     private Contract contract;
+    /**
+     * VMPTicket
+     * <p>
+     * Талон ВМП
+     * 
+     */
+    @JsonProperty("vmpTicket")
+    @JsonPropertyDescription("\u0422\u0430\u043b\u043e\u043d \u0412\u041c\u041f")
+    private VMPTicket vmpTicket;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = -6157443515263484082L;
+    private final static long serialVersionUID = 8252230292572864404L;
 
     /**
      * Идентифкатор
@@ -207,6 +217,28 @@ public class Event implements Serializable
         this.contract = contract;
     }
 
+    /**
+     * VMPTicket
+     * <p>
+     * Талон ВМП
+     * 
+     */
+    @JsonProperty("vmpTicket")
+    public VMPTicket getVmpTicket() {
+        return vmpTicket;
+    }
+
+    /**
+     * VMPTicket
+     * <p>
+     * Талон ВМП
+     * 
+     */
+    @JsonProperty("vmpTicket")
+    public void setVmpTicket(VMPTicket vmpTicket) {
+        this.vmpTicket = vmpTicket;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -224,7 +256,7 @@ public class Event implements Serializable
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(setDate).append(externalId).append(endDate).append(client).append(contract).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(id).append(setDate).append(externalId).append(endDate).append(client).append(contract).append(vmpTicket).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -236,7 +268,7 @@ public class Event implements Serializable
             return false;
         }
         Event rhs = ((Event) other);
-        return new EqualsBuilder().append(id, rhs.id).append(setDate, rhs.setDate).append(externalId, rhs.externalId).append(endDate, rhs.endDate).append(client, rhs.client).append(contract, rhs.contract).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(id, rhs.id).append(setDate, rhs.setDate).append(externalId, rhs.externalId).append(endDate, rhs.endDate).append(client, rhs.client).append(contract, rhs.contract).append(vmpTicket, rhs.vmpTicket).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }
