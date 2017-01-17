@@ -154,6 +154,32 @@
                     <xs:element name="finance" type="tns:RbFinance"/>
                 </xs:sequence>
             </xs:complexType>
+            <!--Метод лечения-->
+            <xs:complexType name="RbTreatment">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Код записи справочника -->
+                    <xs:element name="code" type="xs:string"/>
+                    <!--Наименование записи справочника -->
+                    <xs:element name="name" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Талон ВМ-->
+            <xs:complexType name="VmpTicket">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--номер талона -->
+                    <xs:element name="number" type="xs:string"/>
+                    <!--дата+время начала действия талона-->
+                    <xs:element name="begDate" type="xs:date"/>
+                    <!--дата+время окончания действия талона-->
+                    <xs:element name="endDate" type="xs:date"/>
+                    <!--Метод лечения-->
+                    <xs:element name="treatment" type="tns:RbTreatment"/>
+                </xs:sequence>
+            </xs:complexType>
             <!--Обращение (Госпитализация)-->
             <xs:complexType name="Event">
                 <xs:sequence>
@@ -169,6 +195,8 @@
                     <xs:element name="client" type="tns:Person"/>
                     <!--Контракт, в рамках которого проводится лечение в этом обращении (счета могут выставляться на доп контракты)-->
                     <xs:element name="contract" type="tns:Contract"/>
+                    <!--Талон ВМП в рамках обращения-->
+                    <xs:element name="vmpTicket" type="tns:VmpTicket"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:element name="createHospitalizationRequest">

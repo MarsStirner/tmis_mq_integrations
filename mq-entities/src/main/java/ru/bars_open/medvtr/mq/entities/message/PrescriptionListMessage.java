@@ -46,6 +46,7 @@ public class PrescriptionListMessage implements Serializable
      * PrescriptionAction
      * <p>
      * Экшен cо списком ЛН
+     * (Required)
      * 
      */
     @JsonProperty("prescription")
@@ -83,6 +84,7 @@ public class PrescriptionListMessage implements Serializable
      * PrescriptionAction
      * <p>
      * Экшен cо списком ЛН
+     * (Required)
      * 
      */
     @JsonProperty("prescription")
@@ -94,6 +96,7 @@ public class PrescriptionListMessage implements Serializable
      * PrescriptionAction
      * <p>
      * Экшен cо списком ЛН
+     * (Required)
      * 
      */
     @JsonProperty("prescription")

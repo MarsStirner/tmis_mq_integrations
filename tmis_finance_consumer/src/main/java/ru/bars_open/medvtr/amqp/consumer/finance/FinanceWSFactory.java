@@ -12,9 +12,11 @@ import ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.ObjectFact
 import ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.PersonName;
 import ru.bars_open.medvtr.amqp.consumer.finance.util.SHandler;
 import ru.bars_open.medvtr.mq.entities.base.Person;
+import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,12 +37,12 @@ public class FinanceWSFactory {
 
 
     @Autowired
-    private ConfigManager cfg;
+    private ConfigurationHolder cfg;
 
 
-    public ExchangeMISPortType getWebService(){
-        final URL serviceUrl = cfg.getValue(ConfigManager.FINANCE_SERVICE_URL, URL.class);
-        final QName serviceName = new QName(cfg.getValue(ConfigManager.FINANCE_SERVICE_NAMESPACE), cfg.getValue(ConfigManager.FINANCE_SERVICE_NAME));
+    public ExchangeMISPortType getWebService() throws MalformedURLException {
+        final URL serviceUrl = new URL(cfg.getString(ConfigurationKeys.WEBSERVICE_URL));
+        final QName serviceName = new QName(cfg.getString(ConfigurationKeys.WEBSERVICE_NAMESPACE), cfg.getString(ConfigurationKeys.WEBSERVICE_NAME));
         final ExchangeMIS exchangeMIS = new ExchangeMIS(serviceUrl, serviceName);
         exchangeMIS.setHandlerResolver(portInfo -> new ArrayList<>(Collections.singletonList(new SHandler())));
         log.info("WS initialized: {} - {}", serviceUrl, serviceName);

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
 
 
 import java.io.IOException;
@@ -27,7 +28,6 @@ import java.util.UUID;
 public class ErrorPublisher {
 
     private static final Logger log = LoggerFactory.getLogger("PUBLISHER");
-    private static final int ATTEMPS_LIMIT = 3;
     private static final String HEADER_DELAY = "x-delay";
     private static final String HEADER_ATTEMPTS = "ATTEMPTS";
     private static final String HEADER_NOTE = "NOTE";
@@ -37,38 +37,36 @@ public class ErrorPublisher {
     private Channel channel;
 
     @Autowired
-    private ConfigManager cfg;
+    private ConfigurationHolder cfg;
 
 
     public void publish(
             final long messageTag,
-            final String exchange,
             final String routingKey,
             final AMQP.BasicProperties props,
             final byte[] body
     ) throws IOException {
-        log.info("#{} Start publish to Exchange[{}] with KEY[{}]", messageTag, exchange, routingKey);
+        final String exchangeName = cfg.getString(ConfigurationKeys.ERROR_EXCHANGE);
+        log.info("#{} Start publish to Exchange[{}] with KEY[{}]", messageTag, exchangeName, routingKey);
         if (log.isDebugEnabled()) {
             final StringBuilder sb = new StringBuilder("#").append(messageTag).append(" MessageProperties");
             props.appendPropertyDebugStringTo(sb);
             log.debug("{}", sb.toString());
         }
-        channel.basicPublish(exchange, routingKey, props, body);
+        channel.basicPublish(exchangeName, routingKey, props, body);
         log.info("#{} Published", messageTag);
     }
 
     public void publishWithDelay(
             final long messageTag,
-            final String exchange,
             final String routingKey,
             final AMQP.BasicProperties props,
             final byte[] body,
-            final String note,
-            final int delay
+            final String note
     ) throws IOException {
         final Map<String, Object> headers = new HashMap<>(props.getHeaders());
         headers.put(HEADER_NOTE, note);
-        headers.put(HEADER_DELAY, delay);
+        headers.put(HEADER_DELAY, cfg.getInt(ConfigurationKeys.DELAY_REATTEMPT));
         int attempts = (int) headers.getOrDefault(HEADER_ATTEMPTS, 0);
         headers.put(HEADER_ATTEMPTS, ++attempts);
 
@@ -87,17 +85,16 @@ public class ErrorPublisher {
                 .appId(props.getAppId())
                 .clusterId(props.getClusterId())
                 .build();
-        if(ATTEMPS_LIMIT < attempts){
+        if(cfg.getInt(ConfigurationKeys.MAX_REATTEMPTS) < attempts){
             log.warn("#{} Message reach attempts limit", messageTag);
-            publishToErrorQueue(messageTag, exchange, publishProperties, body, "Message reach attempts limit");
+            publishToErrorQueue(messageTag, publishProperties, body, "Message reach attempts limit");
         } else {
-            publish(messageTag,  cfg.getValue(ConfigManager.ERROR_EXCHANGE), routingKey , publishProperties, body);
+            publish(messageTag, routingKey , publishProperties, body);
         }
     }
 
     public void publishToErrorQueue(
             final long messageTag,
-            final String exchange,
             final AMQP.BasicProperties props,
             final byte[] body,
             final String note
@@ -120,6 +117,10 @@ public class ErrorPublisher {
                 .appId(props.getAppId())
                 .clusterId(props.getClusterId())
                 .build();
-        publish(messageTag, exchange, cfg.getValue(ConfigManager.ERROR_ROUTING_KEY), publishProperties, body);
+        publish(messageTag, cfg.getString(ConfigurationKeys.ERROR_ROUTING_KEY), publishProperties, body);
+    }
+
+    public void messageIsNotValid(final long tag, final AMQP.BasicProperties props, final byte[] body) throws IOException {
+        publishToErrorQueue(tag, props, body, "Message is not valid");
     }
 }

@@ -8,6 +8,7 @@ import ru.bars_open.medvtr.mq.entities.base.*;
 import ru.bars_open.medvtr.mq.entities.message.InvoiceMessage;
 
 import java.math.BigInteger;
+import java.net.MalformedURLException;
 
 /**
  * Author: Upatov Egor <br>
@@ -23,7 +24,7 @@ public class FinanceSender {
     @Autowired
     private FinanceWSFactory wsFactory;
 
-    public int sendInvoice(final long messageTag, final InvoiceMessage message, boolean deleted) {
+    public int sendInvoice(final long messageTag, final InvoiceMessage message, boolean deleted) throws MalformedURLException {
         final Event event = message.getEvent();
         final Invoice invoice = message.getInvoice();
         final Person client = message.getEvent().getClient();
@@ -44,7 +45,7 @@ public class FinanceSender {
         return result.intValue();
     }
 
-    public String sendRefund(final long messageTag, final InvoiceMessage message) {
+    public String sendRefund(final long messageTag, final InvoiceMessage message) throws MalformedURLException {
         final Invoice invoice = message.getInvoice();
         final String parentNumber = invoice.getParent() != null  ? invoice.getParent().getNumber() : "";
         final String result =  wsFactory.getWebService().putReturn(

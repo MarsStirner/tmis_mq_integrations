@@ -25,6 +25,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="endDate" type="{http://www.w3.org/2001/XMLSchema}date"/>
  *         &lt;element name="client" type="{http://schemas.xmlsoap.org/soap/envelope}Person"/>
  *         &lt;element name="contract" type="{http://schemas.xmlsoap.org/soap/envelope}Contract"/>
+ *         &lt;element name="vmpTicket" type="{http://schemas.xmlsoap.org/soap/envelope}VmpTicket"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -40,7 +41,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "externalId",
     "endDate",
     "client",
-    "contract"
+    "contract",
+    "vmpTicket"
 })
 public class Event {
 
@@ -57,6 +59,8 @@ public class Event {
     protected Person client;
     @XmlElement(required = true)
     protected Contract contract;
+    @XmlElement(required = true)
+    protected VmpTicket vmpTicket;
 
     /**
      * Gets the value of the id property.
@@ -192,6 +196,30 @@ public class Event {
      */
     public void setContract(Contract value) {
         this.contract = value;
+    }
+
+    /**
+     * Gets the value of the vmpTicket property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link VmpTicket }
+     *     
+     */
+    public VmpTicket getVmpTicket() {
+        return vmpTicket;
+    }
+
+    /**
+     * Sets the value of the vmpTicket property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link VmpTicket }
+     *     
+     */
+    public void setVmpTicket(VmpTicket value) {
+        this.vmpTicket = value;
     }
 
 }

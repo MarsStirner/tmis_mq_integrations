@@ -17,7 +17,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <main-class>ru.bars_open.medvtr.amqp.consumer.pharmacy.hospitalization.ApplicationConfig</main-class>
+        <main-class>ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.ApplicationConfig</main-class>
         <!-- Library Versions -->
         <version.spring-framework>4.3.3.RELEASE</version.spring-framework>
     </properties>
@@ -57,19 +57,11 @@
             <artifactId>spring-web</artifactId>
             <version>${version.spring-framework}</version>
         </dependency>
-
-        <!-- Утилиты -->
-        <dependency>
-            <!-- Read yaml config files-->
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>1.14</version>
-        </dependency>
     </dependencies>
 
 
     <build>
-        <finalName>tmis_finance_consumer</finalName>
+        <finalName>pharmacy_hospitalization_consumer</finalName>
         <plugins>
             <plugin>
                 <!-- Copy all used libraries to destination folder -->
