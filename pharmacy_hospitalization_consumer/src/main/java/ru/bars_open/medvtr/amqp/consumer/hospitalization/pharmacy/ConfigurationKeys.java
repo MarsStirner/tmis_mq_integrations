@@ -24,4 +24,8 @@ public class ConfigurationKeys {
     public static final String AMQP_SERVER_PORT = "amqp.server.port";
     public static final String AMQP_USERNAME = "amqp.user.username";
     public static final String AMQP_PASSWORD = "amqp.user.password";
+
+
+    public static final String RETRY_DELAY = "amqp.error.delay";
+    public static final String RETRY_ATTEMPTS = "amqp.error.retryAttempts";
 }

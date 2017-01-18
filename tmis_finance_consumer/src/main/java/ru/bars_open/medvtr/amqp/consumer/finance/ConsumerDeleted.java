@@ -46,7 +46,7 @@ public class ConsumerDeleted extends com.rabbitmq.client.DefaultConsumer {
     public ConsumerDeleted(final Channel channel, final ConfigurationHolder cfg) throws IOException {
         super(channel);
         log.info("Start init Consumer [@{}]", Integer.toHexString(this.hashCode()));
-        this.queueName = cfg.getString(ConfigurationKeys.QUEUE_REFUND);
+        this.queueName = cfg.getString(ConfigurationKeys.QUEUE_DELETED);
     }
 
     @PostConstruct

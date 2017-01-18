@@ -30,11 +30,51 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link AddMovingResponse }
+     * Create an instance of {@link CreateHospitalizationResponse }
      * 
      */
-    public AddMovingResponse createAddMovingResponse() {
-        return new AddMovingResponse();
+    public CreateHospitalizationResponse createCreateHospitalizationResponse() {
+        return new CreateHospitalizationResponse();
+    }
+
+    /**
+     * Create an instance of {@link StationaryReceived }
+     * 
+     */
+    public StationaryReceived createStationaryReceived() {
+        return new StationaryReceived();
+    }
+
+    /**
+     * Create an instance of {@link StationaryLeaved }
+     * 
+     */
+    public StationaryLeaved createStationaryLeaved() {
+        return new StationaryLeaved();
+    }
+
+    /**
+     * Create an instance of {@link OrgStructure }
+     * 
+     */
+    public OrgStructure createOrgStructure() {
+        return new OrgStructure();
+    }
+
+    /**
+     * Create an instance of {@link AddMovingRequest }
+     * 
+     */
+    public AddMovingRequest createAddMovingRequest() {
+        return new AddMovingRequest();
+    }
+
+    /**
+     * Create an instance of {@link Contract }
+     * 
+     */
+    public Contract createContract() {
+        return new Contract();
     }
 
     /**
@@ -54,59 +94,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link StationaryLeaved }
-     * 
-     */
-    public StationaryLeaved createStationaryLeaved() {
-        return new StationaryLeaved();
-    }
-
-    /**
-     * Create an instance of {@link CloseHospitalizationRequest }
-     * 
-     */
-    public CloseHospitalizationRequest createCloseHospitalizationRequest() {
-        return new CloseHospitalizationRequest();
-    }
-
-    /**
      * Create an instance of {@link CreateHospitalizationRequest }
      * 
      */
     public CreateHospitalizationRequest createCreateHospitalizationRequest() {
         return new CreateHospitalizationRequest();
-    }
-
-    /**
-     * Create an instance of {@link Address }
-     * 
-     */
-    public Address createAddress() {
-        return new Address();
-    }
-
-    /**
-     * Create an instance of {@link StationaryReceived }
-     * 
-     */
-    public StationaryReceived createStationaryReceived() {
-        return new StationaryReceived();
-    }
-
-    /**
-     * Create an instance of {@link CreateHospitalizationResponse }
-     * 
-     */
-    public CreateHospitalizationResponse createCreateHospitalizationResponse() {
-        return new CreateHospitalizationResponse();
-    }
-
-    /**
-     * Create an instance of {@link Contract }
-     * 
-     */
-    public Contract createContract() {
-        return new Contract();
     }
 
     /**
@@ -118,19 +110,27 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Person }
+     * Create an instance of {@link RbFinance }
      * 
      */
-    public Person createPerson() {
-        return new Person();
+    public RbFinance createRbFinance() {
+        return new RbFinance();
     }
 
     /**
-     * Create an instance of {@link AddMovingRequest }
+     * Create an instance of {@link CloseHospitalizationRequest }
      * 
      */
-    public AddMovingRequest createAddMovingRequest() {
-        return new AddMovingRequest();
+    public CloseHospitalizationRequest createCloseHospitalizationRequest() {
+        return new CloseHospitalizationRequest();
+    }
+
+    /**
+     * Create an instance of {@link Address }
+     * 
+     */
+    public Address createAddress() {
+        return new Address();
     }
 
     /**
@@ -142,6 +142,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link Person }
+     * 
+     */
+    public Person createPerson() {
+        return new Person();
+    }
+
+    /**
      * Create an instance of {@link Event }
      * 
      */
@@ -150,19 +158,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link OrgStructure }
+     * Create an instance of {@link AddMovingResponse }
      * 
      */
-    public OrgStructure createOrgStructure() {
-        return new OrgStructure();
-    }
-
-    /**
-     * Create an instance of {@link RbFinance }
-     * 
-     */
-    public RbFinance createRbFinance() {
-        return new RbFinance();
+    public AddMovingResponse createAddMovingResponse() {
+        return new AddMovingResponse();
     }
 
 }

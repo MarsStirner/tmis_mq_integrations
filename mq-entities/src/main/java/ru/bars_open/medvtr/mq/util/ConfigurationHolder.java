@@ -4,6 +4,7 @@ import com.typesafe.config.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,10 @@ public class ConfigurationHolder {
         } else {
             log.info("Try loading from ConfigService[{}]", configURL);
             try {
-                return ConfigFactory.parseURL(configURL);
+                final Config result = ConfigFactory.parseURL(configURL);
+                if(result != null && HttpURLConnection.HTTP_OK == result.getInt("meta.code")){
+                   return result.getConfig("result");
+                }
             } catch (final Exception e) {
                 log.warn("Cant load config from \'{}\'. Cause : {}", configURL, e.getMessage());
             }
@@ -49,7 +53,11 @@ public class ConfigurationHolder {
 
     private URL parseConfigServiceURL(final Config cfg) {
         try {
-            return new URL(cfg.getString("protocol"), cfg.getString("host"), cfg.getInt("port"), cfg.getString("resourceName"));
+            String path = cfg.getString("resourceName");
+            if(!path.startsWith("/")){
+                path = "/"+ path;
+            }
+            return new URL(cfg.getString("protocol"), cfg.getString("host"), cfg.getInt("port"), path);
         } catch (Exception e) {
             return null;
         }

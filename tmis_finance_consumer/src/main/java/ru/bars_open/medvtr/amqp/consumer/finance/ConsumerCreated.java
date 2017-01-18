@@ -46,7 +46,7 @@ public class ConsumerCreated extends com.rabbitmq.client.DefaultConsumer {
     public ConsumerCreated(final Channel channel, final ConfigurationHolder cfg) throws IOException {
         super(channel);
         log.info("Start init Consumer [@{}]", Integer.toHexString(this.hashCode()));
-        this.queueName = cfg.getString(ConfigurationKeys.QUEUE_REFUND);
+        this.queueName = cfg.getString(ConfigurationKeys.QUEUE_CREATED);
     }
 
     @PostConstruct
