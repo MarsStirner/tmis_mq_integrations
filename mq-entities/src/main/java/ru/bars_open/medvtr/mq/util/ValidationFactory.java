@@ -175,7 +175,7 @@ public class ValidationFactory {
         checkNotNull(source.getId(), prefix, ".id", result);
         checkNotEmpty(source.getNumber(), prefix, ".number", result);
         checkNotNull(source.getBegDate(), prefix, ".begDate", result);
-        result.addAll(getErrors(source.getPayer(), ".Payer"));
+        result.addAll(getErrors(source.getPayer(), prefix+".Payer"));
         return result;
     }
 

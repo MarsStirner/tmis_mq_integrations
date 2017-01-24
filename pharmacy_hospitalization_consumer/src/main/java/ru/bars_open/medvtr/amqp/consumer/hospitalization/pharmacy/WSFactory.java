@@ -64,7 +64,7 @@ public class WSFactory{
     }
 
 
-    public PharmacyHospitalizationPortType getWebService() throws MalformedURLException {
+    public PharmacyHospitalizationPortType getWebService() {
         return webservice;
     }
 

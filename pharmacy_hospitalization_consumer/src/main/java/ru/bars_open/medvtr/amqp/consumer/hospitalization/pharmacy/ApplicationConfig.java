@@ -140,7 +140,7 @@ public class ApplicationConfig {
     }
 
     @Bean(name = "amqpTemplate")
-    public RabbitTemplate amqpTemplate(final ConnectionFactory mqConnectionFactory, final ConfigurationHolder cfg) {
+    public RabbitTemplate amqpTemplate(final ConnectionFactory mqConnectionFactory) {
         final RabbitTemplate result = new RabbitTemplate(mqConnectionFactory);
         result.setEncoding(StandardCharsets.UTF_8.name());
         return result;

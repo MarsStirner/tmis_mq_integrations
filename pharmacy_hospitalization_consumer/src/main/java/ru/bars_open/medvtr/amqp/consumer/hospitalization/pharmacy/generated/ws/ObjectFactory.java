@@ -30,6 +30,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link RbFinance }
+     * 
+     */
+    public RbFinance createRbFinance() {
+        return new RbFinance();
+    }
+
+    /**
      * Create an instance of {@link Address }
      * 
      */
@@ -38,43 +46,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link CloseHospitalizationRequest }
+     * Create an instance of {@link RbTreatment }
      * 
      */
-    public CloseHospitalizationRequest createCloseHospitalizationRequest() {
-        return new CloseHospitalizationRequest();
+    public RbTreatment createRbTreatment() {
+        return new RbTreatment();
     }
 
     /**
-     * Create an instance of {@link CreateHospitalizationRequest }
+     * Create an instance of {@link Person }
      * 
      */
-    public CreateHospitalizationRequest createCreateHospitalizationRequest() {
-        return new CreateHospitalizationRequest();
-    }
-
-    /**
-     * Create an instance of {@link Event }
-     * 
-     */
-    public Event createEvent() {
-        return new Event();
-    }
-
-    /**
-     * Create an instance of {@link CloseHospitalizationResponse }
-     * 
-     */
-    public CloseHospitalizationResponse createCloseHospitalizationResponse() {
-        return new CloseHospitalizationResponse();
-    }
-
-    /**
-     * Create an instance of {@link AddMovingRequest }
-     * 
-     */
-    public AddMovingRequest createAddMovingRequest() {
-        return new AddMovingRequest();
+    public Person createPerson() {
+        return new Person();
     }
 
     /**
@@ -86,51 +70,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link CreateHospitalizationResponse }
+     * Create an instance of {@link AddMovingRequest }
      * 
      */
-    public CreateHospitalizationResponse createCreateHospitalizationResponse() {
-        return new CreateHospitalizationResponse();
-    }
-
-    /**
-     * Create an instance of {@link Contragent }
-     * 
-     */
-    public Contragent createContragent() {
-        return new Contragent();
-    }
-
-    /**
-     * Create an instance of {@link RbFinance }
-     * 
-     */
-    public RbFinance createRbFinance() {
-        return new RbFinance();
-    }
-
-    /**
-     * Create an instance of {@link OrgStructure }
-     * 
-     */
-    public OrgStructure createOrgStructure() {
-        return new OrgStructure();
-    }
-
-    /**
-     * Create an instance of {@link Organisation }
-     * 
-     */
-    public Organisation createOrganisation() {
-        return new Organisation();
-    }
-
-    /**
-     * Create an instance of {@link StationaryReceived }
-     * 
-     */
-    public StationaryReceived createStationaryReceived() {
-        return new StationaryReceived();
+    public AddMovingRequest createAddMovingRequest() {
+        return new AddMovingRequest();
     }
 
     /**
@@ -139,6 +83,14 @@ public class ObjectFactory {
      */
     public AddMovingResponse createAddMovingResponse() {
         return new AddMovingResponse();
+    }
+
+    /**
+     * Create an instance of {@link Organisation }
+     * 
+     */
+    public Organisation createOrganisation() {
+        return new Organisation();
     }
 
     /**
@@ -158,6 +110,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link CreateHospitalizationResponse }
+     * 
+     */
+    public CreateHospitalizationResponse createCreateHospitalizationResponse() {
+        return new CreateHospitalizationResponse();
+    }
+
+    /**
      * Create an instance of {@link StationaryLeaved }
      * 
      */
@@ -166,19 +126,59 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link RbTreatment }
+     * Create an instance of {@link CloseHospitalizationResponse }
      * 
      */
-    public RbTreatment createRbTreatment() {
-        return new RbTreatment();
+    public CloseHospitalizationResponse createCloseHospitalizationResponse() {
+        return new CloseHospitalizationResponse();
     }
 
     /**
-     * Create an instance of {@link Person }
+     * Create an instance of {@link OrgStructure }
      * 
      */
-    public Person createPerson() {
-        return new Person();
+    public OrgStructure createOrgStructure() {
+        return new OrgStructure();
+    }
+
+    /**
+     * Create an instance of {@link Contragent }
+     * 
+     */
+    public Contragent createContragent() {
+        return new Contragent();
+    }
+
+    /**
+     * Create an instance of {@link CreateHospitalizationRequest }
+     * 
+     */
+    public CreateHospitalizationRequest createCreateHospitalizationRequest() {
+        return new CreateHospitalizationRequest();
+    }
+
+    /**
+     * Create an instance of {@link CloseHospitalizationRequest }
+     * 
+     */
+    public CloseHospitalizationRequest createCloseHospitalizationRequest() {
+        return new CloseHospitalizationRequest();
+    }
+
+    /**
+     * Create an instance of {@link Event }
+     * 
+     */
+    public Event createEvent() {
+        return new Event();
+    }
+
+    /**
+     * Create an instance of {@link StationaryReceived }
+     * 
+     */
+    public StationaryReceived createStationaryReceived() {
+        return new StationaryReceived();
     }
 
 }

@@ -20,8 +20,6 @@
         <main-class>ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.ApplicationConfig</main-class>
         <!-- Library Versions -->
         <version.spring-framework>4.3.3.RELEASE</version.spring-framework>
-        <logs.directory>./logs</logs.directory>
-        <log.format>[%date{ISO8601}][%level][%thread][%logger{0}]: %message%n</log.format>
     </properties>
 
     <dependencies>
@@ -33,7 +31,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.7.21</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -60,11 +57,6 @@
             <version>${version.spring-framework}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.amqp</groupId>
-            <artifactId>spring-amqp</artifactId>
-            <version>1.6.2.RELEASE</version>
-        </dependency>
-        <dependency>
             <!--Implementation of spring-amqp-->
             <groupId>org.springframework.amqp</groupId>
             <artifactId>spring-rabbit</artifactId>
@@ -72,14 +64,13 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
+            <artifactId>spring-context</artifactId>
             <version>${version.spring-framework}</version>
         </dependency>
     </dependencies>
 
 
     <build>
-        <finalName>pharmacy_hospitalization_consumer</finalName>
         <plugins>
             <plugin>
                 <!-- Copy all used libraries to destination folder -->
@@ -125,6 +116,8 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <finalName>${project.artifactId}-full</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
                             <mainClass>${main-class}</mainClass>
@@ -161,7 +154,6 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
-
         </resources>
     </build>
 

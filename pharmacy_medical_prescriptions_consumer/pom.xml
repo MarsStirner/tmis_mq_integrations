@@ -57,19 +57,10 @@
             <artifactId>spring-web</artifactId>
             <version>${version.spring-framework}</version>
         </dependency>
-
-        <!-- Утилиты -->
-        <dependency>
-            <!-- Read yaml config files-->
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>1.14</version>
-        </dependency>
     </dependencies>
 
 
     <build>
-        <finalName>tmis_finance_consumer</finalName>
         <plugins>
             <plugin>
                 <!-- Copy all used libraries to destination folder -->
@@ -115,6 +106,8 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <finalName>${project.artifactId}-full</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
                             <mainClass>${main-class}</mainClass>
