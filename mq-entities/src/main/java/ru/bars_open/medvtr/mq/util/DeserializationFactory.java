@@ -34,6 +34,10 @@ public class DeserializationFactory {
     }
 
     private static Serializer getSerializer(final String protocol) {
+        if(StringUtils.isEmpty(protocol)){
+            log.warn("No matching serializer found for '{}' protocol. Try with default Serializer.", protocol);
+            return defaultSerializer;
+        }
        switch(protocol){
            case "application/json": {
                return JSONSerializer.getInstance();

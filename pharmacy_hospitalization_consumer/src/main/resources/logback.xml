@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="false">
+    <jmxConfigurator/>
+    <contextName>mq_integration_1Cpharmacy_hospitalization</contextName>
+
+    <!--APPENDERS-->
+    <!-- Для сообщений-->
+    <appender name="APPENDER_ROOT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${log.format}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logs.directory}/service.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Для сообщений-->
+    <appender name="APPENDER_CONSUMER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${log.format}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logs.directory}/amqp/amqp.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Для отладки конфигурации-->
+    <appender name="APPENDER_CONFIG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${log.format}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logs.directory}/cfg/cfg.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+
+    <!--LOGGERS-->
+
+    <!-- Для AMQP  -->
+    <logger name="ru.bars_open.medvtr.amqp.consumer" level="DEBUG" additivity="true">
+        <appender-ref ref="APPENDER_CONSUMER"/>
+    </logger>
+
+    <logger name="org.springframework" level = "INFO">
+        <appender-ref ref="APPENDER_ROOT"/>
+    </logger>
+
+    <!-- Для конфигов -->
+    <logger name="CONFIG" level="DEBUG" additivity="true">
+        <appender-ref ref="APPENDER_CONFIG"/>
+    </logger>
+
+    <root level="DEBUG">
+        <appender-ref ref="APPENDER_ROOT"/>
+    </root>
+</configuration>

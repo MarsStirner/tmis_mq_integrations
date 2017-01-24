@@ -11,11 +11,13 @@ import org.springframework.stereotype.Component;
 import ru.bars_open.medvtr.mq.entities.message.InvoiceMessage;
 import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
 import ru.bars_open.medvtr.mq.util.DeserializationFactory;
+import ru.bars_open.medvtr.mq.util.ValidationFactory;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Author: Upatov Egor <br>
@@ -94,23 +96,9 @@ public class ConsumerCreated extends com.rabbitmq.client.DefaultConsumer {
     }
 
     private boolean validateMessage(final long messageTag, final InvoiceMessage message) {
-        if (message == null) {
-            log.warn("#{}: message is null", messageTag);
-            return false;
-        } else if (message.getEvent() == null) {
-            log.warn("#{}: message has empty Event", messageTag);
-            return false;
-        } else if (message.getEvent().getClient() == null) {
-            log.warn("#{}: message has empty Event.Client", messageTag);
-            return false;
-        } else if (message.getInvoice() == null) {
-            log.warn("#{}: message has empty Invoice", messageTag);
-            return false;
-        } else if (message.getInvoice().getContract() == null) {
-            log.warn("#{}: message has empty Invoice.Contract", messageTag);
-            return false;
-        } else if (message.getInvoice().getContract().getPayer() == null) {
-            log.warn("#{}: message has empty Invoice.Contract.Payer", messageTag);
+        final Set<String> errors = ValidationFactory.getErrors(message, "InvoiceMessage");
+        if(errors != null && !errors.isEmpty()){
+            log.warn("#{}: Message is not valid. Failed constraints: {}", messageTag, errors);
             return false;
         }
         return true;

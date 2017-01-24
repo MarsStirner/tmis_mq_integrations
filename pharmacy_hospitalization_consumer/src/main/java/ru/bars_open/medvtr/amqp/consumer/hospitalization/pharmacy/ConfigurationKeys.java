@@ -15,9 +15,9 @@ public class ConfigurationKeys {
     public static final String APP_NAME = "appName";
 
     // Настройки соединения с вебсервисом 1С
-    public static final String FINANCE_SERVICE_URL = "webservice.url";
-    public static final String FINANCE_SERVICE_NAME = "webservice.name";
-    public static final String FINANCE_SERVICE_NAMESPACE = "webservice.targetNamespace";
+    public static final String WEBSERVICE_URL = "webservice.url";
+    public static final String WEBSERVICE_NAME = "webservice.name";
+    public static final String WEBSERVICE_NAMESPACE = "webservice.targetNamespace";
 
     // Настройки работы с AMQP
     public static final String AMQP_SERVER_HOST = "amqp.server.host";
@@ -25,7 +25,15 @@ public class ConfigurationKeys {
     public static final String AMQP_USERNAME = "amqp.user.username";
     public static final String AMQP_PASSWORD = "amqp.user.password";
 
+    public static final String QUEUE_NAME = "amqp.queue";
 
-    public static final String RETRY_DELAY = "amqp.error.delay";
+    public static final String ROUTING_KEY_CREATE = "amqp.binding.create.routing_key";
+    public static final String ROUTING_KEY_CLOSE = "amqp.binding.close.routing_key";
+    public static final String ROUTING_KEY_MOVING = "amqp.binding.moving.routing_key";
+
+    public static final String EXCHANGE_ERROR = "amqp.error.exchange";
+    public static final String ROUTING_KEY_ERROR = "amqp.error.routing_key";
     public static final String RETRY_ATTEMPTS = "amqp.error.retryAttempts";
+    public static final String ERROR_DELAY = "amqp.error.delay";
+
 }
