@@ -145,41 +145,4 @@ public class ApplicationConfig {
         result.setEncoding(StandardCharsets.UTF_8.name());
         return result;
     }
-
-
-//
-//    @Bean("connection")
-//    public Connection connection(final ConnectionFactory factory) throws IOException, TimeoutException {
-//        final Connection result = factory.newConnection("connection_tmis_finance_consumer");
-//        final Object clientUUID = result.getClientProperties().get("clientUUID");
-//        log.info("Connection [@{}][{}] {}", Integer.toHexString(result.hashCode()), clientUUID, result);
-//        return result;
-//    }
-//
-//    @Bean("channel")
-//    public Channel channel(final Connection connection) throws IOException {
-//        final Channel result = connection.createChannel();
-//        result.addShutdownListener(cause -> log.error("Channel [@{}] shutdown cause '{}'", Integer.toHexString(result.hashCode()), cause.toString()));
-//        // We also can theoretically use non-recover channel & connection
-//        if (Recoverable.class.isAssignableFrom(result.getClass())) {
-//            ((Recoverable) result).addRecoveryListener(new RecoveryListener() {
-//                @Override
-//                public void handleRecovery(final Recoverable recoverable) {
-//                    log.warn("Channel [@{}] recovered!", Integer.toHexString(result.hashCode()));
-//                }
-//
-//                @Override
-//                public void handleRecoveryStarted(final Recoverable recoverable) {
-//                    log.warn("Channel [@{}] recovery started!", Integer.toHexString(result.hashCode()));
-//                }
-//            });
-//        }
-//        result.addReturnListener((replyCode, replyText, exchange, routingKey, properties, body) -> {
-//            log.debug("Channel return: {}, {}, {}, {}, {}, {}", replyCode, replyText, exchange, routingKey, properties, body);
-//        });
-//        log.info("Channel [@{}] {}", Integer.toHexString(result.hashCode()), result.getChannelNumber());
-//        return result;
-//    }
-
-
 }
