@@ -28,7 +28,7 @@ public class FinanceSender {
         final Event event = message.getEvent();
         final Invoice invoice = message.getInvoice();
         final Person client = message.getEvent().getClient();
-        final Person payer = invoice.getContract().getPayer();
+        final Person payer = invoice.getContract().getPayer().getPerson();
         final BigInteger result = wsFactory.getWebService().putTreatment(
                 event.getId(),
                 wsFactory.wrapDate(event.getSetDate()),

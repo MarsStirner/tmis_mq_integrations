@@ -175,9 +175,37 @@ public class ValidationFactory {
         checkNotNull(source.getId(), prefix, ".id", result);
         checkNotEmpty(source.getNumber(), prefix, ".number", result);
         checkNotNull(source.getBegDate(), prefix, ".begDate", result);
-        if (source.getPayer() != null) {
-            result.addAll(getErrors(source.getPayer(), prefix + ".[optional]Payer"));
+        result.addAll(getErrors(source.getPayer(), ".Payer"));
+        return result;
+    }
+
+    private static Set<String> getErrors(final Contragent source, final String prefix) {
+        final Set<String> result = new HashSet<>();
+        if (!checkNotNull(source, prefix, "", result)) {
+            return result;
         }
+        checkNotNull(source.getId(), prefix, ".id", result);
+        if (checkNotNull(source.getType(), prefix, ".type", result)) {
+            switch (source.getType()) {
+                case JURIDICAL:
+                    result.addAll(getErrors(source.getOrganisation(), ".Organisation"));
+                    break;
+                case PHYSICAL:
+                    result.addAll(getErrors(source.getPerson(), ".Person"));
+                    break;
+            }
+        }
+        return result;
+    }
+
+    private static Set<String> getErrors(final Organisation source, final String prefix) {
+        final Set<String> result = new HashSet<>();
+        if (!checkNotNull(source, prefix, "", result)) {
+            return result;
+        }
+        checkNotNull(source.getId(), prefix, ".id", result);
+        checkNotEmpty(source.getUuid(), prefix, ".uuid", result);
+        checkNotEmpty(source.getShortName(), prefix, ".shortName", result);
         return result;
     }
 
@@ -209,9 +237,6 @@ public class ValidationFactory {
         checkNotEmpty(source.getNumber(), prefix, ".number", result);
         checkNotNull(source.getSum(), prefix, ".sum", result);
         result.addAll(getErrors(source.getContract(), prefix + ".Contract"));
-        if (source.getContract() != null && (source.getContract().getPayer() == null || source.getContract().getPayer().getId() == null)) {
-            result.add(prefix + ".Contract.Payer is null or have null ID");
-        }
         return result;
     }
 }

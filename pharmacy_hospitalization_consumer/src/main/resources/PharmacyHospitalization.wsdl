@@ -10,6 +10,13 @@
                    targetNamespace="http://schemas.xmlsoap.org/soap/envelope"
                    attributeFormDefault="unqualified"
                    elementFormDefault="qualified">
+            <!--Тип контрагента-->
+            <xs:simpleType name="ContragentType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="JURIDICAL"/>
+                    <xs:enumeration value="PHYSICAL"/>
+                </xs:restriction>
+            </xs:simpleType>
             <!--Пол-->
             <xs:simpleType name="Sex">
                 <xs:restriction base="xs:string">
@@ -135,13 +142,37 @@
                     <xs:element name="name" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
+            <!--Организация -->
+            <xs:complexType name="Organisation">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--dashed string uuid -->
+                    <xs:element name="uuid" type="xs:string"/>
+                    <!--Краткое наименование организации-->
+                    <xs:element name="shortName" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <!--Контрагент-->
+            <xs:complexType name="Contragent">
+                <xs:sequence>
+                    <!--Идентифкатор в ТМИС-->
+                    <xs:element name="id" type="xs:int"/>
+                    <!--Тип контрагента -->
+                    <xs:element name="type" type="tns:ContragentType"/>
+                    <!--контрагент-пользователь(пациент) физ. лицо -->
+                    <xs:element name="person" type="tns:Person"/>
+                    <!--контрагент-организация юр. лицо-->
+                    <xs:element name="organisation" type="tns:Organisation"/>
+                </xs:sequence>
+            </xs:complexType>
             <!--Контракт-->
             <xs:complexType name="Contract">
                 <xs:sequence>
                     <!--Идентифкатор в ТМИС-->
                     <xs:element name="id" type="xs:int"/>
                     <!--плательщик -->
-                    <xs:element name="payer" type="tns:Person"/>
+                    <xs:element name="payer" type="tns:Contragent"/>
                     <!--номер договора -->
                     <xs:element name="number" type="xs:string"/>
                     <!--дата+врем подписания договора-->

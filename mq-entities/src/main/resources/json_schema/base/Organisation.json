@@ -1,0 +1,28 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/Organisation.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Organisation",
+  "description": "Организация",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.Organisation",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентифкатор МИС",
+      "minimum": 0
+    },
+    "uuid": {
+      "type": "string",
+      "description": "dashed string uuid"
+    },
+    "shortName": {
+      "type": "string",
+      "description": "Краткое наименование организации"
+    }
+  },
+  "required": [
+    "id",
+    "uuid",
+    "shortName"
+  ]
+}

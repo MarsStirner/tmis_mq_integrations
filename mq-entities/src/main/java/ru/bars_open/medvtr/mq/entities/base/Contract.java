@@ -41,14 +41,15 @@ public class Contract implements Serializable
     @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u043a\u0430\u0442\u043e\u0440")
     private Integer id;
     /**
-     * person
+     * Contract
      * <p>
-     * Описание пациента МИС ()
+     * Контрагент (физ или юр лицо)
+     * (Required)
      * 
      */
     @JsonProperty("payer")
-    @JsonPropertyDescription("\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u043f\u0430\u0446\u0438\u0435\u043d\u0442\u0430 \u041c\u0418\u0421 ()")
-    private Person payer;
+    @JsonPropertyDescription("\u041a\u043e\u043d\u0442\u0440\u0430\u0433\u0435\u043d\u0442 (\u0444\u0438\u0437 \u0438\u043b\u0438 \u044e\u0440 \u043b\u0438\u0446\u043e)")
+    private Contragent payer;
     /**
      * номер договора
      * (Required)
@@ -89,7 +90,7 @@ public class Contract implements Serializable
     private RbFinance finance;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = -2083146542189375611L;
+    private final static long serialVersionUID = 4752750516294568027L;
 
     /**
      * Идентифкатор
@@ -112,24 +113,26 @@ public class Contract implements Serializable
     }
 
     /**
-     * person
+     * Contract
      * <p>
-     * Описание пациента МИС ()
+     * Контрагент (физ или юр лицо)
+     * (Required)
      * 
      */
     @JsonProperty("payer")
-    public Person getPayer() {
+    public Contragent getPayer() {
         return payer;
     }
 
     /**
-     * person
+     * Contract
      * <p>
-     * Описание пациента МИС ()
+     * Контрагент (физ или юр лицо)
+     * (Required)
      * 
      */
     @JsonProperty("payer")
-    public void setPayer(Person payer) {
+    public void setPayer(Contragent payer) {
         this.payer = payer;
     }
 

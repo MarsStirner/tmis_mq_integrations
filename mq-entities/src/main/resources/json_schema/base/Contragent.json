@@ -1,0 +1,33 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/Contragent.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Contract",
+  "description": "Контрагент (физ или юр лицо)",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.Contragent",
+  "properties": {
+    "id": {
+      "description": "Идентифкатор",
+      "type": "integer"
+    },
+    "type":{
+      "enum": [
+        "JURIDICAL",
+        "PHYSICAL"
+      ],
+      "description": "Тип контрагента"
+    },
+    "person": {
+      "description": "контрагент-пользователь(пациент) физ. лицо",
+      "$ref": "Person.json"
+    },
+    "organisation": {
+      "description": "контрагент-организация юр. лицо",
+      "$ref": "Organisation.json"
+    }
+  },
+  "required": [
+    "id",
+    "type"
+  ]
+}

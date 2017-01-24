@@ -12,7 +12,7 @@
     },
     "payer": {
       "description": "плательщик",
-      "$ref": "Person.json"
+      "$ref": "Contragent.json"
     },
     "number": {
       "description": "номер договора",
@@ -41,7 +41,8 @@
   },
   "required": [
     "id",
-    "number"
+    "number",
+    "payer"
   ]
 }
 

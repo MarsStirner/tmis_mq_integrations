@@ -20,7 +20,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}int"/>
- *         &lt;element name="payer" type="{http://schemas.xmlsoap.org/soap/envelope}Person"/>
+ *         &lt;element name="payer" type="{http://schemas.xmlsoap.org/soap/envelope}Contragent"/>
  *         &lt;element name="number" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="signDate" type="{http://www.w3.org/2001/XMLSchema}date"/>
  *         &lt;element name="begDate" type="{http://www.w3.org/2001/XMLSchema}date"/>
@@ -48,7 +48,7 @@ public class Contract {
 
     protected int id;
     @XmlElement(required = true)
-    protected Person payer;
+    protected Contragent payer;
     @XmlElement(required = true)
     protected String number;
     @XmlElement(required = true)
@@ -84,10 +84,10 @@ public class Contract {
      * 
      * @return
      *     possible object is
-     *     {@link Person }
+     *     {@link Contragent }
      *     
      */
-    public Person getPayer() {
+    public Contragent getPayer() {
         return payer;
     }
 
@@ -96,10 +96,10 @@ public class Contract {
      * 
      * @param value
      *     allowed object is
-     *     {@link Person }
+     *     {@link Contragent }
      *     
      */
-    public void setPayer(Person value) {
+    public void setPayer(Contragent value) {
         this.payer = value;
     }
 

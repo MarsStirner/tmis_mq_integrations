@@ -103,8 +103,12 @@ public class ConsumerDeleted extends com.rabbitmq.client.DefaultConsumer {
 
     private boolean validateMessage(final long messageTag, final InvoiceMessage message) {
         final Set<String> errors = ValidationFactory.getErrors(message, "InvoiceMessage");
-        if(errors != null && !errors.isEmpty()){
+        if (!errors.isEmpty()) {
             log.warn("#{}: Message is not valid. Failed constraints: {}", messageTag, errors);
+            return false;
+        }
+        if (message.getInvoice().getContract().getPayer().getPerson() == null) {
+            log.warn("#{}: Message is not valid. InvoiceMessage.Invoice.Contract.Payer.Person is null", messageTag);
             return false;
         }
         return true;

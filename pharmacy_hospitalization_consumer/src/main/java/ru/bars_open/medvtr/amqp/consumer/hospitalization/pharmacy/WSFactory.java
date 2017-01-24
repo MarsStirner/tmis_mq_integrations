@@ -203,9 +203,39 @@ public class WSFactory{
         result.setEndDate(wrapDate(source.getEndDate()));
         result.setSignDate(wrapDate(source.getSignDate()));
         result.setNumber(source.getNumber());
-        result.setPayer(createPerson(source.getPayer()));
+        result.setPayer(createContragent(source.getPayer()));
         result.setFinance(createRbFinance(source.getFinance()));
         return result;
+    }
+
+    private Contragent createContragent(final ru.bars_open.medvtr.mq.entities.base.Contragent source) {
+        final Contragent result = OBJECT_FACTORY.createContragent();
+        result.setId(source.getId());
+        result.setType(wrapContragentType(source.getType().value()));
+        switch (result.getType()) {
+            case JURIDICAL:
+                result.setOrganisation(createOrganisation(source.getOrganisation()));
+                break;
+            case PHYSICAL:
+                result.setPerson(createPerson(source.getPerson()));
+                break;
+        }
+        return result;
+    }
+
+    private Organisation createOrganisation(final ru.bars_open.medvtr.mq.entities.base.Organisation source) {
+        if (source == null) {
+            return null;
+        }
+        final Organisation result = OBJECT_FACTORY.createOrganisation();
+        result.setId(source.getId());
+        result.setShortName(source.getShortName());
+        result.setUuid(source.getUuid());
+        return result;
+    }
+
+    private ContragentType wrapContragentType(final String value) {
+        return ContragentType.fromValue(value);
     }
 
     private RbFinance createRbFinance(final ru.bars_open.medvtr.mq.entities.base.refbook.RbFinance source) {
