@@ -196,7 +196,7 @@
                     <xs:element name="name" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
-            <!--Талон ВМ-->
+            <!--Талон ВМП-->
             <xs:complexType name="VmpTicket">
                 <xs:sequence>
                     <!--Идентифкатор в ТМИС-->

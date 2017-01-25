@@ -1,16 +1,19 @@
 package ru.bars_open.medvtr.mq.util;
 
 import org.apache.commons.lang3.StringUtils;
+import ru.bars_open.medvtr.mq.entities.action.PrescriptionAction;
 import ru.bars_open.medvtr.mq.entities.action.StationaryLeaved;
 import ru.bars_open.medvtr.mq.entities.action.StationaryMoving;
 import ru.bars_open.medvtr.mq.entities.action.StationaryReceived;
 import ru.bars_open.medvtr.mq.entities.base.*;
 import ru.bars_open.medvtr.mq.entities.base.refbook.RbTreatment;
-import ru.bars_open.medvtr.mq.entities.message.HospitalizationCreateMessage;
-import ru.bars_open.medvtr.mq.entities.message.HospitalizationFinishMessage;
-import ru.bars_open.medvtr.mq.entities.message.HospitalizationMovingMessage;
-import ru.bars_open.medvtr.mq.entities.message.InvoiceMessage;
+import ru.bars_open.medvtr.mq.entities.base.refbook.RbUnit;
+import ru.bars_open.medvtr.mq.entities.base.refbook.RlsNomen;
+import ru.bars_open.medvtr.mq.entities.base.refbook.RlsTradeName;
+import ru.bars_open.medvtr.mq.entities.base.util.ValueAndUnit;
+import ru.bars_open.medvtr.mq.entities.message.*;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +37,14 @@ public class ValidationFactory {
     private static boolean checkNotEmpty(final String source, final String prefix, final String name, final Set<String> result) {
         if (StringUtils.isEmpty(source)) {
             result.add(prefix + name + " is null or empty");
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean checkNotEmpty(final Collection source, final String prefix, final String name, final Set<String> result) {
+        if (source == null || source.isEmpty()) {
+            result.add(prefix + name + " collection is null or empty");
             return false;
         }
         return true;
@@ -69,10 +80,89 @@ public class ValidationFactory {
         if (movings != null && !movings.isEmpty()) {
             for (int i = 0; i < movings.size(); i++) {
                 final StationaryMoving moving = movings.get(i);
-                result.addAll(getErrors(moving, ".Moving[" + i + "]"));
+                result.addAll(getErrors(moving, prefix+ ".Moving[" + i + "]"));
             }
         }
         result.addAll(getErrors(source.getLeaved(), prefix + ".Leaved"));
+        return result;
+    }
+
+    public static Set<String> getErrors(final PrescriptionListMessage source, final String prefix) {
+        final Set<String> result = new HashSet<>();
+        if (!checkNotNull(source, prefix, "", result)) {
+            return result;
+        }
+        result.addAll(getErrors(source.getEvent(), prefix + ".Event"));
+        result.addAll(getErrors(source.getPrescription(), prefix + ".Prescription"));
+        return result;
+    }
+
+    private static Set<String> getErrors(final PrescriptionAction source, final String prefix) {
+        final Set<String> result = new HashSet<>();
+        if (!checkNotNull(source, prefix, "", result)) {
+            return result;
+        }
+        checkNotNull(source.getId(), prefix, ".id", result);
+        checkNotNull(source.getBegDate(), prefix, ".begDate", result);
+        final List<MedicalPrescription> prescriptions = source.getPrescriptions();
+        if (checkNotEmpty(source.getPrescriptions(), prefix, ".MedicalPrescription", result)) {
+            for (int i = 0; i < prescriptions.size(); i++) {
+                final MedicalPrescription item = prescriptions.get(i);
+                result.addAll(getErrors(item, prefix+".MedicalPrescription[" + i + "]"));
+            }
+        }
+        return result;
+    }
+
+    private static Set<String> getErrors(final MedicalPrescription source, final String prefix) {
+        final Set<String> result = new HashSet<>();
+        if (!checkNotNull(source, prefix, "", result)) {
+            return result;
+        }
+        checkNotNull(source.getId(), prefix, ".id", result);
+        result.addAll(getErrors(source.getRls(), prefix + ".Rls"));
+        result.addAll(getErrors(source.getDose(), prefix + ".Dose"));
+        result.addAll(getErrors(source.getFrequency(), prefix + ".Frequency"));
+        result.addAll(getErrors(source.getDuration(), prefix + ".Duration"));
+        return result;
+    }
+
+    private static Set<String> getErrors(final ValueAndUnit source, final String prefix) {
+        final Set<String> result = new HashSet<>();
+        if (!checkNotNull(source, prefix, "", result)) {
+            return result;
+        }
+        checkNotNull(source.getValue(), prefix, ".value", result);
+        result.addAll(getErrors(source.getUnit(), prefix + ".Unit"));
+        return result;
+    }
+
+    private static Set<String> getErrors(final RbUnit source, final String prefix) {
+        final Set<String> result = new HashSet<>();
+        if (!checkNotNull(source, prefix, "", result)) {
+            return result;
+        }
+        checkNotNull(source.getId(), prefix, ".id", result);
+        checkNotEmpty(source.getCode(), prefix, ".code", result);
+        return result;
+    }
+
+    private static Set<String> getErrors(final RlsNomen source, final String prefix) {
+        final Set<String> result = new HashSet<>();
+        if (!checkNotNull(source, prefix, "", result)) {
+            return result;
+        }
+        checkNotNull(source.getId(), prefix, ".id", result);
+        result.addAll(getErrors(source.getTradeName(), prefix + ".TradeName"));
+        return result;
+    }
+
+    private static Set<String> getErrors(final RlsTradeName source, final String prefix) {
+        final Set<String> result = new HashSet<>();
+        if (!checkNotNull(source, prefix, "", result)) {
+            return result;
+        }
+        checkNotNull(source.getId(), prefix, ".id", result);
         return result;
     }
 
@@ -239,4 +329,6 @@ public class ValidationFactory {
         result.addAll(getErrors(source.getContract(), prefix + ".Contract"));
         return result;
     }
+
+
 }

@@ -1,4 +1,4 @@
-package ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy;
+package ru.bars_open.medvtr.amqp.consumer.medical_prescription.pharmacy;
 
 import com.rabbitmq.client.Channel;
 import org.apache.commons.lang3.StringUtils;
@@ -9,10 +9,16 @@ import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.bars_open.medvtr.mq.util.exceptions.MessageIsIncorrectException;
-import ru.bars_open.medvtr.mq.util.exceptions.UnknownRoutingKeyException;
+import ru.bars_open.medvtr.amqp.consumer.medical_prescription.pharmacy.generated.ws.CloseRequest;
+import ru.bars_open.medvtr.amqp.consumer.medical_prescription.pharmacy.generated.ws.CloseResponse;
+import ru.bars_open.medvtr.amqp.consumer.medical_prescription.pharmacy.generated.ws.CreateRequest;
+import ru.bars_open.medvtr.amqp.consumer.medical_prescription.pharmacy.generated.ws.CreateResponse;
+import ru.bars_open.medvtr.mq.entities.message.PrescriptionListMessage;
 import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
 import ru.bars_open.medvtr.mq.util.DeserializationFactory;
+import ru.bars_open.medvtr.mq.util.ValidationFactory;
+import ru.bars_open.medvtr.mq.util.exceptions.MessageIsIncorrectException;
+import ru.bars_open.medvtr.mq.util.exceptions.UnknownRoutingKeyException;
 
 import javax.xml.ws.WebServiceException;
 import java.nio.charset.Charset;
@@ -33,7 +39,6 @@ public class Consumer implements ChannelAwareMessageListener {
 
     private final String ROUTING_KEY_CREATE;
     private final String ROUTING_KEY_CLOSE;
-    private final String ROUTING_KEY_MOVING;
 
     private final Set<String> possibleKeys;
 
@@ -45,23 +50,14 @@ public class Consumer implements ChannelAwareMessageListener {
         possibleKeys.add(ROUTING_KEY_CREATE);
         this.ROUTING_KEY_CLOSE = cfg.getString(ConfigurationKeys.ROUTING_KEY_CLOSE);
         possibleKeys.add(ROUTING_KEY_CLOSE);
-        this.ROUTING_KEY_MOVING = cfg.getString(ConfigurationKeys.ROUTING_KEY_MOVING);
-        possibleKeys.add(ROUTING_KEY_MOVING);
         log.info("Constructor called. Possible keys = {}", possibleKeys);
     }
 
-
-    @Autowired
-    private HospitalizationCreateSender hospitalizationCreateSender;
-
-    @Autowired
-    private HospitalizationMovingSender hospitalizationMovingSender;
-
-    @Autowired
-    private HospitalizationCloseSender hospitalizationCloseSender;
-
     @Autowired
     private ErrorMessageHandler errorHandler;
+
+    @Autowired
+    private WSFactory webserviceFactory;
 
 
     @Override
@@ -78,12 +74,34 @@ public class Consumer implements ChannelAwareMessageListener {
         boolean requeue = false;
         String errorMessage = StringUtils.EMPTY;
         try {
-            if (ROUTING_KEY_MOVING.equals(routingKey)) {
-                hospitalizationMovingSender.send(tag, encoding, message);
-            } else if (ROUTING_KEY_CREATE.equals(routingKey)) {
-                hospitalizationCreateSender.send(tag, encoding, message);
+            final PrescriptionListMessage parsedMessage = DeserializationFactory.parse(message.getBody(),
+                                                                                       props.getContentType(),
+                                                                                       encoding,
+                                                                                       PrescriptionListMessage.class
+            );
+            log.debug("#{}: Parsed", tag);
+            validate(parsedMessage);
+            log.info("#{}: message is valid", tag);
+            if (ROUTING_KEY_CREATE.equals(routingKey)) {
+                final CreateRequest request = webserviceFactory.createCreateRequest(parsedMessage);
+                log.info("#{}: Request parameters constructed", tag);
+                final CreateResponse response = webserviceFactory.getWebService().create(request);
+                log.info("#{}: Response from WS = {}", tag, response != null ? response.getReturn() : "null");
+                if (response == null || StringUtils.isEmpty(response.getReturn()) || !"OK".equals(response.getReturn())) {
+                    throw new WebServiceException("Webservice['" + webserviceFactory
+                            .getServiceURL() + "'] after processing createHospitalization returned unexpected result=" + (response != null ? response
+                            .getReturn() : "null"));
+                }
             } else if (ROUTING_KEY_CLOSE.equals(routingKey)) {
-                hospitalizationCloseSender.send(tag, encoding, message);
+                final CloseRequest request = webserviceFactory.createCloseRequest(parsedMessage);
+                log.info("#{}: Request parameters constructed", tag);
+                final CloseResponse response = webserviceFactory.getWebService().close(request);
+                log.info("#{}: Response from WS = {}", tag, response != null ? response.getReturn() : "null");
+                if (response == null || StringUtils.isEmpty(response.getReturn()) || !"OK".equals(response.getReturn())) {
+                    throw new WebServiceException("Webservice['" + webserviceFactory
+                            .getServiceURL() + "'] after processing createHospitalization returned unexpected result=" + (response != null ? response
+                            .getReturn() : "null"));
+                }
             } else {
                 throw new UnknownRoutingKeyException(routingKey, possibleKeys);
             }
@@ -114,6 +132,13 @@ public class Consumer implements ChannelAwareMessageListener {
                 }
                 log.info("###{}: End. With error: {}", tag, errorMessage);
             }
+        }
+    }
+
+    private void validate(final PrescriptionListMessage message) throws MessageIsIncorrectException {
+        final Set<String> errors = ValidationFactory.getErrors(message, "PrescriptionListMessage");
+        if (!errors.isEmpty()) {
+            throw new MessageIsIncorrectException(errors);
         }
     }
 

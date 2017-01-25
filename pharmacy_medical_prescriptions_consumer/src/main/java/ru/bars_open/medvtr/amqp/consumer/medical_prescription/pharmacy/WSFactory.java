@@ -1,4 +1,4 @@
-package ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy;
+package ru.bars_open.medvtr.amqp.consumer.medical_prescription.pharmacy;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import org.joda.time.DateTime;
@@ -6,13 +6,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.*;
-import ru.bars_open.medvtr.mq.util.SoapLoggingHandler;
-import ru.bars_open.medvtr.mq.entities.base.VMPTicket;
-import ru.bars_open.medvtr.mq.entities.message.HospitalizationCreateMessage;
-import ru.bars_open.medvtr.mq.entities.message.HospitalizationFinishMessage;
-import ru.bars_open.medvtr.mq.entities.message.HospitalizationMovingMessage;
+import ru.bars_open.medvtr.amqp.consumer.medical_prescription.pharmacy.generated.ws.*;
+import ru.bars_open.medvtr.amqp.consumer.medical_prescription.pharmacy.generated.ws.RbFinance;
+import ru.bars_open.medvtr.amqp.consumer.medical_prescription.pharmacy.generated.ws.RbTreatment;
+import ru.bars_open.medvtr.amqp.consumer.medical_prescription.pharmacy.generated.ws.RbUnit;
+import ru.bars_open.medvtr.amqp.consumer.medical_prescription.pharmacy.generated.ws.RlsActMatters;
+import ru.bars_open.medvtr.amqp.consumer.medical_prescription.pharmacy.generated.ws.RlsNomen;
+
+import ru.bars_open.medvtr.mq.entities.message.PrescriptionListMessage;
 import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
+import ru.bars_open.medvtr.mq.util.SoapLoggingHandler;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
@@ -25,12 +28,12 @@ import java.util.GregorianCalendar;
 import java.util.Map;
 
 @Repository
-public class WSFactory{
+public class WSFactory {
 
     private static final Logger log = LoggerFactory.getLogger(WSFactory.class);
     private final static ObjectFactory OBJECT_FACTORY = new ObjectFactory();
 
-    private final PharmacyHospitalizationPortType webservice;
+    private final PharmacyMedicalPrescriptionPortType webservice;
     private final URL serviceURL;
     private final QName serviceName;
 
@@ -39,13 +42,13 @@ public class WSFactory{
     public WSFactory(ConfigurationHolder cfg) throws MalformedURLException {
         this.serviceURL = new URL(cfg.getString(ConfigurationKeys.WEBSERVICE_URL));
         this.serviceName = new QName(cfg.getString(ConfigurationKeys.WEBSERVICE_NAMESPACE), cfg.getString(ConfigurationKeys.WEBSERVICE_NAME));
-        final PharmacyHospitalization service = new PharmacyHospitalization();
+        final PharmacyMedicalPrescription service = new PharmacyMedicalPrescription();
         service.setHandlerResolver(portInfo -> new ArrayList<>(Collections.singletonList(new SoapLoggingHandler())));
         // Timeout in millis
         int requestTimeout = 10000;
         int connectTimeout = 1000;
 
-        final PharmacyHospitalizationPortType port = service.getPharmacyHospitalizationSoap();
+        final PharmacyMedicalPrescriptionPortType port = service.getPharmacyMedicalPrescriptionSoap();
         final Map<String, Object> requestContext = ((BindingProvider) port).getRequestContext();
         requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, serviceURL.toExternalForm());
         //https://java.net/jira/browse/JAX_WS-1166
@@ -64,7 +67,7 @@ public class WSFactory{
     }
 
 
-    public PharmacyHospitalizationPortType getWebService() {
+    public PharmacyMedicalPrescriptionPortType getWebService() {
         return webservice;
     }
 
@@ -85,60 +88,131 @@ public class WSFactory{
         return new XMLGregorianCalendarImpl(calendar);
     }
 
-    public CloseHospitalizationRequest createHospitalizationRequest(final HospitalizationFinishMessage message) {
-        final CloseHospitalizationRequest result = OBJECT_FACTORY.createCloseHospitalizationRequest();
-        result.setEvent(createEvent(message.getEvent()));
-        for (ru.bars_open.medvtr.mq.entities.action.StationaryMoving moving : message.getMovings()) {
-            result.getMoves().add(createMoving(moving));
+    public CreateRequest createCreateRequest(final PrescriptionListMessage source) {
+        final CreateRequest result = OBJECT_FACTORY.createCreateRequest();
+        result.setEvent(createEvent(source.getEvent()));
+        result.setPrescription(createPrescription(source.getPrescription()));
+        return result;
+    }
+
+    public CloseRequest createCloseRequest(final PrescriptionListMessage source) {
+        final CloseRequest result = OBJECT_FACTORY.createCloseRequest();
+        result.setEvent(createEvent(source.getEvent()));
+        result.setPrescription(createPrescription(source.getPrescription()));
+        return result;
+    }
+
+    private PrescriptionAction createPrescription(final ru.bars_open.medvtr.mq.entities.action.PrescriptionAction source) {
+        final PrescriptionAction result = OBJECT_FACTORY.createPrescriptionAction();
+        result.setId(source.getId());
+        result.setBegDate(wrapDate(source.getBegDate()));
+        result.setEndDate(wrapDate(source.getEndDate()));
+        result.setStatus(wrapStatus(source.getStatus().value()));
+        for (ru.bars_open.medvtr.mq.entities.base.MedicalPrescription medicalPrescription : source.getPrescriptions()) {
+            result.getPrescriptions().add(createMedicalPrescription(medicalPrescription));
         }
-        result.setLeaved(createLeaved(message.getLeaved()));
         return result;
     }
 
-    private StationaryLeaved createLeaved(final ru.bars_open.medvtr.mq.entities.action.StationaryLeaved source) {
-        final StationaryLeaved result = OBJECT_FACTORY.createStationaryLeaved();
+    private MedicalPrescription createMedicalPrescription(final ru.bars_open.medvtr.mq.entities.base.MedicalPrescription source) {
+        final MedicalPrescription result = OBJECT_FACTORY.createMedicalPrescription();
         result.setId(source.getId());
         result.setStatus(wrapStatus(source.getStatus().value()));
         result.setBegDate(wrapDate(source.getBegDate()));
-        result.setEndDate(wrapDate(source.getEndDate()));
-        result.setHospOutcome(source.getHospOutcome());
+        result.setNote(source.getNote());
+        result.setDose(createValueAndUnit(source.getDose()));
+        result.setDuration(createValueAndUnit(source.getDuration()));
+        result.setFrequency(createValueAndUnit(source.getFrequency()));
+        result.setReasonOfCancel(source.getReasonOfCancel());
+        result.setRls(createRls(source.getRls()));
         return result;
     }
 
-
-    public CreateHospitalizationRequest createHospitalizationRequest(final HospitalizationCreateMessage message) {
-        final CreateHospitalizationRequest result = OBJECT_FACTORY.createCreateHospitalizationRequest();
-        result.setEvent(createEvent(message.getEvent()));
-        result.setReceived(createReceived(message.getReceived()));
-        return result;
-    }
-
-    public AddMovingRequest createAddMovingRequest(final HospitalizationMovingMessage message) {
-        final AddMovingRequest result = OBJECT_FACTORY.createAddMovingRequest();
-        result.setEvent(createEvent(message.getEvent()));
-        result.setMoving(createMoving(message.getMoving()));
-        return result;
-    }
-
-    private StationaryMoving createMoving(final ru.bars_open.medvtr.mq.entities.action.StationaryMoving source) {
-        final StationaryMoving result = OBJECT_FACTORY.createStationaryMoving();
+    private RlsNomen createRls(final ru.bars_open.medvtr.mq.entities.base.refbook.RlsNomen source) {
+        final RlsNomen result = OBJECT_FACTORY.createRlsNomen();
         result.setId(source.getId());
-        result.setStatus(wrapStatus(source.getStatus().value()));
-        result.setBegDate(wrapDate(source.getBegDate()));
-        result.setEndDate(wrapDate(source.getEndDate()));
-        result.setOrgStructStay(createOrgStructure(source.getOrgStructStay()));
-        result.setOrgStructReceived(createOrgStructure(source.getOrgStructReceived()));
+        result.setActMatters(createActMatters(source.getActMatters()));
+        result.setTradeName(createTradeName(source.getTradeName()));
+        result.setForm(createRlsForm(source.getForm()));
+        result.setPackaging(createRlsPackaging(source.getPackaging()));
+        result.setFilling(createRlsFilling(source.getFilling()));
+        result.setUnit(createRbUnit(source.getUnit()));
+        result.setDose(createValueAndUnit(source.getDose()));
+        result.setDrugLifeTime(source.getDrugLifeTime());
         return result;
     }
 
-    private StationaryReceived createReceived(final ru.bars_open.medvtr.mq.entities.action.StationaryReceived source) {
-        final StationaryReceived result = OBJECT_FACTORY.createStationaryReceived();
+    private RlsFilling createRlsFilling(final ru.bars_open.medvtr.mq.entities.base.refbook.RlsFilling source) {
+        if (source == null) {
+            return null;
+        }
+        final RlsFilling result = OBJECT_FACTORY.createRlsFilling();
         result.setId(source.getId());
-        result.setStatus(wrapStatus(source.getStatus().value()));
-        result.setBegDate(wrapDate(source.getBegDate()));
-        result.setEndDate(wrapDate(source.getEndDate()));
-        result.setOrgStructDirection(createOrgStructure(source.getOrgStructDirection()));
-        result.setOrgStructStay(createOrgStructure(source.getOrgStructStay()));
+        result.setName(source.getName());
+        return result;
+    }
+
+    private RlsPackaging createRlsPackaging(final ru.bars_open.medvtr.mq.entities.base.refbook.RlsPackaging source) {
+        if (source == null) {
+            return null;
+        }
+        final RlsPackaging result = OBJECT_FACTORY.createRlsPackaging();
+        result.setId(source.getId());
+        result.setName(source.getName());
+        return result;
+    }
+
+    private RlsForm createRlsForm(final ru.bars_open.medvtr.mq.entities.base.refbook.RlsForm source) {
+        if (source == null) {
+            return null;
+        }
+        final RlsForm result = OBJECT_FACTORY.createRlsForm();
+        result.setId(source.getId());
+        result.setName(source.getName());
+        return result;
+    }
+
+    private RlsTradeName createTradeName(final ru.bars_open.medvtr.mq.entities.base.refbook.RlsTradeName source) {
+        if (source == null) {
+            return null;
+        }
+        final RlsTradeName result = OBJECT_FACTORY.createRlsTradeName();
+        result.setId(source.getId());
+        result.setName(source.getName());
+        result.setLocalName(source.getLocalName());
+        return result;
+    }
+
+    private RlsActMatters createActMatters(final ru.bars_open.medvtr.mq.entities.base.refbook.RlsActMatters source) {
+        if (source == null) {
+            return null;
+        }
+        final RlsActMatters result = OBJECT_FACTORY.createRlsActMatters();
+        result.setId(source.getId());
+        result.setLocalName(source.getLocalName());
+        result.setName(source.getName());
+        return result;
+    }
+
+    private ValueAndUnit createValueAndUnit(final ru.bars_open.medvtr.mq.entities.base.util.ValueAndUnit source) {
+        if (source == null) {
+            return null;
+        }
+        final ValueAndUnit result = OBJECT_FACTORY.createValueAndUnit();
+        result.setValue(source.getValue());
+        result.setUnit(createRbUnit(source.getUnit()));
+        return result;
+    }
+
+    private RbUnit createRbUnit(final ru.bars_open.medvtr.mq.entities.base.refbook.RbUnit source) {
+        if (source == null) {
+            return null;
+        }
+        final RbUnit result = OBJECT_FACTORY.createRbUnit();
+        result.setId(source.getId());
+        result.setCode(source.getCode());
+        result.setName(source.getName());
+        result.setShortName(source.getShortName());
         return result;
     }
 
@@ -146,19 +220,9 @@ public class WSFactory{
         return Status.fromValue(source);
     }
 
-    private OrgStructure createOrgStructure(final ru.bars_open.medvtr.mq.entities.base.OrgStructure source) {
-        if (source == null) {
-            return null;
-        }
-        final OrgStructure result = OBJECT_FACTORY.createOrgStructure();
-        result.setId(source.getId());
-        result.setCode(source.getCode());
-        result.setName(source.getName());
-        return result;
-    }
 
     private Event createEvent(final ru.bars_open.medvtr.mq.entities.base.Event source) {
-        final ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.Event result = OBJECT_FACTORY.createEvent();
+        final Event result = OBJECT_FACTORY.createEvent();
         result.setId(source.getId());
         result.setSetDate(wrapDate(source.getSetDate()));
         result.setExternalId(source.getExternalId());
@@ -169,7 +233,7 @@ public class WSFactory{
         return result;
     }
 
-    private VmpTicket createVmpTicket(final VMPTicket source) {
+    private VmpTicket createVmpTicket(final ru.bars_open.medvtr.mq.entities.base.VMPTicket source) {
         if (source == null) {
             return null;
         }
@@ -270,7 +334,6 @@ public class WSFactory{
         }
         return Sex.valueOf(source.value());
     }
-
 
 
 }

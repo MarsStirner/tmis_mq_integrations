@@ -1,4 +1,4 @@
-package ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.exceptions;
+package ru.bars_open.medvtr.mq.util.exceptions;
 
 import java.util.Set;
 
