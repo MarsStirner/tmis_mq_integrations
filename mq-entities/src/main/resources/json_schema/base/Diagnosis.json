@@ -9,9 +9,9 @@
       "type": "integer",
       "minimum": 0
     },
-    "type": {
-      "description": "Код записи справочника",
-      "$ref": "./refbook/RbDiagnosisType.json"
+    "typeDescription": {
+      "description": "Тип диагноза",
+      "type": "string"
     },
     "MKB": {
       "description": "Диагноз по МКБ-10",
@@ -20,7 +20,7 @@
   },
   "required": [
     "id",
-    "type",
+    "typeDescription",
     "MKB"
   ]
 }

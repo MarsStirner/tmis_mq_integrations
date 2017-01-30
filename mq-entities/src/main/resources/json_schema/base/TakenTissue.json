@@ -51,9 +51,7 @@
           "minimum": 0
         },
         "code": {
-          "type": "integer",
-          "minimum": 100000,
-          "maximum": 999999
+          "type": "integer"
         }
       },
       "required": [

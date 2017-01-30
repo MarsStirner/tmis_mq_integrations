@@ -1,21 +1,15 @@
 
 package ru.bars_open.medvtr.mq.entities.base;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import ru.bars_open.medvtr.mq.entities.base.refbook.MKB;
-import ru.bars_open.medvtr.mq.entities.base.refbook.RbDiagnosisType;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -25,7 +19,7 @@ import ru.bars_open.medvtr.mq.entities.base.refbook.RbDiagnosisType;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "id",
-    "type",
+    "typeDescription",
     "MKB"
 })
 public class Diagnosis implements Serializable
@@ -40,13 +34,13 @@ public class Diagnosis implements Serializable
     @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u043a\u0430\u0442\u043e\u0440 \u041c\u0418\u0421")
     private Integer id;
     /**
-     * Справочник источников финансирования
+     * Тип диагноза
      * (Required)
      * 
      */
-    @JsonProperty("type")
-    @JsonPropertyDescription("\u0421\u043f\u0440\u0430\u0432\u043e\u0447\u043d\u0438\u043a \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a\u043e\u0432 \u0444\u0438\u043d\u0430\u043d\u0441\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f")
-    private RbDiagnosisType type;
+    @JsonProperty("typeDescription")
+    @JsonPropertyDescription("\u0422\u0438\u043f \u0434\u0438\u0430\u0433\u043d\u043e\u0437\u0430")
+    private String typeDescription;
     /**
      * Справочник МКБ-10 (Международный классификатор болезней) 
      * (Required)
@@ -57,7 +51,7 @@ public class Diagnosis implements Serializable
     private MKB mKB;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = 5156472794421706606L;
+    private final static long serialVersionUID = -7138489365888990945L;
 
     /**
      * Идентифкатор МИС
@@ -80,23 +74,23 @@ public class Diagnosis implements Serializable
     }
 
     /**
-     * Справочник источников финансирования
+     * Тип диагноза
      * (Required)
      * 
      */
-    @JsonProperty("type")
-    public RbDiagnosisType getType() {
-        return type;
+    @JsonProperty("typeDescription")
+    public String getTypeDescription() {
+        return typeDescription;
     }
 
     /**
-     * Справочник источников финансирования
+     * Тип диагноза
      * (Required)
      * 
      */
-    @JsonProperty("type")
-    public void setType(RbDiagnosisType type) {
-        this.type = type;
+    @JsonProperty("typeDescription")
+    public void setTypeDescription(String typeDescription) {
+        this.typeDescription = typeDescription;
     }
 
     /**
@@ -136,7 +130,7 @@ public class Diagnosis implements Serializable
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(type).append(mKB).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(id).append(typeDescription).append(mKB).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -148,7 +142,7 @@ public class Diagnosis implements Serializable
             return false;
         }
         Diagnosis rhs = ((Diagnosis) other);
-        return new EqualsBuilder().append(id, rhs.id).append(type, rhs.type).append(mKB, rhs.mKB).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(id, rhs.id).append(typeDescription, rhs.typeDescription).append(mKB, rhs.mKB).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

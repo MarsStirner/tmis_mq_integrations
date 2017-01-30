@@ -30,11 +30,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link StationaryLeaved }
+     * Create an instance of {@link StationaryMoving }
      * 
      */
-    public StationaryLeaved createStationaryLeaved() {
-        return new StationaryLeaved();
+    public StationaryMoving createStationaryMoving() {
+        return new StationaryMoving();
     }
 
     /**
@@ -46,19 +46,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Event }
+     * Create an instance of {@link Address }
      * 
      */
-    public Event createEvent() {
-        return new Event();
-    }
-
-    /**
-     * Create an instance of {@link StationaryReceived }
-     * 
-     */
-    public StationaryReceived createStationaryReceived() {
-        return new StationaryReceived();
+    public Address createAddress() {
+        return new Address();
     }
 
     /**
@@ -70,6 +62,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link Event }
+     * 
+     */
+    public Event createEvent() {
+        return new Event();
+    }
+
+    /**
      * Create an instance of {@link Contragent }
      * 
      */
@@ -78,11 +78,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link StationaryMoving }
+     * Create an instance of {@link VmpTicket }
      * 
      */
-    public StationaryMoving createStationaryMoving() {
-        return new StationaryMoving();
+    public VmpTicket createVmpTicket() {
+        return new VmpTicket();
     }
 
     /**
@@ -94,75 +94,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link RbTreatment }
-     * 
-     */
-    public RbTreatment createRbTreatment() {
-        return new RbTreatment();
-    }
-
-    /**
-     * Create an instance of {@link Contract }
-     * 
-     */
-    public Contract createContract() {
-        return new Contract();
-    }
-
-    /**
-     * Create an instance of {@link CloseHospitalizationResponse }
-     * 
-     */
-    public CloseHospitalizationResponse createCloseHospitalizationResponse() {
-        return new CloseHospitalizationResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateHospitalizationRequest }
-     * 
-     */
-    public CreateHospitalizationRequest createCreateHospitalizationRequest() {
-        return new CreateHospitalizationRequest();
-    }
-
-    /**
-     * Create an instance of {@link CreateHospitalizationResponse }
-     * 
-     */
-    public CreateHospitalizationResponse createCreateHospitalizationResponse() {
-        return new CreateHospitalizationResponse();
-    }
-
-    /**
-     * Create an instance of {@link Person }
-     * 
-     */
-    public Person createPerson() {
-        return new Person();
-    }
-
-    /**
-     * Create an instance of {@link AddMovingResponse }
-     * 
-     */
-    public AddMovingResponse createAddMovingResponse() {
-        return new AddMovingResponse();
-    }
-
-    /**
-     * Create an instance of {@link Address }
-     * 
-     */
-    public Address createAddress() {
-        return new Address();
-    }
-
-    /**
      * Create an instance of {@link RbFinance }
      * 
      */
     public RbFinance createRbFinance() {
         return new RbFinance();
+    }
+
+    /**
+     * Create an instance of {@link StationaryReceived }
+     * 
+     */
+    public StationaryReceived createStationaryReceived() {
+        return new StationaryReceived();
     }
 
     /**
@@ -174,11 +118,67 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link VmpTicket }
+     * Create an instance of {@link RbTreatment }
      * 
      */
-    public VmpTicket createVmpTicket() {
-        return new VmpTicket();
+    public RbTreatment createRbTreatment() {
+        return new RbTreatment();
+    }
+
+    /**
+     * Create an instance of {@link CreateHospitalizationResponse }
+     * 
+     */
+    public CreateHospitalizationResponse createCreateHospitalizationResponse() {
+        return new CreateHospitalizationResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateHospitalizationRequest }
+     * 
+     */
+    public CreateHospitalizationRequest createCreateHospitalizationRequest() {
+        return new CreateHospitalizationRequest();
+    }
+
+    /**
+     * Create an instance of {@link Person }
+     * 
+     */
+    public Person createPerson() {
+        return new Person();
+    }
+
+    /**
+     * Create an instance of {@link Contract }
+     * 
+     */
+    public Contract createContract() {
+        return new Contract();
+    }
+
+    /**
+     * Create an instance of {@link StationaryLeaved }
+     * 
+     */
+    public StationaryLeaved createStationaryLeaved() {
+        return new StationaryLeaved();
+    }
+
+    /**
+     * Create an instance of {@link AddMovingResponse }
+     * 
+     */
+    public AddMovingResponse createAddMovingResponse() {
+        return new AddMovingResponse();
+    }
+
+    /**
+     * Create an instance of {@link CloseHospitalizationResponse }
+     * 
+     */
+    public CloseHospitalizationResponse createCloseHospitalizationResponse() {
+        return new CloseHospitalizationResponse();
     }
 
 }
