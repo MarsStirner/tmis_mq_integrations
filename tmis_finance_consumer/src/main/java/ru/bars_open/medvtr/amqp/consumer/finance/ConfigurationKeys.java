@@ -11,11 +11,6 @@ public class ConfigurationKeys {
     public static final String CONSUMER_TAG = "consumer.tag";
     public static final String CONSUMER_UUID = "consumer.uuid";
 
-
-    // Натсройки коннекта к ЦСК (Центральной системе конфигурации
-    public static final String APP_NAME = "APP_NAME";
-    public static final String CONFIG_URL = "CONFIG_URL";
-
     // Настройки соединения с вебсервисом 1С
     public static final String WEBSERVICE_URL = "webservice.url";
     public static final String WEBSERVICE_NAME = "webservice.name";
@@ -31,11 +26,9 @@ public class ConfigurationKeys {
     public static final String QUEUE_DELETED="amqp.queue.deleted";
     public static final String QUEUE_CREATED="amqp.queue.created";
 
-    public static final String ERROR_QUEUE="amqp.error.queue";
     public static final String ERROR_EXCHANGE="amqp.error.exchange";
     public static final String ERROR_ROUTING_KEY="amqp.error.routing_key";
-
-    public static final String MAX_REATTEMPTS = "amqp.error.retryAttempts";
-    public static final String DELAY_REATTEMPT = "amqp.error.delay";
+    public static final String ERROR_DELAY = "amqp.error.delay";
+    public static final String ERROR_REATTEMPTS = "amqp.error.retryAttempts";
 
 }

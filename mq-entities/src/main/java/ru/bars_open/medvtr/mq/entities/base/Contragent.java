@@ -51,8 +51,6 @@ public class Contragent implements Serializable
     @JsonPropertyDescription("\u0422\u0438\u043f \u043a\u043e\u043d\u0442\u0440\u0430\u0433\u0435\u043d\u0442\u0430")
     private Contragent.Type type;
     /**
-     * person
-     * <p>
      * Описание пациента МИС ()
      * 
      */
@@ -113,8 +111,6 @@ public class Contragent implements Serializable
     }
 
     /**
-     * person
-     * <p>
      * Описание пациента МИС ()
      * 
      */
@@ -124,8 +120,6 @@ public class Contragent implements Serializable
     }
 
     /**
-     * person
-     * <p>
      * Описание пациента МИС ()
      * 
      */

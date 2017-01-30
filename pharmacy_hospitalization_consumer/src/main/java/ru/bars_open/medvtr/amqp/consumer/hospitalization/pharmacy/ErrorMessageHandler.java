@@ -30,9 +30,9 @@ public class ErrorMessageHandler {
 
     @Autowired
     public ErrorMessageHandler(final ConfigurationHolder cfg) {
-        this.exchange = cfg.getString(ConfigurationKeys.EXCHANGE_ERROR);
-        this.retryAttempts = cfg.getInt(ConfigurationKeys.RETRY_ATTEMPTS);
-        this.routingKey = cfg.getString(ConfigurationKeys.ROUTING_KEY_ERROR);
+        this.exchange = cfg.getString(ConfigurationKeys.ERROR_EXCHANGE);
+        this.retryAttempts = cfg.getInt(ConfigurationKeys.ERROR_REATTEMPTS);
+        this.routingKey = cfg.getString(ConfigurationKeys.ERROR_ROUTING_KEY);
         this.delay = cfg.getInt(ConfigurationKeys.ERROR_DELAY);
     }
 
@@ -64,6 +64,4 @@ public class ErrorMessageHandler {
         template.send(exchange, routingKey, message, new CorrelationData(message.getMessageProperties().getCorrelationIdString()));
         log.info("#{}: Published to ErrorQueue with message='{}': {}", tag, errorMessage, message.getMessageProperties());
     }
-
-
 }

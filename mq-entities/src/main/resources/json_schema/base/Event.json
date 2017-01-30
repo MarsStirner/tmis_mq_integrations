@@ -1,23 +1,26 @@
 {
   "id": "http://bars-open.ru/medvtr/json-schema/base/Event.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Event",
   "description": "Обращение на лечение",
-  "type": "object",
   "javaType": "ru.bars_open.medvtr.mq.entities.base.Event",
   "properties": {
     "id": {
-      "description": "Идентифкатор",
-      "type": "integer"
+      "description": "Идентифкатор МИС",
+      "type": "integer",
+      "minimum": 0
+    },
+    "externalId": {
+      "description": "номер обращения",
+      "type": "string"
+    },
+    "type": {
+      "description": "Тип обращения",
+      "$ref": "EventType.json"
     },
     "setDate": {
       "description": "дата создания обращения",
       "type": "string",
       "format": "date-time"
-    },
-    "externalId": {
-      "description": "номер обращения",
-      "type": "string"
     },
     "endDate": {
       "description": "дата закрытия обращения",
@@ -25,23 +28,36 @@
       "format": "date-time"
     },
     "client": {
-      "type": "object",
-      "$ref": "Person.json",
-      "description": "пациент из обращения"
+      "description": "Пациент из обращения",
+      "$ref": "Person.json"
     },
-    "contract":{
-      "type": "object",
-      "$ref": "Contract.json",
-      "description": "договор на лечение (контракт)"
+    "orgStructure": {
+      "description": "Текущее отделение ЛПУ в котором находится пациент",
+      "$ref": "OrgStructure.json"
     },
-    "vmpTicket":{
-      "type": "object",
-      "$ref": "VMPTicket.json",
-      "description": "Талон ВМП в рамках обращения"
+    "doctor": {
+      "description": "Лечащий врач в рамках обращения",
+      "$ref": "Person.json"
+    },
+    "contract": {
+      "description": "Договор на лечение (контракт)",
+      "$ref": "Contract.json"
+    },
+    "diagnosis": {
+      "description": "Диагнозы в рамках этого обращения",
+      "type": "array",
+      "items": {
+        "$ref": "Diagnosis.json"
+      }
+    },
+    "vmpTicket": {
+      "description": "Талон ВМП в рамках обращения",
+      "$ref": "VMPTicket.json"
     }
   },
   "required": [
     "id",
-    "externalId"
+    "externalId",
+    "type"
   ]
 }

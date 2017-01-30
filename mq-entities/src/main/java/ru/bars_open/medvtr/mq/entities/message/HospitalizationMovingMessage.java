@@ -33,8 +33,6 @@ public class HospitalizationMovingMessage implements Serializable
 {
 
     /**
-     * Event
-     * <p>
      * Обращение на лечение
      * (Required)
      * 
@@ -57,8 +55,6 @@ public class HospitalizationMovingMessage implements Serializable
     private final static long serialVersionUID = -3654860313827818113L;
 
     /**
-     * Event
-     * <p>
      * Обращение на лечение
      * (Required)
      * 
@@ -69,8 +65,6 @@ public class HospitalizationMovingMessage implements Serializable
     }
 
     /**
-     * Event
-     * <p>
      * Обращение на лечение
      * (Required)
      * 

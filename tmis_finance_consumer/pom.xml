@@ -13,7 +13,7 @@
     <name>[tmis_finance_consumer] AMQP finance consumer </name>
     <description>AMQP consumer for 1C Finance: transform message and send it to SOAP webservice</description>
     <artifactId>tmis_finance_consumer</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -32,17 +32,15 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+        </dependency>
 
         <dependency>
             <!-- Сущности для AMQP -->
             <groupId>ru.bars_open.medvtr</groupId>
             <artifactId>mq-entities</artifactId>
-            <version>LATEST</version>
-        </dependency>
-
-        <dependency>
-            <groupId>ru.bars_open.medvtr</groupId>
-            <artifactId>configuration_loader</artifactId>
             <version>LATEST</version>
         </dependency>
 
@@ -59,23 +57,20 @@
             <version>${version.spring-framework}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${version.spring-framework}</version>
+            <!--Implementation of spring-amqp-->
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
+            <version>1.6.3.RELEASE</version>
         </dependency>
-
-        <!-- Утилиты -->
         <dependency>
-            <!-- Read yaml config files-->
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>1.14</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${version.spring-framework}</version>
         </dependency>
     </dependencies>
 
 
     <build>
-        <finalName>tmis_finance_consumer</finalName>
         <plugins>
             <plugin>
                 <!-- Copy all used libraries to destination folder -->
@@ -121,6 +116,8 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <finalName>${project.artifactId}-full</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
                             <mainClass>${main-class}</mainClass>
@@ -152,6 +149,12 @@
                 </configuration>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 
 

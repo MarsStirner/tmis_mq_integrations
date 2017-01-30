@@ -33,8 +33,6 @@ public class PrescriptionListMessage implements Serializable
 {
 
     /**
-     * Event
-     * <p>
      * Обращение на лечение
      * (Required)
      * 
@@ -57,8 +55,6 @@ public class PrescriptionListMessage implements Serializable
     private final static long serialVersionUID = 7459708951336928418L;
 
     /**
-     * Event
-     * <p>
      * Обращение на лечение
      * (Required)
      * 
@@ -69,8 +65,6 @@ public class PrescriptionListMessage implements Serializable
     }
 
     /**
-     * Event
-     * <p>
      * Обращение на лечение
      * (Required)
      * 

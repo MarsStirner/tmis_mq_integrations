@@ -6,17 +6,16 @@ import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonValue;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.DateTime;
+import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.ActionStatus;
 
 
 /**
@@ -43,13 +42,8 @@ public class Action implements Serializable
     @JsonProperty("id")
     @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u044d\u043a\u0448\u0435\u043d\u0430")
     private Integer id;
-    /**
-     * Статус экшена
-     * 
-     */
     @JsonProperty("status")
-    @JsonPropertyDescription("\u0421\u0442\u0430\u0442\u0443\u0441 \u044d\u043a\u0448\u0435\u043d\u0430")
-    private Action.Status status;
+    private ActionStatus status;
     /**
      * Дата начала работы
      * 
@@ -66,7 +60,7 @@ public class Action implements Serializable
     private DateTime endDate;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = 4613199720259653670L;
+    private final static long serialVersionUID = -6966662169025736441L;
 
     /**
      * Идентификатор экшена
@@ -88,21 +82,13 @@ public class Action implements Serializable
         this.id = id;
     }
 
-    /**
-     * Статус экшена
-     * 
-     */
     @JsonProperty("status")
-    public Action.Status getStatus() {
+    public ActionStatus getStatus() {
         return status;
     }
 
-    /**
-     * Статус экшена
-     * 
-     */
     @JsonProperty("status")
-    public void setStatus(Action.Status status) {
+    public void setStatus(ActionStatus status) {
         this.status = status;
     }
 
@@ -172,46 +158,6 @@ public class Action implements Serializable
         }
         Action rhs = ((Action) other);
         return new EqualsBuilder().append(id, rhs.id).append(status, rhs.status).append(begDate, rhs.begDate).append(endDate, rhs.endDate).append(additionalProperties, rhs.additionalProperties).isEquals();
-    }
-
-    public enum Status {
-
-        STARTED("STARTED"),
-        WAIT("WAIT"),
-        FINISHED("FINISHED");
-        private final String value;
-        private final static Map<String, Action.Status> CONSTANTS = new HashMap<String, Action.Status>();
-
-        static {
-            for (Action.Status c: values()) {
-                CONSTANTS.put(c.value, c);
-            }
-        }
-
-        private Status(String value) {
-            this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        @JsonValue
-        public String value() {
-            return this.value;
-        }
-
-        @JsonCreator
-        public static Action.Status fromValue(String value) {
-            Action.Status constant = CONSTANTS.get(value);
-            if (constant == null) {
-                throw new IllegalArgumentException(value);
-            } else {
-                return constant;
-            }
-        }
-
     }
 
 }

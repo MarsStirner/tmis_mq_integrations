@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.*;
-import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.util.SHandler;
+import ru.bars_open.medvtr.mq.util.SoapLoggingHandler;
 import ru.bars_open.medvtr.mq.entities.base.VMPTicket;
 import ru.bars_open.medvtr.mq.entities.message.HospitalizationCreateMessage;
 import ru.bars_open.medvtr.mq.entities.message.HospitalizationFinishMessage;
@@ -40,7 +40,7 @@ public class WSFactory{
         this.serviceURL = new URL(cfg.getString(ConfigurationKeys.WEBSERVICE_URL));
         this.serviceName = new QName(cfg.getString(ConfigurationKeys.WEBSERVICE_NAMESPACE), cfg.getString(ConfigurationKeys.WEBSERVICE_NAME));
         final PharmacyHospitalization service = new PharmacyHospitalization();
-        service.setHandlerResolver(portInfo -> new ArrayList<>(Collections.singletonList(new SHandler())));
+        service.setHandlerResolver(portInfo -> new ArrayList<>(Collections.singletonList(new SoapLoggingHandler())));
         // Timeout in millis
         int requestTimeout = 10000;
         int connectTimeout = 1000;
@@ -64,7 +64,7 @@ public class WSFactory{
     }
 
 
-    public PharmacyHospitalizationPortType getWebService() throws MalformedURLException {
+    public PharmacyHospitalizationPortType getWebService() {
         return webservice;
     }
 
@@ -264,13 +264,7 @@ public class WSFactory{
         return result;
     }
 
-    private Sex wrapSex(final ru.bars_open.medvtr.mq.entities.base.Person.Sex source) {
-        if (source == null) {
-            return Sex.UNKNOWN;
-        }
-        return Sex.valueOf(source.value());
+    private Sex wrapSex(final ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex source) {
+        return source != null ? Sex.valueOf(source.value()) : Sex.UNKNOWN;
     }
-
-
-
 }

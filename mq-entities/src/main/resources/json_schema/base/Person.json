@@ -1,48 +1,41 @@
 {
   "id": "http://bars-open.ru/medvtr/json-schema/base/Person.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "person",
   "description": "Описание пациента МИС ()",
-  "type": "object",
   "javaType": "ru.bars_open.medvtr.mq.entities.base.Person",
   "properties": {
     "id": {
-      "type": "integer",
       "description": "Идентифкатор МИС",
+      "type": "integer",
       "minimum": 0
     },
     "lastName": {
-      "type": "string",
-      "description": "Фамилия"
+      "description": "Фамилия",
+      "type": "string"
     },
     "firstName": {
-      "type": "string",
-      "description": "Имя"
+      "description": "Имя",
+      "type": "string"
     },
     "patrName": {
-      "type": "string",
-      "description": "Отчество"
+      "description": "Отчество",
+      "type": "string"
     },
     "sex": {
-      "enum": [
-        "MALE",
-        "FEMALE",
-        "UNKNOWN"
-      ],
-      "description": "Пол пациента"
+      "description": "Пол пациента",
+      "$ref": "./refbook/enum/Sex.json"
     },
     "birthDate": {
-      "type": "string",
       "description": "дата и время рождения пациента",
+      "type": "string",
       "format": "date-time"
     },
     "addresses": {
+      "description": "Адреса пациента (тип адреса внутри элемента)",
       "type": "array",
       "items": {
-        "type": "object",
         "$ref": "Address.json"
-      },
-      "description": "Адреса пациента (тип адреса внутри элемента)"
+      }
     }
   },
   "required": [

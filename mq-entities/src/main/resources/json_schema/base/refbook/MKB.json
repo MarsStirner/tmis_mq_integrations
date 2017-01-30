@@ -1,0 +1,28 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/refbook/MKB.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Справочник МКБ-10 (Международный классификатор болезней) ",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.MKB",
+  "properties": {
+    "diagId": {
+      "description": "Идентификатор диагноза",
+      "type": "string"
+    },
+    "diagName": {
+      "description": "Название диагноза",
+      "type": "string"
+    },
+    "blockName": {
+      "description": "Наименование блока диагнозов",
+      "type": "string"
+    },
+    "className": {
+      "description": "Наименование класса диагнозов",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "code"
+  ]
+}

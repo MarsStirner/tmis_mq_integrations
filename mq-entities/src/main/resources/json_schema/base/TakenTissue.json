@@ -1,0 +1,83 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/TakenTissue.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Забор тканей/биоматериала",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.TakenTissue",
+  "properties": {
+    "id": {
+      "description": "Идентифкатор МИС",
+      "type": "integer",
+      "minimum": 0
+    },
+    "event": {
+      "description": "Обращение в рамках которого будут браться ткани",
+      "$ref": "Event.json"
+    },
+    "tissueType": {
+      "description": "Тип забираемой ткани",
+      "$ref": "./refbook/RbTissueType.json"
+    },
+    "tubeType": {
+      "description": "Тип пробирки (емкости) в которую надо забирать ткань",
+      "$ref": "./refbook/RbTubeType.json"
+    },
+    "amount": {
+      "description": "Количество забираемой ткани (колонки amount + unit)",
+      "$ref": "./util/ValueAndUnit.json"
+    },
+    "datetimePlanned": {
+      "description": "дата и время планируемого взятия тканей",
+      "type": "string",
+      "format": "date-time"
+    },
+    "datetimeTaken": {
+      "description": "дата и время фактического взятия тканей",
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "description": "Статус биозабора",
+      "enum": [
+        "STARTED",
+        "WAIT",
+        "FINISHED"
+      ]
+    },
+    "barcode": {
+      "description": "Баркод для этого биозабора (Штрихкод)",
+      "properties": {
+        "period": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "code": {
+          "type": "integer",
+          "minimum": 100000,
+          "maximum": 999999
+        }
+      },
+      "required": [
+        "period",
+        "code"
+      ]
+    },
+    "note": {
+      "description": "примечание",
+      "type": "string"
+    },
+    "person": {
+      "description": "Врач, выполнивший забор ткани (медсестра)",
+      "$ref": "Person.json"
+    }
+  },
+  "required": [
+    "id",
+    "event",
+    "tissueType",
+    "tubeType",
+    "amount",
+    "datetimePlanned",
+    "status",
+    "barcode"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/Diagnosis.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Диагноз",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.Diagnosis",
+  "properties": {
+    "id": {
+      "description": "Идентифкатор МИС",
+      "type": "integer",
+      "minimum": 0
+    },
+    "type": {
+      "description": "Код записи справочника",
+      "$ref": "./refbook/RbDiagnosisType.json"
+    },
+    "MKB": {
+      "description": "Диагноз по МКБ-10",
+      "$ref": "./refbook/MKB.json"
+    }
+  },
+  "required": [
+    "id",
+    "type",
+    "MKB"
+  ]
+}

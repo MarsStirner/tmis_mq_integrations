@@ -8,22 +8,19 @@ import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonValue;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.DateTime;
+import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex;
 
 
 /**
- * person
- * <p>
  * Описание пациента МИС ()
  * 
  */
@@ -69,13 +66,8 @@ public class Person implements Serializable
     @JsonProperty("patrName")
     @JsonPropertyDescription("\u041e\u0442\u0447\u0435\u0441\u0442\u0432\u043e")
     private String patrName;
-    /**
-     * Пол пациента
-     * 
-     */
     @JsonProperty("sex")
-    @JsonPropertyDescription("\u041f\u043e\u043b \u043f\u0430\u0446\u0438\u0435\u043d\u0442\u0430")
-    private Person.Sex sex;
+    private Sex sex;
     /**
      * дата и время рождения пациента
      * 
@@ -92,7 +84,7 @@ public class Person implements Serializable
     private List<Address> addresses = new ArrayList<Address>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = 5019600373930646372L;
+    private final static long serialVersionUID = -929455486148392373L;
 
     /**
      * Идентифкатор МИС
@@ -168,21 +160,13 @@ public class Person implements Serializable
         this.patrName = patrName;
     }
 
-    /**
-     * Пол пациента
-     * 
-     */
     @JsonProperty("sex")
-    public Person.Sex getSex() {
+    public Sex getSex() {
         return sex;
     }
 
-    /**
-     * Пол пациента
-     * 
-     */
     @JsonProperty("sex")
-    public void setSex(Person.Sex sex) {
+    public void setSex(Sex sex) {
         this.sex = sex;
     }
 
@@ -252,46 +236,6 @@ public class Person implements Serializable
         }
         Person rhs = ((Person) other);
         return new EqualsBuilder().append(id, rhs.id).append(lastName, rhs.lastName).append(firstName, rhs.firstName).append(patrName, rhs.patrName).append(sex, rhs.sex).append(birthDate, rhs.birthDate).append(addresses, rhs.addresses).append(additionalProperties, rhs.additionalProperties).isEquals();
-    }
-
-    public enum Sex {
-
-        MALE("MALE"),
-        FEMALE("FEMALE"),
-        UNKNOWN("UNKNOWN");
-        private final String value;
-        private final static Map<String, Person.Sex> CONSTANTS = new HashMap<String, Person.Sex>();
-
-        static {
-            for (Person.Sex c: values()) {
-                CONSTANTS.put(c.value, c);
-            }
-        }
-
-        private Sex(String value) {
-            this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        @JsonValue
-        public String value() {
-            return this.value;
-        }
-
-        @JsonCreator
-        public static Person.Sex fromValue(String value) {
-            Person.Sex constant = CONSTANTS.get(value);
-            if (constant == null) {
-                throw new IllegalArgumentException(value);
-            } else {
-                return constant;
-            }
-        }
-
     }
 
 }

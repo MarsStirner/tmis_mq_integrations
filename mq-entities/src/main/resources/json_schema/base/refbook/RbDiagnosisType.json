@@ -1,0 +1,25 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/refbook/RbDiagnosisType.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Справочник источников финансирования",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.RbDiagnosisType",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентифкатор МИС",
+      "minimum": 0
+    },
+    "code": {
+      "type": "string",
+      "description": "Код записи справочника"
+    },
+    "name": {
+      "type": "string",
+      "description": "Наименование записи справочника"
+    }
+  },
+  "required": [
+    "id",
+    "code"
+  ]
+}

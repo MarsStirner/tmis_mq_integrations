@@ -4,11 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.bars_open.medvtr.mq.entities.base.*;
+import ru.bars_open.medvtr.mq.entities.base.Event;
+import ru.bars_open.medvtr.mq.entities.base.Invoice;
+import ru.bars_open.medvtr.mq.entities.base.Person;
 import ru.bars_open.medvtr.mq.entities.message.InvoiceMessage;
 
 import java.math.BigInteger;
-import java.net.MalformedURLException;
 
 /**
  * Author: Upatov Egor <br>
@@ -22,9 +23,9 @@ public class FinanceSender {
     private static final Logger log = LoggerFactory.getLogger(ConsumerCreated.class);
 
     @Autowired
-    private FinanceWSFactory wsFactory;
+    private WSFactory wsFactory;
 
-    public int sendInvoice(final long messageTag, final InvoiceMessage message, boolean deleted) throws MalformedURLException {
+    public int sendInvoice(final long messageTag, final InvoiceMessage message, boolean deleted) {
         final Event event = message.getEvent();
         final Invoice invoice = message.getInvoice();
         final Person client = message.getEvent().getClient();
@@ -45,7 +46,7 @@ public class FinanceSender {
         return result.intValue();
     }
 
-    public String sendRefund(final long messageTag, final InvoiceMessage message) throws MalformedURLException {
+    public String sendRefund(final long messageTag, final InvoiceMessage message) {
         final Invoice invoice = message.getInvoice();
         final String parentNumber = invoice.getParent() != null  ? invoice.getParent().getNumber() : "";
         final String result =  wsFactory.getWebService().putReturn(

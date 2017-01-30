@@ -11,9 +11,6 @@ public class ConfigurationKeys {
     public static final String CONSUMER_TAG = "consumer.tag";
     public static final String CONSUMER_UUID = "consumer.uuid";
 
-    // Натсройки коннекта к ЦСК (Центральной системе конфигурации
-    public static final String APP_NAME = "appName";
-
     // Настройки соединения с вебсервисом 1С
     public static final String WEBSERVICE_URL = "webservice.url";
     public static final String WEBSERVICE_NAME = "webservice.name";
@@ -31,9 +28,10 @@ public class ConfigurationKeys {
     public static final String ROUTING_KEY_CLOSE = "amqp.binding.close.routing_key";
     public static final String ROUTING_KEY_MOVING = "amqp.binding.moving.routing_key";
 
-    public static final String EXCHANGE_ERROR = "amqp.error.exchange";
-    public static final String ROUTING_KEY_ERROR = "amqp.error.routing_key";
-    public static final String RETRY_ATTEMPTS = "amqp.error.retryAttempts";
+    public static final String ERROR_EXCHANGE="amqp.error.exchange";
+    public static final String ERROR_ROUTING_KEY="amqp.error.routing_key";
     public static final String ERROR_DELAY = "amqp.error.delay";
+    public static final String ERROR_REATTEMPTS = "amqp.error.retryAttempts";
+
 
 }

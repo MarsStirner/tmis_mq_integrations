@@ -17,7 +17,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <main-class>ru.bars_open.medvtr.amqp.consumer.pharmacy.medical_prescription.ApplicationConfig</main-class>
+        <main-class>ru.bars_open.medvtr.amqp.consumer.medical_prescription.pharmacy.ApplicationConfig</main-class>
         <!-- Library Versions -->
         <version.spring-framework>4.3.3.RELEASE</version.spring-framework>
     </properties>
@@ -27,6 +27,10 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -53,23 +57,21 @@
             <version>${version.spring-framework}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${version.spring-framework}</version>
+            <!--Implementation of spring-amqp-->
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
+            <version>1.6.3.RELEASE</version>
         </dependency>
-
-        <!-- Утилиты -->
         <dependency>
-            <!-- Read yaml config files-->
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>1.14</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${version.spring-framework}</version>
         </dependency>
     </dependencies>
 
 
+
     <build>
-        <finalName>tmis_finance_consumer</finalName>
         <plugins>
             <plugin>
                 <!-- Copy all used libraries to destination folder -->
@@ -115,6 +117,8 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <finalName>${project.artifactId}-full</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
                             <mainClass>${main-class}</mainClass>
@@ -146,6 +150,12 @@
                 </configuration>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 
 

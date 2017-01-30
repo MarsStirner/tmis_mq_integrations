@@ -1,0 +1,53 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/action/Analysis.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Исследование с перечнем лабораторных тестов для исполнения",
+  "javaType": "ru.bars_open.medvtr.mq.entities.action.Analysis",
+  "properties": {
+    "id": {
+      "description": "Идентификатор экшена",
+      "type": "integer",
+      "minimum": 0
+    },
+    "status": {
+      "description": "Статус экшена",
+      "$ref": "../base/refbook/enum/ActionStatus.json"
+    },
+    "type":{
+      "description": "Тип экшена",
+      "$ref": "../base/ActionType.json"
+    },
+    "isUrgent": {
+      "description" : "Флаг срочности исследования",
+      "type": "boolean"
+    },
+    "assigner":{
+      "description": "Ответсвенный врач",
+      "$ref": "../base/Person.json"
+    },
+    "begDate": {
+      "description": "Дата начала работы",
+      "type": "string",
+      "format": "date-time"
+    },
+    "endDate": {
+      "description": "Дата окончания работы",
+      "type": "string",
+      "format": "date-time"
+    },
+    "tests": {
+      "description": "список тестов в рамках исследования",
+      "type" : "array",
+      "items": {
+        "$ref": "../base/refbook/RbTest.json"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "status",
+    "type",
+    "isUrgent",
+    "tests"
+  ]
+}

@@ -33,8 +33,6 @@ public class InvoiceMessage implements Serializable
 {
 
     /**
-     * Event
-     * <p>
      * Обращение на лечение
      * (Required)
      * 
@@ -57,8 +55,6 @@ public class InvoiceMessage implements Serializable
     private final static long serialVersionUID = -2791392774789909973L;
 
     /**
-     * Event
-     * <p>
      * Обращение на лечение
      * (Required)
      * 
@@ -69,8 +65,6 @@ public class InvoiceMessage implements Serializable
     }
 
     /**
-     * Event
-     * <p>
      * Обращение на лечение
      * (Required)
      * 

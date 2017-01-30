@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.exceptions.MessageIsIncorrectException;
+import ru.bars_open.medvtr.mq.util.exceptions.MessageIsIncorrectException;
 import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.CreateHospitalizationRequest;
 import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.CreateHospitalizationResponse;
 import ru.bars_open.medvtr.mq.entities.message.HospitalizationCreateMessage;

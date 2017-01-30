@@ -1,4 +1,4 @@
-package ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.util;
+package ru.bars_open.medvtr.mq.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ import java.util.Set;
  * Company: hitsl (Hi-Tech Solutions) <br>
  * Description: <br>
  */
-public class SHandler implements SOAPHandler<SOAPMessageContext> {
+public class SoapLoggingHandler implements SOAPHandler<SOAPMessageContext> {
 
     private static final Logger log = LoggerFactory.getLogger("SOAP");
 

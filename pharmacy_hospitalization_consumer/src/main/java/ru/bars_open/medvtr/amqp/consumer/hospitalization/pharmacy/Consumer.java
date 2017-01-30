@@ -9,8 +9,8 @@ import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.exceptions.MessageIsIncorrectException;
-import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.exceptions.UnknownRoutingKeyException;
+import ru.bars_open.medvtr.mq.util.exceptions.MessageIsIncorrectException;
+import ru.bars_open.medvtr.mq.util.exceptions.UnknownRoutingKeyException;
 import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
 import ru.bars_open.medvtr.mq.util.DeserializationFactory;
 
