@@ -1,0 +1,8 @@
+{
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex",
+  "enum": [
+    "MALE",
+    "FEMALE",
+    "UNKNOWN"
+  ]
+}

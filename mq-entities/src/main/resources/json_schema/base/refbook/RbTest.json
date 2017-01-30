@@ -1,0 +1,25 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/refbook/RbTest.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Справочник тестов ТМИС",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.RbTest",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентифкатор МИС",
+      "minimum": 0
+    },
+    "code": {
+      "type": "string",
+      "description": "Код записи справочника"
+    },
+    "name": {
+      "type": "string",
+      "description": "Наименование записи справочника"
+    }
+  },
+  "required": [
+    "id",
+    "code"
+  ]
+}

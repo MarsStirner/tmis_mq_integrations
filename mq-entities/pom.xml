@@ -71,6 +71,7 @@
                     <initializeCollections>true</initializeCollections>
                     <includeToString>true</includeToString>
                     <includeHashcodeAndEquals>true</includeHashcodeAndEquals>
+                    <!--<includeJsr303Annotations>true</includeJsr303Annotations>-->
                     <serializable>true</serializable>
 
                     <outputEncoding>UTF-8</outputEncoding>

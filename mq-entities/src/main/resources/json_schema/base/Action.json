@@ -12,12 +12,8 @@
       "minimum": 0
     },
     "status": {
-      "enum": [
-        "STARTED",
-        "WAIT",
-        "FINISHED"
-      ],
-      "description": "Статус экшена"
+      "description": "Статус экшена",
+      "$ref": "../base/refbook/enum/ActionStatus.json"
     },
     "begDate": {
       "description": "Дата начала работы",

@@ -1,0 +1,39 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/refbook/RbTubeType.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Справочник типов прорбирок и ёмкостей (для биозаборов)",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.RbTubeType",
+  "properties": {
+    "id": {
+      "description": "Идентифкатор МИС",
+      "type": "integer",
+      "minimum": 0
+    },
+    "code": {
+      "description": "Код записи справочника",
+      "type": "string"
+    },
+    "name": {
+      "description": "Наименование записи справочника",
+      "type": "string"
+    },
+    "volume" :{
+      "description": "Объем пробирки/ёмкости",
+      "$ref": "../util/ValueAndUnit.json"
+    },
+    "color" : {
+      "description": "Цветовое обозначение ёмкости",
+      "type": "string"
+    },
+    "image" : {
+      "description": "Изображение пробирки/ссылка на изображение",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "code",
+    "name",
+    "volume"
+  ]
+}

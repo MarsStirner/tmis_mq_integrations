@@ -2,7 +2,9 @@
 package ru.bars_open.medvtr.mq.entities.base;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -18,39 +20,34 @@ import org.joda.time.DateTime;
 
 
 /**
- * Event
- * <p>
  * Обращение на лечение
  * 
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "id",
-    "setDate",
     "externalId",
+    "type",
+    "setDate",
     "endDate",
     "client",
+    "orgStructure",
+    "doctor",
     "contract",
+    "diagnosis",
     "vmpTicket"
 })
 public class Event implements Serializable
 {
 
     /**
-     * Идентифкатор
+     * Идентифкатор МИС
      * (Required)
      * 
      */
     @JsonProperty("id")
-    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u043a\u0430\u0442\u043e\u0440")
+    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u043a\u0430\u0442\u043e\u0440 \u041c\u0418\u0421")
     private Integer id;
-    /**
-     * дата создания обращения
-     * 
-     */
-    @JsonProperty("setDate")
-    @JsonPropertyDescription("\u0434\u0430\u0442\u0430 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f \u043e\u0431\u0440\u0430\u0449\u0435\u043d\u0438\u044f")
-    private DateTime setDate;
     /**
      * номер обращения
      * (Required)
@@ -60,6 +57,21 @@ public class Event implements Serializable
     @JsonPropertyDescription("\u043d\u043e\u043c\u0435\u0440 \u043e\u0431\u0440\u0430\u0449\u0435\u043d\u0438\u044f")
     private String externalId;
     /**
+     * Тип обращения на лечение
+     * (Required)
+     * 
+     */
+    @JsonProperty("type")
+    @JsonPropertyDescription("\u0422\u0438\u043f \u043e\u0431\u0440\u0430\u0449\u0435\u043d\u0438\u044f \u043d\u0430 \u043b\u0435\u0447\u0435\u043d\u0438\u0435")
+    private EventType type;
+    /**
+     * дата создания обращения
+     * 
+     */
+    @JsonProperty("setDate")
+    @JsonPropertyDescription("\u0434\u0430\u0442\u0430 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f \u043e\u0431\u0440\u0430\u0449\u0435\u043d\u0438\u044f")
+    private DateTime setDate;
+    /**
      * дата закрытия обращения
      * 
      */
@@ -67,14 +79,28 @@ public class Event implements Serializable
     @JsonPropertyDescription("\u0434\u0430\u0442\u0430 \u0437\u0430\u043a\u0440\u044b\u0442\u0438\u044f \u043e\u0431\u0440\u0430\u0449\u0435\u043d\u0438\u044f")
     private DateTime endDate;
     /**
-     * person
-     * <p>
      * Описание пациента МИС ()
      * 
      */
     @JsonProperty("client")
     @JsonPropertyDescription("\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u043f\u0430\u0446\u0438\u0435\u043d\u0442\u0430 \u041c\u0418\u0421 ()")
     private Person client;
+    /**
+     * OrgStructure
+     * <p>
+     * Отделение больницы
+     * 
+     */
+    @JsonProperty("orgStructure")
+    @JsonPropertyDescription("\u041e\u0442\u0434\u0435\u043b\u0435\u043d\u0438\u0435 \u0431\u043e\u043b\u044c\u043d\u0438\u0446\u044b")
+    private OrgStructure orgStructure;
+    /**
+     * Описание пациента МИС ()
+     * 
+     */
+    @JsonProperty("doctor")
+    @JsonPropertyDescription("\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u043f\u0430\u0446\u0438\u0435\u043d\u0442\u0430 \u041c\u0418\u0421 ()")
+    private Person doctor;
     /**
      * Contract
      * <p>
@@ -84,6 +110,13 @@ public class Event implements Serializable
     @JsonProperty("contract")
     @JsonPropertyDescription("\u0414\u043e\u0433\u043e\u0432\u043e\u0440 \u043d\u0430 \u043b\u0435\u0447\u0435\u043d\u0438\u0435 (\u043a\u043e\u043d\u0442\u0440\u0430\u043a\u0442)")
     private Contract contract;
+    /**
+     * Диагнозы в рамках этого обращения
+     * 
+     */
+    @JsonProperty("diagnosis")
+    @JsonPropertyDescription("\u0414\u0438\u0430\u0433\u043d\u043e\u0437\u044b \u0432 \u0440\u0430\u043c\u043a\u0430\u0445 \u044d\u0442\u043e\u0433\u043e \u043e\u0431\u0440\u0430\u0449\u0435\u043d\u0438\u044f")
+    private List<Diagnosis> diagnosis = new ArrayList<Diagnosis>();
     /**
      * VMPTicket
      * <p>
@@ -95,10 +128,10 @@ public class Event implements Serializable
     private VMPTicket vmpTicket;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = 8252230292572864404L;
+    private final static long serialVersionUID = 3770161331212346812L;
 
     /**
-     * Идентифкатор
+     * Идентифкатор МИС
      * (Required)
      * 
      */
@@ -108,31 +141,13 @@ public class Event implements Serializable
     }
 
     /**
-     * Идентифкатор
+     * Идентифкатор МИС
      * (Required)
      * 
      */
     @JsonProperty("id")
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    /**
-     * дата создания обращения
-     * 
-     */
-    @JsonProperty("setDate")
-    public DateTime getSetDate() {
-        return setDate;
-    }
-
-    /**
-     * дата создания обращения
-     * 
-     */
-    @JsonProperty("setDate")
-    public void setSetDate(DateTime setDate) {
-        this.setDate = setDate;
     }
 
     /**
@@ -156,6 +171,44 @@ public class Event implements Serializable
     }
 
     /**
+     * Тип обращения на лечение
+     * (Required)
+     * 
+     */
+    @JsonProperty("type")
+    public EventType getType() {
+        return type;
+    }
+
+    /**
+     * Тип обращения на лечение
+     * (Required)
+     * 
+     */
+    @JsonProperty("type")
+    public void setType(EventType type) {
+        this.type = type;
+    }
+
+    /**
+     * дата создания обращения
+     * 
+     */
+    @JsonProperty("setDate")
+    public DateTime getSetDate() {
+        return setDate;
+    }
+
+    /**
+     * дата создания обращения
+     * 
+     */
+    @JsonProperty("setDate")
+    public void setSetDate(DateTime setDate) {
+        this.setDate = setDate;
+    }
+
+    /**
      * дата закрытия обращения
      * 
      */
@@ -174,8 +227,6 @@ public class Event implements Serializable
     }
 
     /**
-     * person
-     * <p>
      * Описание пациента МИС ()
      * 
      */
@@ -185,14 +236,52 @@ public class Event implements Serializable
     }
 
     /**
-     * person
-     * <p>
      * Описание пациента МИС ()
      * 
      */
     @JsonProperty("client")
     public void setClient(Person client) {
         this.client = client;
+    }
+
+    /**
+     * OrgStructure
+     * <p>
+     * Отделение больницы
+     * 
+     */
+    @JsonProperty("orgStructure")
+    public OrgStructure getOrgStructure() {
+        return orgStructure;
+    }
+
+    /**
+     * OrgStructure
+     * <p>
+     * Отделение больницы
+     * 
+     */
+    @JsonProperty("orgStructure")
+    public void setOrgStructure(OrgStructure orgStructure) {
+        this.orgStructure = orgStructure;
+    }
+
+    /**
+     * Описание пациента МИС ()
+     * 
+     */
+    @JsonProperty("doctor")
+    public Person getDoctor() {
+        return doctor;
+    }
+
+    /**
+     * Описание пациента МИС ()
+     * 
+     */
+    @JsonProperty("doctor")
+    public void setDoctor(Person doctor) {
+        this.doctor = doctor;
     }
 
     /**
@@ -215,6 +304,24 @@ public class Event implements Serializable
     @JsonProperty("contract")
     public void setContract(Contract contract) {
         this.contract = contract;
+    }
+
+    /**
+     * Диагнозы в рамках этого обращения
+     * 
+     */
+    @JsonProperty("diagnosis")
+    public List<Diagnosis> getDiagnosis() {
+        return diagnosis;
+    }
+
+    /**
+     * Диагнозы в рамках этого обращения
+     * 
+     */
+    @JsonProperty("diagnosis")
+    public void setDiagnosis(List<Diagnosis> diagnosis) {
+        this.diagnosis = diagnosis;
     }
 
     /**
@@ -256,7 +363,7 @@ public class Event implements Serializable
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(setDate).append(externalId).append(endDate).append(client).append(contract).append(vmpTicket).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(id).append(externalId).append(type).append(setDate).append(endDate).append(client).append(orgStructure).append(doctor).append(contract).append(diagnosis).append(vmpTicket).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -268,7 +375,7 @@ public class Event implements Serializable
             return false;
         }
         Event rhs = ((Event) other);
-        return new EqualsBuilder().append(id, rhs.id).append(setDate, rhs.setDate).append(externalId, rhs.externalId).append(endDate, rhs.endDate).append(client, rhs.client).append(contract, rhs.contract).append(vmpTicket, rhs.vmpTicket).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(id, rhs.id).append(externalId, rhs.externalId).append(type, rhs.type).append(setDate, rhs.setDate).append(endDate, rhs.endDate).append(client, rhs.client).append(orgStructure, rhs.orgStructure).append(doctor, rhs.doctor).append(contract, rhs.contract).append(diagnosis, rhs.diagnosis).append(vmpTicket, rhs.vmpTicket).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

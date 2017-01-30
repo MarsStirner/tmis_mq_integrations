@@ -264,13 +264,7 @@ public class WSFactory{
         return result;
     }
 
-    private Sex wrapSex(final ru.bars_open.medvtr.mq.entities.base.Person.Sex source) {
-        if (source == null) {
-            return Sex.UNKNOWN;
-        }
-        return Sex.valueOf(source.value());
+    private Sex wrapSex(final ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex source) {
+        return source != null ? Sex.valueOf(source.value()) : Sex.UNKNOWN;
     }
-
-
-
 }

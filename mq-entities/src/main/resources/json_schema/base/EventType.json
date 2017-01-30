@@ -1,0 +1,26 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/EventType.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Тип обращения на лечение",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.EventType",
+  "properties": {
+    "id": {
+      "description": "Идентифкатор МИС",
+      "type": "integer",
+      "minimum": 0
+    },
+    "code": {
+      "description": "Код записи справочника",
+      "type": "string"
+    },
+    "name": {
+      "description": "Наименование записи справочника",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "code",
+    "name"
+  ]
+}

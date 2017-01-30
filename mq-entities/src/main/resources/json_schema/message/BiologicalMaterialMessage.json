@@ -1,0 +1,24 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/message/BiologicalMaterialMessage.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "BiologicalMaterialMessage",
+  "description": "Сообщения содержащее даные о заборе биоматериала",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.message.BiologicalMaterialMessage",
+  "properties": {
+    "takenTissue": {
+      "description": "Биозабор",
+      "$ref": "../base/TakenTissue.json"
+    },
+    "analysis": {
+      "description": "Экшены - анализы",
+      "type": "array",
+      "items": {
+        "$ref": "../action/Analysis.json"
+      }
+    }
+  },
+  "required": [
+    "takenTissue"
+  ]
+}

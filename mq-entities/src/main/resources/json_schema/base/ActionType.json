@@ -1,0 +1,35 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/ActionType.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Тип экшена",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.ActionType",
+  "properties": {
+    "id": {
+      "description": "Идентифкатор МИС",
+      "type": "integer",
+      "minimum": 0
+    },
+    "code": {
+      "description": "Код записи справочника",
+      "type": "string"
+    },
+    "name": {
+      "description": "Наименование записи справочника",
+      "type": "string"
+    },
+    "flatCode": {
+      "description": "Плоский код",
+      "type": "string"
+    },
+    "mnemonic": {
+      "description": "Мнемоника",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "code",
+    "name",
+    "flatCode"
+  ]
+}
