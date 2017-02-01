@@ -6,19 +6,21 @@
   "type": "object",
   "javaType": "ru.bars_open.medvtr.mq.entities.message.BiologicalMaterialMessage",
   "properties": {
-    "biomaterial": {
-      "description": "Биозабор",
-      "$ref": "../base/Biomaterial.json"
+    "code": {
+      "description": "Код ошибки",
+      "type": "integer"
     },
-    "research": {
-      "description": "Экшены - исследования",
-      "type": "array",
-      "items": {
-        "$ref": "../action/Analysis.json"
-      }
+    "message": {
+      "description": "текстовове описание ошибки",
+      "type": "integer"
+    },
+    "errorData": {
+      "description": "дополнительные данные ошибки",
+      "type": "object"
     }
   },
   "required": [
-    "takenTissue"
+    "code",
+    "message"
   ]
 }

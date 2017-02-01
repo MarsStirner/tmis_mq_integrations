@@ -17,8 +17,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.DateTime;
-import ru.bars_open.medvtr.mq.entities.base.refbook.RbTissueType;
-import ru.bars_open.medvtr.mq.entities.base.refbook.RbTubeType;
+import ru.bars_open.medvtr.mq.entities.base.refbook.RbBiomaterialType;
+import ru.bars_open.medvtr.mq.entities.base.refbook.RbTestTubeType;
 import ru.bars_open.medvtr.mq.entities.base.util.ValueAndUnit;
 
 
@@ -30,8 +30,8 @@ import ru.bars_open.medvtr.mq.entities.base.util.ValueAndUnit;
 @JsonPropertyOrder({
     "id",
     "event",
-    "tissueType",
-    "tubeType",
+    "biomaterialType",
+    "testTubeType",
     "amount",
     "datetimePlanned",
     "datetimeTaken",
@@ -40,7 +40,7 @@ import ru.bars_open.medvtr.mq.entities.base.util.ValueAndUnit;
     "note",
     "person"
 })
-public class TakenTissue implements Serializable
+public class Biomaterial implements Serializable
 {
 
     /**
@@ -64,17 +64,17 @@ public class TakenTissue implements Serializable
      * (Required)
      * 
      */
-    @JsonProperty("tissueType")
+    @JsonProperty("biomaterialType")
     @JsonPropertyDescription("\u0421\u043f\u0440\u0430\u0432\u043e\u0447\u043d\u0438\u043a \u0442\u0438\u043f\u043e\u0432 \u0442\u043a\u0430\u043d\u0438 (\u0434\u043b\u044f \u0431\u0438\u043e\u0437\u0430\u0431\u043e\u0440\u043e\u0432)")
-    private RbTissueType tissueType;
+    private RbBiomaterialType biomaterialType;
     /**
      * Справочник типов прорбирок и ёмкостей (для биозаборов)
      * (Required)
      * 
      */
-    @JsonProperty("tubeType")
+    @JsonProperty("testTubeType")
     @JsonPropertyDescription("\u0421\u043f\u0440\u0430\u0432\u043e\u0447\u043d\u0438\u043a \u0442\u0438\u043f\u043e\u0432 \u043f\u0440\u043e\u0440\u0431\u0438\u0440\u043e\u043a \u0438 \u0451\u043c\u043a\u043e\u0441\u0442\u0435\u0439 (\u0434\u043b\u044f \u0431\u0438\u043e\u0437\u0430\u0431\u043e\u0440\u043e\u0432)")
-    private RbTubeType tubeType;
+    private RbTestTubeType testTubeType;
     /**
      * ValueAndUnit
      * <p>
@@ -107,7 +107,7 @@ public class TakenTissue implements Serializable
      */
     @JsonProperty("status")
     @JsonPropertyDescription("\u0421\u0442\u0430\u0442\u0443\u0441 \u0431\u0438\u043e\u0437\u0430\u0431\u043e\u0440\u0430")
-    private TakenTissue.Status status;
+    private Biomaterial.Status status;
     /**
      * Баркод для этого биозабора (Штрихкод)
      * (Required)
@@ -132,7 +132,7 @@ public class TakenTissue implements Serializable
     private Person person;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = -3993026632332724847L;
+    private final static long serialVersionUID = -5060724009271326872L;
 
     /**
      * Идентифкатор МИС
@@ -179,9 +179,9 @@ public class TakenTissue implements Serializable
      * (Required)
      * 
      */
-    @JsonProperty("tissueType")
-    public RbTissueType getTissueType() {
-        return tissueType;
+    @JsonProperty("biomaterialType")
+    public RbBiomaterialType getBiomaterialType() {
+        return biomaterialType;
     }
 
     /**
@@ -189,9 +189,9 @@ public class TakenTissue implements Serializable
      * (Required)
      * 
      */
-    @JsonProperty("tissueType")
-    public void setTissueType(RbTissueType tissueType) {
-        this.tissueType = tissueType;
+    @JsonProperty("biomaterialType")
+    public void setBiomaterialType(RbBiomaterialType biomaterialType) {
+        this.biomaterialType = biomaterialType;
     }
 
     /**
@@ -199,9 +199,9 @@ public class TakenTissue implements Serializable
      * (Required)
      * 
      */
-    @JsonProperty("tubeType")
-    public RbTubeType getTubeType() {
-        return tubeType;
+    @JsonProperty("testTubeType")
+    public RbTestTubeType getTestTubeType() {
+        return testTubeType;
     }
 
     /**
@@ -209,9 +209,9 @@ public class TakenTissue implements Serializable
      * (Required)
      * 
      */
-    @JsonProperty("tubeType")
-    public void setTubeType(RbTubeType tubeType) {
-        this.tubeType = tubeType;
+    @JsonProperty("testTubeType")
+    public void setTestTubeType(RbTestTubeType testTubeType) {
+        this.testTubeType = testTubeType;
     }
 
     /**
@@ -282,7 +282,7 @@ public class TakenTissue implements Serializable
      * 
      */
     @JsonProperty("status")
-    public TakenTissue.Status getStatus() {
+    public Biomaterial.Status getStatus() {
         return status;
     }
 
@@ -292,7 +292,7 @@ public class TakenTissue implements Serializable
      * 
      */
     @JsonProperty("status")
-    public void setStatus(TakenTissue.Status status) {
+    public void setStatus(Biomaterial.Status status) {
         this.status = status;
     }
 
@@ -369,7 +369,7 @@ public class TakenTissue implements Serializable
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(event).append(tissueType).append(tubeType).append(amount).append(datetimePlanned).append(datetimeTaken).append(status).append(barcode).append(note).append(person).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(id).append(event).append(biomaterialType).append(testTubeType).append(amount).append(datetimePlanned).append(datetimeTaken).append(status).append(barcode).append(note).append(person).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -377,11 +377,11 @@ public class TakenTissue implements Serializable
         if (other == this) {
             return true;
         }
-        if ((other instanceof TakenTissue) == false) {
+        if ((other instanceof Biomaterial) == false) {
             return false;
         }
-        TakenTissue rhs = ((TakenTissue) other);
-        return new EqualsBuilder().append(id, rhs.id).append(event, rhs.event).append(tissueType, rhs.tissueType).append(tubeType, rhs.tubeType).append(amount, rhs.amount).append(datetimePlanned, rhs.datetimePlanned).append(datetimeTaken, rhs.datetimeTaken).append(status, rhs.status).append(barcode, rhs.barcode).append(note, rhs.note).append(person, rhs.person).append(additionalProperties, rhs.additionalProperties).isEquals();
+        Biomaterial rhs = ((Biomaterial) other);
+        return new EqualsBuilder().append(id, rhs.id).append(event, rhs.event).append(biomaterialType, rhs.biomaterialType).append(testTubeType, rhs.testTubeType).append(amount, rhs.amount).append(datetimePlanned, rhs.datetimePlanned).append(datetimeTaken, rhs.datetimeTaken).append(status, rhs.status).append(barcode, rhs.barcode).append(note, rhs.note).append(person, rhs.person).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
     public enum Status {
@@ -390,10 +390,10 @@ public class TakenTissue implements Serializable
         WAIT("WAIT"),
         FINISHED("FINISHED");
         private final String value;
-        private final static Map<String, TakenTissue.Status> CONSTANTS = new HashMap<String, TakenTissue.Status>();
+        private final static Map<String, Biomaterial.Status> CONSTANTS = new HashMap<String, Biomaterial.Status>();
 
         static {
-            for (TakenTissue.Status c: values()) {
+            for (Biomaterial.Status c: values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
@@ -413,8 +413,8 @@ public class TakenTissue implements Serializable
         }
 
         @JsonCreator
-        public static TakenTissue.Status fromValue(String value) {
-            TakenTissue.Status constant = CONSTANTS.get(value);
+        public static Biomaterial.Status fromValue(String value) {
+            Biomaterial.Status constant = CONSTANTS.get(value);
             if (constant == null) {
                 throw new IllegalArgumentException(value);
             } else {

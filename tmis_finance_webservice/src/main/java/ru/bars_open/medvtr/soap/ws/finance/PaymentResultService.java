@@ -1,5 +1,6 @@
 package ru.bars_open.medvtr.soap.ws.finance;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,10 +53,11 @@ public class PaymentResultService {
     @Transactional
     public ApplyPaymentResponse applyPayment(@RequestPayload ApplyPaymentRequest request) throws Exception {
         final int logTag = counter.incrementAndGet();
-        log.info("#{} Call PaymentResultService.applyPayment(sum={}, trxDateTime='{}', invoiceNumber='{}', payType={}, contragentId={})",
+        log.info("#{} Call PaymentResultService.applyPayment(sum={}, trxDateTime='{}', invoiceId='{}', invoiceNumber='{}', payType={}, contragentId={})",
                  logTag,
                  request.getSum(),
                  request.getTrxDatetime(),
+                 request.getInvoiceId(),
                  request.getInvoiceNumber(),
                  request.getPayType(),
                  request.getContragentId()
@@ -63,10 +65,13 @@ public class PaymentResultService {
         final LocalDateTime transactionDateTime = new LocalDateTime(request.getTrxDatetime().toGregorianCalendar());
         final ApplyPaymentResponse response = new ApplyPaymentResponse();
         // Ищем счет по номеру
-        final Invoice invoice = invoiceDao.getByNumber(request.getInvoiceNumber());
+        final Invoice invoice = invoiceDao.get(request.getInvoiceId());
         if (invoice == null) {
-            log.error("#{} Error: no Invoice[number='{}'] found", logTag, request.getInvoiceNumber());
-            throw new Exception("Error: no Invoice[number='"+request.getInvoiceNumber()+"'] found");
+            log.error("#{} Error: no Invoice[{}] found", logTag, request.getInvoiceNumber());
+            throw new Exception("Error: no Invoice["+request.getInvoiceId()+"] found");
+        } else if(!StringUtils.equals(request.getInvoiceNumber(), invoice.getNumber())){
+            log.error("#{} Error: Invoice[{}] found, but has another number['{}']", logTag, invoice.getId(), request.getInvoiceNumber());
+            throw new Exception("Error: Invoice["+request.getInvoiceId()+"] found, but with different number="+invoice.getNumber());
         }
         log.info("#{} found {}", logTag, invoice);
         // Ищем плательщика

@@ -14,11 +14,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex;
+import ru.bars_open.medvtr.mq.entities.base.util.ValueAndUnit;
 
 
 /**
- * Справочник типов ткани (для биозаборов)
+ * Справочник типов прорбирок и ёмкостей (для биозаборов)
  * 
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -26,10 +26,11 @@ import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex;
     "id",
     "code",
     "name",
-    "parent",
-    "sex"
+    "volume",
+    "color",
+    "image"
 })
-public class RbTissueType implements Serializable
+public class RbTestTubeType implements Serializable
 {
 
     /**
@@ -57,22 +58,32 @@ public class RbTissueType implements Serializable
     @JsonPropertyDescription("\u041d\u0430\u0438\u043c\u0435\u043d\u043e\u0432\u0430\u043d\u0438\u0435 \u0437\u0430\u043f\u0438\u0441\u0438 \u0441\u043f\u0440\u0430\u0432\u043e\u0447\u043d\u0438\u043a\u0430")
     private String name;
     /**
-     * Справочник типов ткани (для биозаборов)
-     * 
-     */
-    @JsonProperty("parent")
-    @JsonPropertyDescription("\u0421\u043f\u0440\u0430\u0432\u043e\u0447\u043d\u0438\u043a \u0442\u0438\u043f\u043e\u0432 \u0442\u043a\u0430\u043d\u0438 (\u0434\u043b\u044f \u0431\u0438\u043e\u0437\u0430\u0431\u043e\u0440\u043e\u0432)")
-    private RbTissueType parent;
-    /**
-     * 
+     * ValueAndUnit
+     * <p>
+     * Структура содержащая единицу измерения и само значение
      * (Required)
      * 
      */
-    @JsonProperty("sex")
-    private Sex sex;
+    @JsonProperty("volume")
+    @JsonPropertyDescription("\u0421\u0442\u0440\u0443\u043a\u0442\u0443\u0440\u0430 \u0441\u043e\u0434\u0435\u0440\u0436\u0430\u0449\u0430\u044f \u0435\u0434\u0438\u043d\u0438\u0446\u0443 \u0438\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f \u0438 \u0441\u0430\u043c\u043e \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435")
+    private ValueAndUnit volume;
+    /**
+     * Цветовое обозначение ёмкости
+     * 
+     */
+    @JsonProperty("color")
+    @JsonPropertyDescription("\u0426\u0432\u0435\u0442\u043e\u0432\u043e\u0435 \u043e\u0431\u043e\u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435 \u0451\u043c\u043a\u043e\u0441\u0442\u0438")
+    private String color;
+    /**
+     * Изображение пробирки/ссылка на изображение
+     * 
+     */
+    @JsonProperty("image")
+    @JsonPropertyDescription("\u0418\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u0435 \u043f\u0440\u043e\u0431\u0438\u0440\u043a\u0438/\u0441\u0441\u044b\u043b\u043a\u0430 \u043d\u0430 \u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u0435")
+    private String image;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = -5213475358958072901L;
+    private final static long serialVersionUID = -6389701986349024003L;
 
     /**
      * Идентифкатор МИС
@@ -135,41 +146,63 @@ public class RbTissueType implements Serializable
     }
 
     /**
-     * Справочник типов ткани (для биозаборов)
-     * 
-     */
-    @JsonProperty("parent")
-    public RbTissueType getParent() {
-        return parent;
-    }
-
-    /**
-     * Справочник типов ткани (для биозаборов)
-     * 
-     */
-    @JsonProperty("parent")
-    public void setParent(RbTissueType parent) {
-        this.parent = parent;
-    }
-
-    /**
-     * 
+     * ValueAndUnit
+     * <p>
+     * Структура содержащая единицу измерения и само значение
      * (Required)
      * 
      */
-    @JsonProperty("sex")
-    public Sex getSex() {
-        return sex;
+    @JsonProperty("volume")
+    public ValueAndUnit getVolume() {
+        return volume;
     }
 
     /**
-     * 
+     * ValueAndUnit
+     * <p>
+     * Структура содержащая единицу измерения и само значение
      * (Required)
      * 
      */
-    @JsonProperty("sex")
-    public void setSex(Sex sex) {
-        this.sex = sex;
+    @JsonProperty("volume")
+    public void setVolume(ValueAndUnit volume) {
+        this.volume = volume;
+    }
+
+    /**
+     * Цветовое обозначение ёмкости
+     * 
+     */
+    @JsonProperty("color")
+    public String getColor() {
+        return color;
+    }
+
+    /**
+     * Цветовое обозначение ёмкости
+     * 
+     */
+    @JsonProperty("color")
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    /**
+     * Изображение пробирки/ссылка на изображение
+     * 
+     */
+    @JsonProperty("image")
+    public String getImage() {
+        return image;
+    }
+
+    /**
+     * Изображение пробирки/ссылка на изображение
+     * 
+     */
+    @JsonProperty("image")
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Override
@@ -189,7 +222,7 @@ public class RbTissueType implements Serializable
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(code).append(name).append(parent).append(sex).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(id).append(code).append(name).append(volume).append(color).append(image).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -197,11 +230,11 @@ public class RbTissueType implements Serializable
         if (other == this) {
             return true;
         }
-        if ((other instanceof RbTissueType) == false) {
+        if ((other instanceof RbTestTubeType) == false) {
             return false;
         }
-        RbTissueType rhs = ((RbTissueType) other);
-        return new EqualsBuilder().append(id, rhs.id).append(code, rhs.code).append(name, rhs.name).append(parent, rhs.parent).append(sex, rhs.sex).append(additionalProperties, rhs.additionalProperties).isEquals();
+        RbTestTubeType rhs = ((RbTestTubeType) other);
+        return new EqualsBuilder().append(id, rhs.id).append(code, rhs.code).append(name, rhs.name).append(volume, rhs.volume).append(color, rhs.color).append(image, rhs.image).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

@@ -1,8 +1,8 @@
 {
-  "id": "http://bars-open.ru/medvtr/json-schema/base/refbook/RbTissueType.json",
+  "id": "http://bars-open.ru/medvtr/json-schema/base/refbook/RbBiomaterialType.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "description": "Справочник типов ткани (для биозаборов)",
-  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.RbTissueType",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.RbBiomaterialType",
   "properties": {
     "id": {
       "description": "Идентифкатор МИС",
@@ -19,7 +19,7 @@
     },
     "parent" :{
       "description": "Поле группировки типа ткани",
-      "$ref": "RbTissueType.json"
+      "$ref": "RbBiomaterialType.json"
     },
     "sex" : {
       "description": "Ограничение по полу для этого типа ткани",

@@ -30,35 +30,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link MedicalPrescription }
+     * Create an instance of {@link CreateResponse }
      * 
      */
-    public MedicalPrescription createMedicalPrescription() {
-        return new MedicalPrescription();
-    }
-
-    /**
-     * Create an instance of {@link ValueAndUnit }
-     * 
-     */
-    public ValueAndUnit createValueAndUnit() {
-        return new ValueAndUnit();
-    }
-
-    /**
-     * Create an instance of {@link RlsPackaging }
-     * 
-     */
-    public RlsPackaging createRlsPackaging() {
-        return new RlsPackaging();
-    }
-
-    /**
-     * Create an instance of {@link Contract }
-     * 
-     */
-    public Contract createContract() {
-        return new Contract();
+    public CreateResponse createCreateResponse() {
+        return new CreateResponse();
     }
 
     /**
@@ -70,67 +46,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link CreateResponse }
-     * 
-     */
-    public CreateResponse createCreateResponse() {
-        return new CreateResponse();
-    }
-
-    /**
-     * Create an instance of {@link RlsActMatters }
-     * 
-     */
-    public RlsActMatters createRlsActMatters() {
-        return new RlsActMatters();
-    }
-
-    /**
-     * Create an instance of {@link RlsTradeName }
-     * 
-     */
-    public RlsTradeName createRlsTradeName() {
-        return new RlsTradeName();
-    }
-
-    /**
      * Create an instance of {@link RbUnit }
      * 
      */
     public RbUnit createRbUnit() {
         return new RbUnit();
-    }
-
-    /**
-     * Create an instance of {@link CloseRequest }
-     * 
-     */
-    public CloseRequest createCloseRequest() {
-        return new CloseRequest();
-    }
-
-    /**
-     * Create an instance of {@link Address }
-     * 
-     */
-    public Address createAddress() {
-        return new Address();
-    }
-
-    /**
-     * Create an instance of {@link RlsNomen }
-     * 
-     */
-    public RlsNomen createRlsNomen() {
-        return new RlsNomen();
-    }
-
-    /**
-     * Create an instance of {@link RbFinance }
-     * 
-     */
-    public RbFinance createRbFinance() {
-        return new RbFinance();
     }
 
     /**
@@ -142,11 +62,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link RlsFilling }
+     * Create an instance of {@link RlsPackaging }
      * 
      */
-    public RlsFilling createRlsFilling() {
-        return new RlsFilling();
+    public RlsPackaging createRlsPackaging() {
+        return new RlsPackaging();
+    }
+
+    /**
+     * Create an instance of {@link Address }
+     * 
+     */
+    public Address createAddress() {
+        return new Address();
     }
 
     /**
@@ -158,11 +86,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link RbTreatment }
+     * Create an instance of {@link RlsNomen }
      * 
      */
-    public RbTreatment createRbTreatment() {
-        return new RbTreatment();
+    public RlsNomen createRlsNomen() {
+        return new RlsNomen();
+    }
+
+    /**
+     * Create an instance of {@link ValueAndUnit }
+     * 
+     */
+    public ValueAndUnit createValueAndUnit() {
+        return new ValueAndUnit();
     }
 
     /**
@@ -171,6 +107,62 @@ public class ObjectFactory {
      */
     public Person createPerson() {
         return new Person();
+    }
+
+    /**
+     * Create an instance of {@link RlsTradeName }
+     * 
+     */
+    public RlsTradeName createRlsTradeName() {
+        return new RlsTradeName();
+    }
+
+    /**
+     * Create an instance of {@link CloseRequest }
+     * 
+     */
+    public CloseRequest createCloseRequest() {
+        return new CloseRequest();
+    }
+
+    /**
+     * Create an instance of {@link RlsActMatters }
+     * 
+     */
+    public RlsActMatters createRlsActMatters() {
+        return new RlsActMatters();
+    }
+
+    /**
+     * Create an instance of {@link CloseResponse }
+     * 
+     */
+    public CloseResponse createCloseResponse() {
+        return new CloseResponse();
+    }
+
+    /**
+     * Create an instance of {@link Organisation }
+     * 
+     */
+    public Organisation createOrganisation() {
+        return new Organisation();
+    }
+
+    /**
+     * Create an instance of {@link RbTreatment }
+     * 
+     */
+    public RbTreatment createRbTreatment() {
+        return new RbTreatment();
+    }
+
+    /**
+     * Create an instance of {@link Contract }
+     * 
+     */
+    public Contract createContract() {
+        return new Contract();
     }
 
     /**
@@ -190,6 +182,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link RbFinance }
+     * 
+     */
+    public RbFinance createRbFinance() {
+        return new RbFinance();
+    }
+
+    /**
      * Create an instance of {@link VmpTicket }
      * 
      */
@@ -198,19 +198,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link CloseResponse }
+     * Create an instance of {@link MedicalPrescription }
      * 
      */
-    public CloseResponse createCloseResponse() {
-        return new CloseResponse();
+    public MedicalPrescription createMedicalPrescription() {
+        return new MedicalPrescription();
     }
 
     /**
-     * Create an instance of {@link Organisation }
+     * Create an instance of {@link RlsFilling }
      * 
      */
-    public Organisation createOrganisation() {
-        return new Organisation();
+    public RlsFilling createRlsFilling() {
+        return new RlsFilling();
     }
 
 }

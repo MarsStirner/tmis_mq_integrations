@@ -1,8 +1,8 @@
 {
-  "id": "http://bars-open.ru/medvtr/json-schema/base/refbook/RbTubeType.json",
+  "id": "http://bars-open.ru/medvtr/json-schema/base/refbook/RbTestTubeType.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "description": "Справочник типов прорбирок и ёмкостей (для биозаборов)",
-  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.RbTubeType",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.RbTestTubeType",
   "properties": {
     "id": {
       "description": "Идентифкатор МИС",

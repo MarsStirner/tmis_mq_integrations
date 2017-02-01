@@ -1,8 +1,8 @@
 {
-  "id": "http://bars-open.ru/medvtr/json-schema/base/TakenTissue.json",
+  "id": "http://bars-open.ru/medvtr/json-schema/base/Biomaterial.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "description": "Забор тканей/биоматериала",
-  "javaType": "ru.bars_open.medvtr.mq.entities.base.TakenTissue",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.Biomaterial",
   "properties": {
     "id": {
       "description": "Идентифкатор МИС",
@@ -13,13 +13,13 @@
       "description": "Обращение в рамках которого будут браться ткани",
       "$ref": "Event.json"
     },
-    "tissueType": {
+    "biomaterialType": {
       "description": "Тип забираемой ткани",
-      "$ref": "./refbook/RbTissueType.json"
+      "$ref": "./refbook/RbBiomaterialType.json"
     },
-    "tubeType": {
+    "testTubeType": {
       "description": "Тип пробирки (емкости) в которую надо забирать ткань",
-      "$ref": "./refbook/RbTubeType.json"
+      "$ref": "./refbook/RbTestTubeType.json"
     },
     "amount": {
       "description": "Количество забираемой ткани (колонки amount + unit)",
@@ -71,8 +71,8 @@
   "required": [
     "id",
     "event",
-    "tissueType",
-    "tubeType",
+    "biomaterialType",
+    "testTubeType",
     "amount",
     "datetimePlanned",
     "status",

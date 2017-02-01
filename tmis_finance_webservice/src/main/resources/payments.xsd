@@ -5,6 +5,7 @@
             <xs:sequence>
                 <xs:element name="sum" type="xs:double"/>
                 <xs:element name="trxDatetime" type="xs:dateTime"/>
+                <xs:element name="invoiceId" type="xs:int"/>
                 <xs:element name="invoiceNumber" type="xs:string"/>
                 <xs:element name="payType" type="tns:PayType"/>
                 <xs:element name="contragentId" type="xs:int"/>
