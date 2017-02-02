@@ -53,14 +53,15 @@ public class PaymentResultService {
     @Transactional
     public ApplyPaymentResponse applyPayment(@RequestPayload ApplyPaymentRequest request) throws Exception {
         final int logTag = counter.incrementAndGet();
-        log.info("#{} Call PaymentResultService.applyPayment(sum={}, trxDateTime='{}', invoiceId='{}', invoiceNumber='{}', payType={}, contragentId={})",
+        log.info("#{} Call PaymentResultService.applyPayment(sum={}, trxDateTime='{}', invoiceId='{}', invoiceNumber='{}', payType={}, contragentId={}, refund={})",
                  logTag,
                  request.getSum(),
                  request.getTrxDatetime(),
                  request.getInvoiceId(),
                  request.getInvoiceNumber(),
                  request.getPayType(),
-                 request.getContragentId()
+                 request.getContragentId(),
+                 request.isRefund()
         );
         final LocalDateTime transactionDateTime = new LocalDateTime(request.getTrxDatetime().toGregorianCalendar());
         final ApplyPaymentResponse response = new ApplyPaymentResponse();
