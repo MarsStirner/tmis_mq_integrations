@@ -146,6 +146,7 @@
                     <keep>true</keep>
                     <packageName>ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance</packageName>
                     <sourceDestDir>${project.basedir}/src/main/java/</sourceDestDir>
+                    <wsdlLocation>/Exchange_MIS.wsdl</wsdlLocation>
                 </configuration>
             </plugin>
         </plugins>

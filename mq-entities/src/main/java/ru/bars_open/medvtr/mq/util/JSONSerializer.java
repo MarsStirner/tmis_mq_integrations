@@ -1,6 +1,8 @@
 package ru.bars_open.medvtr.mq.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,8 @@ public class JSONSerializer implements Serializer {
     private JSONSerializer() {
         mapper = new ObjectMapper();
         mapper.registerModule(new JodaModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+      //  mapper.enable(SerializationFeature.INDENT_OUTPUT);
     }
 
     public static JSONSerializer getInstance(){
@@ -49,6 +53,16 @@ public class JSONSerializer implements Serializer {
             return mapper.readValue(new InputStreamReader(new ByteArrayInputStream(content), encoding), clazz);
         } catch (IOException e) {
             log.error("Cannot parse byte array to {}", clazz.getCanonicalName());
+            return null;
+        }
+    }
+
+    @Override
+    public <T> byte[] serialize(final T value, final Charset encoding) {
+        try {
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(value);
+        } catch (JsonProcessingException e) {
+            log.error("Cannot parse {} to byte array", value.getClass());
             return null;
         }
     }

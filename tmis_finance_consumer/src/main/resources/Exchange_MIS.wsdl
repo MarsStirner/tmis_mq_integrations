@@ -66,6 +66,8 @@
                                     type="tns:PersonName"/>
                         <xs:element name="remove"
                                     type="xs:int"/>
+                        <xs:element name="invoice_id"
+                                    type="xs:int"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -87,6 +89,10 @@
                         <xs:element name="sumReturn"
                                     type="xs:double"/>
                         <xs:element name="remove"
+                                    type="xs:int"/>
+                        <xs:element name="invoice_id"
+                                    type="xs:int"/>
+                        <xs:element name="parentInvoice_id"
                                     type="xs:int"/>
                     </xs:sequence>
                 </xs:complexType>
@@ -184,11 +190,11 @@
                 <wsi:Claim xmlns:wsi="http://ws-i.org/schemas/conformanceClaim/"
                            conformsTo="http://ws-i.org/profiles/basic/1.1"/>
             </documentation>
-            <soapbind:address location="http://10.1.0.108/AS06_bgu/ws/Exchange_MIS"/>
+            <soapbind:address location="http://10.1.0.102/AS06_bgu_metodika/ws/Exchange_MIS"/>
         </port>
         <port name="Exchange_MISSoap12"
               binding="tns:Exchange_MISSoap12Binding">
-            <soap12bind:address location="http://10.1.0.108/AS06_bgu/ws/Exchange_MIS"/>
+            <soap12bind:address location="http://10.1.0.102/AS06_bgu_metodika/ws/Exchange_MIS"/>
         </port>
     </service>
 </definitions>

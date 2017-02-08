@@ -40,7 +40,8 @@ public class FinanceSender {
                 wsFactory.createPersonName(client),
                 String.valueOf(payer.getId()),
                 wsFactory.createPersonName(payer),
-                deleted ? 1 : 0
+                deleted ? 1 : 0,
+                invoice.getId()
         );
         log.info("#{} WebService answer - {}", messageTag, result);
         return result.intValue();
@@ -49,11 +50,14 @@ public class FinanceSender {
     public String sendRefund(final long messageTag, final InvoiceMessage message) {
         final Invoice invoice = message.getInvoice();
         final String parentNumber = invoice.getParent() != null  ? invoice.getParent().getNumber() : "";
+        final int parentId = invoice.getParent() != null  ? invoice.getParent().getId() : -1;
         final String result =  wsFactory.getWebService().putReturn(
                 parentNumber,
                 invoice.getNumber(),
                 invoice.getSum(),
-                invoice.getDeleted() ? 1 : 0
+                invoice.getDeleted() ? 1 : 0,
+                invoice.getId(),
+                parentId
         );
         log.info("#{} WebService answer - {}", messageTag, result);
         return result;

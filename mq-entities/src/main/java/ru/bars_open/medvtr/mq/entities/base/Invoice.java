@@ -24,6 +24,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
+    "id",
     "number",
     "deleted",
     "contract",
@@ -33,6 +34,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class Invoice implements Serializable
 {
 
+    /**
+     * Идентифкатор
+     * 
+     */
+    @JsonProperty("id")
+    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u043a\u0430\u0442\u043e\u0440")
+    private Integer id;
     /**
      * номер счета
      * (Required)
@@ -76,7 +84,25 @@ public class Invoice implements Serializable
     private Invoice parent;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = 6579423106579045452L;
+    private final static long serialVersionUID = -715190695582313256L;
+
+    /**
+     * Идентифкатор
+     * 
+     */
+    @JsonProperty("id")
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * Идентифкатор
+     * 
+     */
+    @JsonProperty("id")
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     /**
      * номер счета
@@ -197,7 +223,7 @@ public class Invoice implements Serializable
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(number).append(deleted).append(contract).append(sum).append(parent).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(id).append(number).append(deleted).append(contract).append(sum).append(parent).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -209,7 +235,7 @@ public class Invoice implements Serializable
             return false;
         }
         Invoice rhs = ((Invoice) other);
-        return new EqualsBuilder().append(number, rhs.number).append(deleted, rhs.deleted).append(contract, rhs.contract).append(sum, rhs.sum).append(parent, rhs.parent).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(id, rhs.id).append(number, rhs.number).append(deleted, rhs.deleted).append(contract, rhs.contract).append(sum, rhs.sum).append(parent, rhs.parent).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

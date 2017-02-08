@@ -10,9 +10,11 @@ import java.nio.charset.StandardCharsets;
  * Description:
  */
 public interface Serializer {
-    <T>  T parse(byte[] content, Charset encoding, Class<T> clazz);
+    <T> T parse(byte[] content, Charset encoding, Class<T> clazz);
 
-    default <T> T parse(byte[] content, Class<T> clazz){
+    default <T> T parse(byte[] content, Class<T> clazz) {
         return parse(content, StandardCharsets.UTF_8, clazz);
     }
+
+    <T> byte[] serialize(T value, Charset encoding);
 }

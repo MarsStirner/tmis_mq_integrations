@@ -39,7 +39,7 @@ public class WSFactory{
     public WSFactory(ConfigurationHolder cfg) throws MalformedURLException {
         this.serviceURL = new URL(cfg.getString(ConfigurationKeys.WEBSERVICE_URL));
         this.serviceName = new QName(cfg.getString(ConfigurationKeys.WEBSERVICE_NAMESPACE), cfg.getString(ConfigurationKeys.WEBSERVICE_NAME));
-        final PharmacyHospitalization service = new PharmacyHospitalization();
+        final PharmacyHospitalization service = new PharmacyHospitalization(getClass().getClassLoader().getResource("PharmacyHospitalization.wsdl"), serviceName);
         service.setHandlerResolver(portInfo -> new ArrayList<>(Collections.singletonList(new SoapLoggingHandler())));
         // Timeout in millis
         int requestTimeout = 10000;

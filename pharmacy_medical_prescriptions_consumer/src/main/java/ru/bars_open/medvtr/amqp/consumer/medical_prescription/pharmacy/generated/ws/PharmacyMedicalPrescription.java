@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.1
  * 
  */
-@WebServiceClient(name = "PharmacyMedicalPrescription", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", wsdlLocation = "file:/C:/ProjectsMis/tmis_mq_integrations/pharmacy_medical_prescriptions_consumer/src/main/resources/PharmacyMedicalPrescription.wsdl")
+@WebServiceClient(name = "PharmacyMedicalPrescription", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", wsdlLocation = "/PharmacyMedicalPrescription.wsdl")
 public class PharmacyMedicalPrescription
     extends Service
 {
@@ -30,9 +30,9 @@ public class PharmacyMedicalPrescription
         try {
             URL baseUrl;
             baseUrl = ru.bars_open.medvtr.amqp.consumer.medical_prescription.pharmacy.generated.ws.PharmacyMedicalPrescription.class.getResource(".");
-            url = new URL(baseUrl, "file:/C:/ProjectsMis/tmis_mq_integrations/pharmacy_medical_prescriptions_consumer/src/main/resources/PharmacyMedicalPrescription.wsdl");
+            url = new URL(baseUrl, "/PharmacyMedicalPrescription.wsdl");
         } catch (MalformedURLException e) {
-            logger.warning("Failed to create URL for the wsdl Location: 'file:/C:/ProjectsMis/tmis_mq_integrations/pharmacy_medical_prescriptions_consumer/src/main/resources/PharmacyMedicalPrescription.wsdl', retrying as a local file");
+            logger.warning("Failed to create URL for the wsdl Location: '/PharmacyMedicalPrescription.wsdl', retrying as a local file");
             logger.warning(e.getMessage());
         }
         PHARMACYMEDICALPRESCRIPTION_WSDL_LOCATION = url;

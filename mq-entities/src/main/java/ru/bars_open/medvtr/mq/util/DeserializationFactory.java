@@ -15,35 +15,40 @@ import java.nio.charset.UnsupportedCharsetException;
  * Description:
  */
 public class DeserializationFactory {
+    public static final String CONTENT_TYPE_APPLICATION_JSON = "application/json";
 
     private static final Logger log = LoggerFactory.getLogger(DeserializationFactory.class);
 
     private static Serializer defaultSerializer = JSONSerializer.getInstance();
 
 
-    public static <T> T parse(final byte[] content, final String protocol, final Class<T> clazz){
-        return parse(content, protocol, (Charset) null, clazz);
+    public static <T> T parse(final byte[] content, final String contentType, final Class<T> clazz){
+        return parse(content, contentType, (Charset) null, clazz);
     }
 
-    public static <T> T parse(final byte[] content, final String protocol, final String encoding, final Class<T> clazz){
-        return parse(content, protocol, Charset.forName(encoding), clazz);
+    public static <T> T parse(final byte[] content, final String contentType, final String encoding, final Class<T> clazz){
+        return parse(content, contentType, Charset.forName(encoding), clazz);
     }
 
-    public static <T> T parse(final byte[] content, final String protocol, final Charset encoding, final Class<T> clazz){
-      return getSerializer(protocol).parse(content, encoding, clazz);
+    public static <T> T parse(final byte[] content, final String contentType, final Charset encoding, final Class<T> clazz){
+      return getSerializer(contentType).parse(content, encoding, clazz);
     }
 
-    private static Serializer getSerializer(final String protocol) {
-        if(StringUtils.isEmpty(protocol)){
-            log.warn("No matching serializer found for '{}' protocol. Try with default Serializer.", protocol);
+    public static <T> byte[] serialize(final T value, final String contentType, final Charset encoding){
+        return getSerializer(contentType).serialize(value, encoding);
+    }
+
+    private static Serializer getSerializer(final String contentType) {
+        if(StringUtils.isEmpty(contentType)){
+            log.warn("No matching serializer found for '{}' contentType. Try with default Serializer.", contentType);
             return defaultSerializer;
         }
-       switch(protocol){
-           case "application/json": {
+       switch(contentType){
+           case CONTENT_TYPE_APPLICATION_JSON: {
                return JSONSerializer.getInstance();
            }
            default: {
-               log.warn("No matching serializer found for '{}' protocol. Try with default Serializer.", protocol);
+               log.warn("No matching serializer found for '{}' contentType. Try with default Serializer.", contentType);
                return defaultSerializer;
            }
        }

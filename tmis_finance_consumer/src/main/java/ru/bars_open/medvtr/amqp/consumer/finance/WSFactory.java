@@ -46,7 +46,7 @@ public class WSFactory{
     public WSFactory(ConfigurationHolder cfg) throws MalformedURLException {
         this.serviceURL = new URL(cfg.getString(ConfigurationKeys.WEBSERVICE_URL));
         this.serviceName = new QName(cfg.getString(ConfigurationKeys.WEBSERVICE_NAMESPACE), cfg.getString(ConfigurationKeys.WEBSERVICE_NAME));
-        final ExchangeMIS service = new ExchangeMIS();
+        final ExchangeMIS service = new ExchangeMIS(getClass().getClassLoader().getResource("Exchange_MIS.wsdl"), serviceName);
         service.setHandlerResolver(portInfo -> new ArrayList<>(Collections.singletonList(new SHandler())));
         // Timeout in millis
         int requestTimeout = 10000;

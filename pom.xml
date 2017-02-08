@@ -52,7 +52,7 @@
                 <module>tmis_finance_webservice</module>
                 <module>pharmacy_hospitalization_consumer</module>
                 <module>pharmacy_medical_prescriptions_consumer</module>
-                <module>laboratory_integration</module>
+                <module>biomaterial_integration</module>
             </modules>
         </profile>
         <profile>
@@ -70,9 +70,9 @@
             </modules>
         </profile>
         <profile>
-            <id>laboratory</id>
+            <id>biomaterial</id>
             <modules>
-                <module>laboratory_integration</module>
+                <module>biomaterial_integration</module>
             </modules>
         </profile>
     </profiles>

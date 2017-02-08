@@ -6,6 +6,10 @@
   "type": "object",
   "javaType": "ru.bars_open.medvtr.mq.entities.base.Invoice",
   "properties": {
+    "id": {
+      "description": "Идентифкатор",
+      "type": "integer"
+    },
     "number": {
       "description": "номер счета",
       "type": "string"
