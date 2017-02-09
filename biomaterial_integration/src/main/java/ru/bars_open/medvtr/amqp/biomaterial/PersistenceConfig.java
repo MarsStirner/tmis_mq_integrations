@@ -1,5 +1,7 @@
 package ru.bars_open.medvtr.amqp.biomaterial;
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigValue;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.hibernate.SessionFactory;
@@ -8,11 +10,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jndi.JndiTemplate;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
 
+import javax.naming.NamingException;
 import javax.sql.DataSource;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -25,38 +31,41 @@ import java.util.Properties;
 @EnableTransactionManagement
 public class PersistenceConfig {
 
-    public static final String PU_NAME_HOSPITAL = "hospital";
     public static final String SESSION_FACTORY = "databaseSessionFactory";
-    public static final String JNDI_NAME_HOSPITAL = "hospitalDatasource";
 
-    private static final Logger log = LoggerFactory.getLogger("PERSISTENCE_CONFIG");
+    private static final Logger log = LoggerFactory.getLogger("CONFIG");
 
     @Bean("hospitalDataSource")
-    public DataSource lookupHospitalDatasource() {
-//        try {
-//            final DataSource result = new JndiTemplate().lookup(JNDI_NAME_HOSPITAL, DataSource.class);
-//            log.info("Initialized DataSource[{}] [@{}]", JNDI_NAME_HOSPITAL, Integer.toHexString(result.hashCode()));
-//            return result;
-//        } catch (NamingException e) {
-//            final String errorMsg ="NOT_FOUND_JNDI_DATASOURCE";
-//            log.error(errorMsg);
-//            throw new IllegalStateException(errorMsg, e);
-//        }
-        //TODO !!@!@!@!##@$!@#$!@$
-        final HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/laboratory_integration");
-        config.setUsername("root");
-        config.setPassword("root");
-        config.addDataSourceProperty("useUnicode", "true");
-        config.addDataSourceProperty("characterEncoding", "UTF-8");
-        config.addDataSourceProperty("characterSetResults", "UTF-8");
-        config.addDataSourceProperty("serverTimezone", "UTC");
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-
-        HikariDataSource ds = new HikariDataSource(config);
-        return ds;
+    public DataSource lookupHospitalDatasource(final ConfigurationHolder cfg) {
+        final Config dsCfg = cfg.getConfig("datasource");
+        if (dsCfg.hasPath("jndiName")) {
+            final String jndiName = dsCfg.getString("jndiName");
+            log.info("Datasource: Try initialize by jndiName[{}]", jndiName);
+            try {
+                final DataSource result = new JndiTemplate().lookup(jndiName, DataSource.class);
+                log.info("Datasource: Initialized JNDI[{}] [@{}]", jndiName, Integer.toHexString(result.hashCode()));
+                return result;
+            } catch (NamingException e) {
+                throw new IllegalStateException("No Datasource with JNDI "+jndiName, e);
+            }
+        } else {
+            log.info("Try initialize by settings : {}", dsCfg);
+            final StringBuilder jdbcUrlBuilder = new StringBuilder("jdbc:");
+            jdbcUrlBuilder.append(dsCfg.getString("rdbms"));
+            jdbcUrlBuilder.append("://").append(dsCfg.getString("host")).append(':').append(dsCfg.getInt("port"));
+            jdbcUrlBuilder.append('/').append(dsCfg.getString("schema"));
+            log.info("JDBC URL = '{}'", jdbcUrlBuilder);
+            final HikariConfig config = new HikariConfig();
+            config.setJdbcUrl(jdbcUrlBuilder.toString());
+            config.setUsername(dsCfg.getString("username"));
+            config.setPassword(dsCfg.getString("password"));
+            if(dsCfg.hasPath("connectionProperties")) {
+                for (Map.Entry<String, ConfigValue> entry : dsCfg.getConfig("connectionProperties").entrySet()) {
+                    config.addDataSourceProperty(entry.getKey(), entry.getValue().unwrapped());
+                }
+            }
+            return new HikariDataSource(config);
+        }
     }
 
     @Bean("hospitalHibernateProperties")
@@ -73,8 +82,7 @@ public class PersistenceConfig {
 
     @Bean(SESSION_FACTORY)
     public LocalSessionFactoryBean hospitalSessionFactory(
-            @Qualifier("hospitalDataSource") final DataSource dataSource,
-            @Qualifier("hospitalHibernateProperties") final Properties props
+            @Qualifier("hospitalDataSource") final DataSource dataSource, @Qualifier("hospitalHibernateProperties") final Properties props
     ) {
         final LocalSessionFactoryBean result = new LocalSessionFactoryBean();
         result.setDataSource(dataSource);
@@ -86,7 +94,8 @@ public class PersistenceConfig {
 
     @Bean("hospitalTransactionManager")
     public HibernateTransactionManager hospitalTransactionManager(
-            @Qualifier(SESSION_FACTORY) final SessionFactory sessionFactory) {
+            @Qualifier(SESSION_FACTORY) final SessionFactory sessionFactory
+    ) {
         final HibernateTransactionManager result = new HibernateTransactionManager(sessionFactory);
         log.info("Initialized 'hospitalTransactionManager'[@{}]", Integer.toHexString(result.hashCode()));
         return result;

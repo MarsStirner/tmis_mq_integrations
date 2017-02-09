@@ -73,6 +73,9 @@
     <logger name="CONFIG" level="DEBUG" additivity="true">
         <appender-ref ref="APPENDER_CONFIG"/>
     </logger>
+    <logger name="com.zaxxer.hikari.HikariConfig" level="DEBUG" additivity="true">
+        <appender-ref ref="APPENDER_CONFIG"/>
+    </logger>
 
     <!-- SQL -->
     <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
@@ -84,7 +87,7 @@
     <logger name="org.hibernate.id" level="DEBUG" additivity="false">
         <appender-ref ref="APPENDER_SQL"/>
     </logger>
-    <logger name="com.zaxxer.hikari" level="DEBUG" additivity="false">
+    <logger name="com.zaxxer.hikari.pool" level="DEBUG" additivity="false">
         <appender-ref ref="APPENDER_SQL"/>
     </logger>
 
