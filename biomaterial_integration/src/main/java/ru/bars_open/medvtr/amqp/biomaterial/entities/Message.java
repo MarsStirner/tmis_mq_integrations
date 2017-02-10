@@ -53,13 +53,6 @@ public class Message extends IdentifiedEntity{
     @Column(name="body", nullable = false)
     private String body;
 
-
-    /**
-     * Порядковый номер сообщения в рамках сессии обмена (для поиска в логе)
-     */
-    @Column(name="deliveryTag", nullable = false)
-    private int deliveryTag;
-
     /**
      * Ссылка на биоматериал, к которому относится сообщение
      */
@@ -115,14 +108,6 @@ public class Message extends IdentifiedEntity{
         this.body = body;
     }
 
-    public int getDeliveryTag() {
-        return deliveryTag;
-    }
-
-    public void setDeliveryTag(final int deliveryTag) {
-        this.deliveryTag = deliveryTag;
-    }
-
     public Biomaterial getBiomaterial() {
         return biomaterial;
     }
@@ -140,7 +125,6 @@ public class Message extends IdentifiedEntity{
         sb.append(", timestamp=").append(timestamp);
         sb.append(", type='").append(type).append('\'');
         sb.append(", body='").append(body).append('\'');
-        sb.append(", deliveryTag=").append(deliveryTag);
         sb.append(", biomaterial=").append(biomaterial);
         sb.append('}');
         return sb.toString();

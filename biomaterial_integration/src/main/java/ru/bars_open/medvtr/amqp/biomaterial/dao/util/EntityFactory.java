@@ -2,7 +2,6 @@ package ru.bars_open.medvtr.amqp.biomaterial.dao.util;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.joda.time.LocalDateTime;
-import org.springframework.amqp.core.MessageProperties;
 import ru.bars_open.medvtr.amqp.biomaterial.entities.*;
 import ru.bars_open.medvtr.mq.entities.action.Analysis;
 import ru.bars_open.medvtr.mq.entities.base.ActionType;
@@ -54,16 +53,14 @@ public class EntityFactory {
         return result;
     }
 
-    public static Message create(final org.springframework.amqp.core.Message message, final Direction direction, final Biomaterial biomaterial) {
-        final MessageProperties messageProperties = message.getMessageProperties();
+    public static Message createMessage(final byte[] body, final String uuid, final String routingKey, final String type, final Direction direction, final Biomaterial biomaterial) {
         final Message result = new Message();
-        result.setCorrelationId(messageProperties.getCorrelationIdString());
-        result.setBody(new String(message.getBody(), StandardCharsets.UTF_8));
-        result.setDeliveryTag((int) messageProperties.getDeliveryTag());
+        result.setCorrelationId(uuid);
+        result.setBody(new String(body, StandardCharsets.UTF_8));
         result.setDirection(direction);
-        result.setRoutingKey(messageProperties.getReceivedRoutingKey());
-        result.setTimestamp(new LocalDateTime(messageProperties.getTimestamp()));
-        result.setType(messageProperties.getType());
+        result.setRoutingKey(routingKey);
+        result.setTimestamp(new LocalDateTime());
+        result.setType(type);
         result.setBiomaterial(biomaterial);
         return result;
     }

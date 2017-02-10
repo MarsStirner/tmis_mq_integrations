@@ -1,4 +1,4 @@
-package ru.bars_open.medvtr.amqp.biomaterial.dao.impl.mapped;
+package ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.impl.mapped;
 
 
 import org.hibernate.Session;
@@ -10,9 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import ru.bars_open.medvtr.amqp.biomaterial.PersistenceConfig;
-import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.mapped.AbstractDao;
-import ru.bars_open.medvtr.amqp.biomaterial.entities.mapped.IdentifiedEntity;
+import ru.bars_open.medvtr.amqp.biomaterial.hepa.PersistenceConfig;
+import ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.interfaces.mapped.AbstractDao;
+import ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.IdentifiedEntity;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="false">
+    <jmxConfigurator/>
+    <contextName>${project.artifactId}</contextName>
+
+    <!--APPENDERS-->
+    <!-- Для сообщений-->
+    <appender name="APPENDER_ROOT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${log.format}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logs.directory}/${project.artifactId}/service.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Для сообщений-->
+    <appender name="APPENDER_CONSUMER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${log.format}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logs.directory}/${project.artifactId}/amqp/amqp.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Для отладки конфигурации-->
+    <appender name="APPENDER_CONFIG" class="ch.qos.logback.core.FileAppender">
+        <encoder>
+            <pattern>${log.format}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <file>${logs.directory}/${project.artifactId}/cfg.log</file>
+    </appender>
+
+    <!-- Для отладки работы с БД-->
+    <!-- для SQL-->
+    <appender name="APPENDER_SQL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${log.format}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <file>${logs.directory}/${project.artifactId}/sql/sql.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${logs.directory}/${project.artifactId}//sql.%i.log.gz</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>3</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>25MB</maxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+
+
+    <!--LOGGERS-->
+
+    <!--Стронние логгеры-->
+    <logger name="org.springframework" level="INFO">
+        <appender-ref ref="APPENDER_ROOT"/>
+    </logger>
+    <logger name="org.hibernate" level="INFO" additivity="true"/>
+
+
+    <!-- Для AMQP  -->
+    <logger name="ru.bars_open.medvtr.amqp.biomaterial.consumer" level="DEBUG" additivity="true">
+        <appender-ref ref="APPENDER_CONSUMER"/>
+    </logger>
+
+    <!-- Для конфигов -->
+    <logger name="CONFIG" level="DEBUG" additivity="true">
+        <appender-ref ref="APPENDER_CONFIG"/>
+    </logger>
+    <logger name="com.zaxxer.hikari.HikariConfig" level="DEBUG" additivity="true">
+        <appender-ref ref="APPENDER_CONFIG"/>
+    </logger>
+
+    <!-- SQL -->
+    <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+        <appender-ref ref="APPENDER_SQL"/>
+    </logger>
+    <logger name="org.hibernate.transform" level="DEBUG" additivity="false">
+        <appender-ref ref="APPENDER_SQL"/>
+    </logger>
+    <logger name="org.hibernate.id" level="DEBUG" additivity="false">
+        <appender-ref ref="APPENDER_SQL"/>
+    </logger>
+    <logger name="com.zaxxer.hikari.pool" level="DEBUG" additivity="false">
+        <appender-ref ref="APPENDER_SQL"/>
+    </logger>
+
+    <root level="DEBUG">
+        <appender-ref ref="APPENDER_ROOT"/>
+    </root>
+</configuration>

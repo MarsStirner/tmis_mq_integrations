@@ -27,12 +27,14 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public Message createMessage(
-            final org.springframework.amqp.core.Message source,
+            final byte[] body,
+            final String uuid,
+            final String routingKey,
+            final String type,
             final Direction direction,
             final Biomaterial biomaterial
     ) {
-        if (source == null) { return null; }
-        final Message result = EntityFactory.create(source, direction, biomaterial);
+        final Message result = EntityFactory.createMessage(body, uuid, routingKey, type, direction, biomaterial);
         save(result);
         return result;
     }

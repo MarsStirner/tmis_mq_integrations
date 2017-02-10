@@ -73,6 +73,7 @@
             <id>biomaterial</id>
             <modules>
                 <module>biomaterial_integration</module>
+                <module>laboratory_hepa_consumer</module>
             </modules>
         </profile>
     </profiles>

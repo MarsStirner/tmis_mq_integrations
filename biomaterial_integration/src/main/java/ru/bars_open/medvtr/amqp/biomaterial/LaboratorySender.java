@@ -1,5 +1,6 @@
 package ru.bars_open.medvtr.amqp.biomaterial;
 
+import com.typesafe.config.Config;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.amqp.core.MessagePropertiesBuilder;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.MessageDao;
 import ru.bars_open.medvtr.amqp.biomaterial.entities.MapResearchTypeToLaboratory;
 import ru.bars_open.medvtr.amqp.biomaterial.entities.Person;
 import ru.bars_open.medvtr.amqp.biomaterial.entities.RbLaboratory;
@@ -18,6 +20,7 @@ import ru.bars_open.medvtr.mq.entities.base.ActionType;
 import ru.bars_open.medvtr.mq.entities.base.Biomaterial;
 import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex;
 import ru.bars_open.medvtr.mq.entities.message.BiologicalMaterialMessage;
+import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
 import ru.bars_open.medvtr.mq.util.DeserializationFactory;
 
 import java.nio.charset.StandardCharsets;
@@ -36,31 +39,55 @@ public class LaboratorySender {
 
     @Autowired
     private RabbitTemplate template;
+    @Autowired
+    private MessageDao messageDao;
+
+    private final Config cfg;
+
+    @Autowired
+    public LaboratorySender(final ConfigurationHolder cfg) {
+        this.cfg = cfg.getConfig("laboratories");
+        log.debug("Initialized with CFG= {}", cfg);
+    }
+
 
     public void send(
-            final long tag, final String uuid, final Biomaterial biomaterial, final Map<RbLaboratory, Set<SendResearchToLabaratoryStruct>> toSend
+            final long tag,
+            final String uuid,
+            final ru.bars_open.medvtr.amqp.biomaterial.entities.Biomaterial dbBiomaterial,
+            final Biomaterial biomaterial,
+            final Map<RbLaboratory, Set<SendResearchToLabaratoryStruct>> toSend
     ) {
         for (Map.Entry<RbLaboratory, Set<SendResearchToLabaratoryStruct>> entry : toSend.entrySet()) {
-            sendToLaboratory(tag, uuid, entry.getKey(), biomaterial, entry.getValue());
+            sendToLaboratory(tag, uuid, dbBiomaterial, entry.getKey().getCode(), biomaterial, entry.getValue());
         }
-        log.info("#{}: SENDED", tag);
     }
 
     private void sendToLaboratory(
             final long tag,
             final String uuid,
-            final RbLaboratory laboratory,
+            final ru.bars_open.medvtr.amqp.biomaterial.entities.Biomaterial dbBiomaterial,
+            final String laboratoryCode,
             final Biomaterial biomaterial,
             final Set<SendResearchToLabaratoryStruct> toSend
     ) {
-        final String logPrefix = "#" + tag + "-" + laboratory.getCode();
-        final BiologicalMaterialMessage result = constructBiologicalMaterialMessage(biomaterial, toSend, logPrefix);
-        final Message message = constructMessage(result, uuid);
-        template.send(laboratory.getExchange(), laboratory.getRoutingKey(), message);
+        final String logPrefix = "#" + tag + "-" + laboratoryCode;
+        log.info("{}: Start sending [{}] researches", logPrefix, toSend.size());
+        if (cfg.hasPath(laboratoryCode)) {
+            final Config labConfig = cfg.getConfig(laboratoryCode);
+            final String routingKey = labConfig.getString("routing_key");
+            final String exchange = labConfig.getString("exchange");
+            final BiologicalMaterialMessage result = constructBiologicalMaterialMessage(biomaterial, toSend, logPrefix);
+            final byte[] body = DeserializationFactory.serialize(result, DeserializationFactory.CONTENT_TYPE_APPLICATION_JSON, StandardCharsets.UTF_8);
+            final Message message = constructMessage(body, uuid);
+            messageDao.createOutMessage(body, uuid, routingKey ,"BiologicalMaterialMessage", dbBiomaterial);
+            template.send(exchange, routingKey, message);
+        } else {
+            log.error("{}: NO CONFIGURATION!!!! SKIP.", logPrefix);
+        }
     }
 
-    private Message constructMessage(final BiologicalMaterialMessage source, final String uuid) {
-        final byte[] body = DeserializationFactory.serialize(source, DeserializationFactory.CONTENT_TYPE_APPLICATION_JSON, StandardCharsets.UTF_8);
+    private Message constructMessage(final byte[] body, final String uuid) {
         final MessagePropertiesBuilder propertiesBuilder = MessagePropertiesBuilder.newInstance();
         propertiesBuilder.setAppId("LABORATORY_INTEGRATION");
         propertiesBuilder.setContentEncoding(StandardCharsets.UTF_8.name());
@@ -76,7 +103,6 @@ public class LaboratorySender {
     private BiologicalMaterialMessage constructBiologicalMaterialMessage(
             final Biomaterial biomaterial, final Set<SendResearchToLabaratoryStruct> toSend, final String logPrefix
     ) {
-        log.info("{}: Start construct BiologicalMaterialMessage with [{}] researches", logPrefix, toSend.size());
         final BiologicalMaterialMessage result = new BiologicalMaterialMessage();
         result.setBiomaterial(biomaterial);
         for (SendResearchToLabaratoryStruct parameters : toSend) {

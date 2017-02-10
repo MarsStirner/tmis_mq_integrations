@@ -93,7 +93,7 @@ public class Consumer implements ChannelAwareMessageListener {
                                                                                                           tag
                 );
                 if (!toSend.isEmpty()) {
-                    laboratorySender.send(tag, dbMessage.getCorrelationId(), message.getBiomaterial(), toSend);
+                    laboratorySender.send(tag, dbMessage.getCorrelationId(), dbBiomaterial, message.getBiomaterial(), toSend);
                 } else {
                     //TODO
                     log.warn("#{}: Nothing to send!!!", tag);
@@ -139,7 +139,7 @@ public class Consumer implements ChannelAwareMessageListener {
         }
     }
 
-    //TODO
+    //TODO Реализовать кастомный конвертер пропертей сообщения org.springframework.amqp.rabbit.support.MessagePropertiesConverter
     private void validateMessageProperties(final MessageProperties messageProperties, final long tag, final String routingKey) {
         if (StringUtils.isEmpty(messageProperties.getCorrelationIdString())) {
             final String value = UUID.randomUUID().toString();
