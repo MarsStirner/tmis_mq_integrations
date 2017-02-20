@@ -30,34 +30,34 @@ public class RbTest implements Serializable
 {
 
     /**
-     * Идентифкатор МИС
+     * Идентифкатор МИС (rbTest.id)
      * (Required)
      * 
      */
     @JsonProperty("id")
-    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u043a\u0430\u0442\u043e\u0440 \u041c\u0418\u0421")
+    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u043a\u0430\u0442\u043e\u0440 \u041c\u0418\u0421 (rbTest.id)")
     private Integer id;
     /**
-     * Код записи справочника
+     * Код записи справочника (rbTest.code)
      * (Required)
      * 
      */
     @JsonProperty("code")
-    @JsonPropertyDescription("\u041a\u043e\u0434 \u0437\u0430\u043f\u0438\u0441\u0438 \u0441\u043f\u0440\u0430\u0432\u043e\u0447\u043d\u0438\u043a\u0430")
+    @JsonPropertyDescription("\u041a\u043e\u0434 \u0437\u0430\u043f\u0438\u0441\u0438 \u0441\u043f\u0440\u0430\u0432\u043e\u0447\u043d\u0438\u043a\u0430 (rbTest.code)")
     private String code;
     /**
-     * Наименование записи справочника
+     * Наименование записи справочника (rbTest.name)
      * 
      */
     @JsonProperty("name")
-    @JsonPropertyDescription("\u041d\u0430\u0438\u043c\u0435\u043d\u043e\u0432\u0430\u043d\u0438\u0435 \u0437\u0430\u043f\u0438\u0441\u0438 \u0441\u043f\u0440\u0430\u0432\u043e\u0447\u043d\u0438\u043a\u0430")
+    @JsonPropertyDescription("\u041d\u0430\u0438\u043c\u0435\u043d\u043e\u0432\u0430\u043d\u0438\u0435 \u0437\u0430\u043f\u0438\u0441\u0438 \u0441\u043f\u0440\u0430\u0432\u043e\u0447\u043d\u0438\u043a\u0430 (rbTest.name)")
     private String name;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
     private final static long serialVersionUID = 2151748427483394421L;
 
     /**
-     * Идентифкатор МИС
+     * Идентифкатор МИС (rbTest.id)
      * (Required)
      * 
      */
@@ -67,7 +67,7 @@ public class RbTest implements Serializable
     }
 
     /**
-     * Идентифкатор МИС
+     * Идентифкатор МИС (rbTest.id)
      * (Required)
      * 
      */
@@ -77,7 +77,7 @@ public class RbTest implements Serializable
     }
 
     /**
-     * Код записи справочника
+     * Код записи справочника (rbTest.code)
      * (Required)
      * 
      */
@@ -87,7 +87,7 @@ public class RbTest implements Serializable
     }
 
     /**
-     * Код записи справочника
+     * Код записи справочника (rbTest.code)
      * (Required)
      * 
      */
@@ -97,7 +97,7 @@ public class RbTest implements Serializable
     }
 
     /**
-     * Наименование записи справочника
+     * Наименование записи справочника (rbTest.name)
      * 
      */
     @JsonProperty("name")
@@ -106,7 +106,7 @@ public class RbTest implements Serializable
     }
 
     /**
-     * Наименование записи справочника
+     * Наименование записи справочника (rbTest.name)
      * 
      */
     @JsonProperty("name")

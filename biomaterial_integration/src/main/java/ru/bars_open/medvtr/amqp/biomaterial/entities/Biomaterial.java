@@ -12,8 +12,8 @@ import javax.persistence.*;
  * Description:
  */
 @Entity
-@Table(name="Biomaterial")
-public class Biomaterial extends IdentifiedEntityWithExternal{
+@Table(name = "Biomaterial")
+public class Biomaterial extends IdentifiedEntityWithExternal {
 
     /**
      * префикс ШК
@@ -22,52 +22,60 @@ public class Biomaterial extends IdentifiedEntityWithExternal{
     private String barcodePrefix;
 
     /**
-     *номер ШК
+     * номер ШК
      */
     @Column(name = "barcodeNumber", nullable = false)
     private String barcodeNumber;
 
     /**
-     *Планируемая дата биозабора (на когда назначен)
+     * Планируемая дата биозабора (на когда назначен)
      */
     @Column(name = "plannedDateTime", nullable = false)
     private LocalDateTime plannedDateTime;
 
     /**
-     *Фактическая дата биозабора (когда материал забран у пациента)
+     * Фактическая дата биозабора (когда материал забран у пациента)
      */
     @Column(name = "facticalDateTime", nullable = false)
     private LocalDateTime facticalDateTime;
 
     /**
      * Количество забранного материала {Measurement}
+     *
+     * @ManyToOne(fetch = FetchType.LAZY)
+     * @JoinColumn(name="amount_id", nullable = false)
+     * private Measurement amount;
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="amount_id", nullable = false)
-    private Measurement amount;
+    @Column(name = "amount", nullable = false)
+    private String amount;
 
     /**
      * Тип пробирки {rbTestTubeType}
+     * @ManyToOne(fetch = FetchType.LAZY)
+     * @JoinColumn(name = "testTubeType_id", nullable = false)
+     * private RbTestTubeType testTubeType;
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="testTubeType_id", nullable = false)
-    private RbTestTubeType testTybeType;
-
+    @Column(name = "testTubeType", nullable = false)
+    private String testTubeType;
 
     /**
      * Тип биоматериала {rbBiomaterialType}
+     * @ManyToOne(fetch = FetchType.LAZY)
+     * @JoinColumn(name = "biomaterialType_id", nullable = false)
+     * private RbBiomaterialType biomaterialType;
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="biomaterialType_id", nullable = false)
-    private RbBiomaterialType biomaterialType;
+    @Column(name = "biomaterialType", nullable = false)
+    private String biomaterialType;
 
 
     /**
      * Врач, выполнивший биозабор {Person}
+     * @ManyToOne(fetch = FetchType.LAZY)
+     * @JoinColumn(name = "person_id", nullable = false)
+     * private Person person;
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="person_id", nullable = false)
-    private Person person;
+    @Column(name = "person", nullable = false)
+    private String person;
 
     /**
      * Примечание к биозабору
@@ -110,35 +118,35 @@ public class Biomaterial extends IdentifiedEntityWithExternal{
         this.facticalDateTime = facticalDateTime;
     }
 
-    public Measurement getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(final Measurement amount) {
+    public void setAmount(final String amount) {
         this.amount = amount;
     }
 
-    public RbTestTubeType getTestTybeType() {
-        return testTybeType;
+    public String getTestTubeType() {
+        return testTubeType;
     }
 
-    public void setTestTybeType(final RbTestTubeType testTybeType) {
-        this.testTybeType = testTybeType;
+    public void setTestTubeType(final String testTubeType) {
+        this.testTubeType = testTubeType;
     }
 
-    public RbBiomaterialType getBiomaterialType() {
+    public String getBiomaterialType() {
         return biomaterialType;
     }
 
-    public void setBiomaterialType(final RbBiomaterialType biomaterialType) {
+    public void setBiomaterialType(final String biomaterialType) {
         this.biomaterialType = biomaterialType;
     }
 
-    public Person getPerson() {
+    public String getPerson() {
         return person;
     }
 
-    public void setPerson(final Person person) {
+    public void setPerson(final String person) {
         this.person = person;
     }
 
@@ -158,7 +166,7 @@ public class Biomaterial extends IdentifiedEntityWithExternal{
         sb.append(", plannedDateTime=").append(plannedDateTime);
         sb.append(", facticalDateTime=").append(facticalDateTime);
         sb.append(", amount=").append(amount);
-        sb.append(", testTybeType=").append(testTybeType);
+        sb.append(", testTybeType=").append(testTubeType);
         sb.append(", biomaterialType=").append(biomaterialType);
         sb.append(", person=").append(person);
         sb.append(", note='").append(note).append('\'');

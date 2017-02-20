@@ -1,6 +1,5 @@
 package ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces;
 
-import org.springframework.amqp.core.MessageProperties;
 import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.mapped.AbstractDao;
 import ru.bars_open.medvtr.amqp.biomaterial.entities.Biomaterial;
 import ru.bars_open.medvtr.amqp.biomaterial.entities.Direction;
@@ -13,24 +12,13 @@ import ru.bars_open.medvtr.amqp.biomaterial.entities.Message;
  * Description:
  */
 public interface MessageDao extends AbstractDao<Message> {
-    Message createMessage(
-            final byte[] body, final String uuid, final String routingKey, final String type, final Direction direction, final Biomaterial biomaterial
-    );
+    Message createMessage(byte[] body, String uuid, String routingKey, String type, Direction direction, Biomaterial biomaterial);
 
-    default Message createInMessage(org.springframework.amqp.core.Message message, final Biomaterial biomaterial) {
-        final MessageProperties props = message.getMessageProperties();
-        return createMessage(message.getBody(),
-                             props.getCorrelationIdString(),
-                             props.getReceivedRoutingKey(),
-                             props.getType(),
-                             Direction.IN,
-                             biomaterial
-        );
+    default Message createInMessage(byte[] body, String uuid, String routingKey, String type, Biomaterial biomaterial) {
+        return createMessage(body, uuid, routingKey, type, Direction.IN, biomaterial);
     }
 
-    default Message createOutMessage(
-            final byte[] body, final String uuid, final String routingKey, final String type, final Biomaterial biomaterial
-    ) {
+    default Message createOutMessage(byte[] body, String uuid, String routingKey, String type, Biomaterial biomaterial) {
         return createMessage(body, uuid, routingKey, type, Direction.OUT, biomaterial);
     }
 }

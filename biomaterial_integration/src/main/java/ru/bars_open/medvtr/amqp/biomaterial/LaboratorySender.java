@@ -10,21 +10,30 @@ import org.springframework.amqp.core.MessagePropertiesBuilder;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.MappingDao;
 import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.MessageDao;
-import ru.bars_open.medvtr.amqp.biomaterial.entities.MapResearchTypeToLaboratory;
-import ru.bars_open.medvtr.amqp.biomaterial.entities.Person;
+import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.StatusDao;
+import ru.bars_open.medvtr.amqp.biomaterial.dto.MessageContext;
+import ru.bars_open.medvtr.amqp.biomaterial.dto.ResearchContext;
+import ru.bars_open.medvtr.amqp.biomaterial.entities.LaboratoryStatus;
 import ru.bars_open.medvtr.amqp.biomaterial.entities.RbLaboratory;
-import ru.bars_open.medvtr.amqp.biomaterial.entities.Research;
+import ru.bars_open.medvtr.amqp.biomaterial.entities.laboratoryMappings.MapBiomaterialTypeToLaboratory;
+import ru.bars_open.medvtr.amqp.biomaterial.entities.laboratoryMappings.MapResearchTypeToLaboratory;
+import ru.bars_open.medvtr.amqp.biomaterial.entities.laboratoryMappings.MapTestTubeTypeToLaboratory;
+import ru.bars_open.medvtr.amqp.biomaterial.entities.laboratoryMappings.MapTestTypeToLaboratory;
+import ru.bars_open.medvtr.amqp.biomaterial.util.MDCHelper;
 import ru.bars_open.medvtr.mq.entities.action.Analysis;
 import ru.bars_open.medvtr.mq.entities.base.ActionType;
 import ru.bars_open.medvtr.mq.entities.base.Biomaterial;
-import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex;
+import ru.bars_open.medvtr.mq.entities.base.refbook.RbBiomaterialType;
+import ru.bars_open.medvtr.mq.entities.base.refbook.RbTest;
+import ru.bars_open.medvtr.mq.entities.base.refbook.RbTestTubeType;
+import ru.bars_open.medvtr.mq.entities.base.util.Test;
 import ru.bars_open.medvtr.mq.entities.message.BiologicalMaterialMessage;
 import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
 import ru.bars_open.medvtr.mq.util.DeserializationFactory;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -37,131 +46,195 @@ import java.util.Set;
 public class LaboratorySender {
     private static final Logger log = LoggerFactory.getLogger(LaboratorySender.class);
 
+    private final String appId;
+
     @Autowired
     private RabbitTemplate template;
+
     @Autowired
     private MessageDao messageDao;
+
+    @Autowired
+    private MappingDao mappingDao;
+
+    @Autowired
+    private StatusDao statusDao;
 
     private final Config cfg;
 
     @Autowired
     public LaboratorySender(final ConfigurationHolder cfg) {
+        this.appId = cfg.getAppId();
         this.cfg = cfg.getConfig("laboratories");
-        log.debug("Initialized with CFG= {}", cfg);
+        log.info("Initialized with CFG = {}", cfg);
     }
 
-
-    public void send(
-            final long tag,
-            final String uuid,
-            final ru.bars_open.medvtr.amqp.biomaterial.entities.Biomaterial dbBiomaterial,
-            final Biomaterial biomaterial,
-            final Map<RbLaboratory, Set<SendResearchToLabaratoryStruct>> toSend
-    ) {
-        for (Map.Entry<RbLaboratory, Set<SendResearchToLabaratoryStruct>> entry : toSend.entrySet()) {
-            sendToLaboratory(tag, uuid, dbBiomaterial, entry.getKey().getCode(), biomaterial, entry.getValue());
-        }
-    }
-
-    private void sendToLaboratory(
-            final long tag,
-            final String uuid,
-            final ru.bars_open.medvtr.amqp.biomaterial.entities.Biomaterial dbBiomaterial,
-            final String laboratoryCode,
-            final Biomaterial biomaterial,
-            final Set<SendResearchToLabaratoryStruct> toSend
-    ) {
-        final String logPrefix = "#" + tag + "-" + laboratoryCode;
-        log.info("{}: Start sending [{}] researches", logPrefix, toSend.size());
-        if (cfg.hasPath(laboratoryCode)) {
-            final Config labConfig = cfg.getConfig(laboratoryCode);
+    /**
+     * [E] Отправка в лаборатории:
+     * -- [E.1] Поиск маппингов справочников для конкретной лаборатории
+     * -- [E.2] Формирование сообщений с учетом маппингов
+     * -- [E.3] Отправка в ЛИС-ы
+     * -- [E.4] Сохранить в БД связки Исследований и Лабораторий
+     *
+     * @param laboratory
+     * @param ctx
+     * @param researches
+     */
+    public boolean send(final RbLaboratory laboratory, final MessageContext ctx, final Set<ResearchContext> researches) {
+        MDCHelper.push(laboratory.getCode());
+        log.info("Start sending [{}] researches", researches.size());
+        if (cfg.hasPath(laboratory.getCode())) {
+            final Config labConfig = cfg.getConfig(laboratory.getCode());
             final String routingKey = labConfig.getString("routing_key");
             final String exchange = labConfig.getString("exchange");
-            final BiologicalMaterialMessage result = constructBiologicalMaterialMessage(biomaterial, toSend, logPrefix);
-            final byte[] body = DeserializationFactory.serialize(result, DeserializationFactory.CONTENT_TYPE_APPLICATION_JSON, StandardCharsets.UTF_8);
-            final Message message = constructMessage(body, uuid);
-            messageDao.createOutMessage(body, uuid, routingKey ,"BiologicalMaterialMessage", dbBiomaterial);
+            // [E.1] Поиск маппингов справочников для конкретной лаборатории
+            // [E.2] Формирование сообщений с учетом маппингов
+            final BiologicalMaterialMessage result = constructBiologicalMaterialMessage(laboratory, ctx, researches);
+            final Message message = constructMessage(routingKey, result, ctx, laboratory.getCode());
+            // [E.3] Отправка в ЛИС
             template.send(exchange, routingKey, message);
+            log.info("Sent! Exchange='{}', routingKey='{}'", exchange, routingKey);
+            // [E.4] Сохранить в БД связки Исследований и Лабораторий
+            for (ResearchContext researchContext : researches) {
+                statusDao.setLaboratoryStatus(researchContext.getResearch(), laboratory, LaboratoryStatus.WAIT);
+            }
         } else {
-            log.error("{}: NO CONFIGURATION!!!! SKIP.", logPrefix);
+            log.error("NO CONFIGURATION!!!! SKIP.");
+            MDCHelper.pop();
+            return false;
+        }
+        MDCHelper.pop();
+        return true;
+    }
+
+    private BiologicalMaterialMessage constructBiologicalMaterialMessage(
+            final RbLaboratory laboratory, final MessageContext ctx, final Set<ResearchContext> researches
+    ) {
+        final BiologicalMaterialMessage result = new BiologicalMaterialMessage();
+        result.setBiomaterial(constructBiomaterial(laboratory, ctx.getMqBiomaterial()));
+        for (ResearchContext researchContext : researches) {
+            MDCHelper.push(researchContext.getId());
+            result.getResearch().add(constructAnalysis(laboratory, researchContext.getAnalysis()));
+            MDCHelper.pop();
+        }
+        return result;
+    }
+
+    private Analysis constructAnalysis(final RbLaboratory laboratory, final Analysis source) {
+        final Analysis result = new Analysis();
+        result.setId(source.getId());
+        result.setStatus(source.getStatus());
+        result.setType(constructActionType(laboratory, source.getType()));
+        result.setIsUrgent(source.getIsUrgent());
+        result.setAssigner(source.getAssigner());
+        result.setBegDate(source.getBegDate());
+        result.setEndDate(source.getEndDate());
+        for (Test test : source.getTests()) {
+            MDCHelper.push(test.getId());
+            result.getTests().add(constructTest(laboratory, test));
+            MDCHelper.pop();
+        }
+        return result;
+    }
+
+    private Test constructTest(final RbLaboratory laboratory, final Test source) {
+        final MapTestTypeToLaboratory mapping = mappingDao.getTestType(laboratory, source.getTest().getCode());
+        if (mapping != null) {
+            log.info("TestType replaced by [{}]['{}', '{}']", mapping.getPk().getCode(), mapping.getReplaceCode(), mapping.getReplaceName());
+            final Test result = new Test();
+            result.setId(source.getId());
+            final RbTest indicator = new RbTest();
+            result.setTest(indicator);
+            indicator.setId(source.getTest().getId());
+            indicator.setCode(StringUtils.isNotEmpty(mapping.getReplaceCode()) ? mapping.getReplaceCode() : source.getTest().getCode());
+            indicator.setName(StringUtils.isNotEmpty(mapping.getReplaceName()) ? mapping.getReplaceName() : source.getTest().getName());
+            return result;
+        } else {
+            return source;
         }
     }
 
-    private Message constructMessage(final byte[] body, final String uuid) {
+    private ActionType constructActionType(final RbLaboratory laboratory, final ActionType source) {
+        final MapResearchTypeToLaboratory mapping = mappingDao.getResearchType(laboratory, source.getCode());
+        if (mapping != null) {
+            log.info("ActionType replaced by [{}]['{}', '{}']", mapping.getPk().getCode(), mapping.getReplaceCode(), mapping.getReplaceName());
+            final ActionType result = new ActionType();
+            result.setId(source.getId());
+            result.setCode(StringUtils.isNotEmpty(mapping.getReplaceCode()) ? mapping.getReplaceCode() : source.getCode());
+            result.setName(StringUtils.isNotEmpty(mapping.getReplaceName()) ? mapping.getReplaceName() : source.getName());
+            result.setFlatCode(source.getFlatCode());
+            result.setMnemonic(source.getMnemonic());
+            return result;
+        } else {
+            return source;
+        }
+    }
+
+    private Biomaterial constructBiomaterial(final RbLaboratory laboratory, final Biomaterial source) {
+        final Biomaterial result = new Biomaterial();
+        result.setId(source.getId());
+        result.setEvent(source.getEvent());
+        result.setBiomaterialType(constructBiomaterialType(laboratory, source.getBiomaterialType()));
+        result.setTestTubeType(constructTestTubeType(laboratory, source.getTestTubeType()));
+        result.setAmount(source.getAmount());
+        result.setDatetimePlanned(source.getDatetimePlanned());
+        result.setDatetimeTaken(source.getDatetimeTaken());
+        result.setStatus(source.getStatus());
+        result.setBarcode(source.getBarcode());
+        result.setNote(laboratory.getCode());
+        result.setPerson(source.getPerson());
+        return result;
+    }
+
+    private RbTestTubeType constructTestTubeType(final RbLaboratory laboratory, final RbTestTubeType source) {
+        final MapTestTubeTypeToLaboratory mapping = mappingDao.getTestTubeType(laboratory, source.getCode());
+        if (mapping != null) {
+            log.info("TestTubeType replaced by [{}]['{}', '{}']", mapping.getPk().getCode(), mapping.getReplaceCode(), mapping.getReplaceName());
+            final RbTestTubeType result = new RbTestTubeType();
+            result.setId(source.getId());
+            result.setCode(StringUtils.isNotEmpty(mapping.getReplaceCode()) ? mapping.getReplaceCode() : source.getCode());
+            result.setName(StringUtils.isNotEmpty(mapping.getReplaceName()) ? mapping.getReplaceName() : source.getName());
+            result.setColor(source.getColor());
+            result.setImage(source.getImage());
+            result.setVolume(source.getVolume());
+            return result;
+        } else {
+            return source;
+        }
+    }
+
+    private RbBiomaterialType constructBiomaterialType(final RbLaboratory laboratory, final RbBiomaterialType source) {
+        final MapBiomaterialTypeToLaboratory mapping = mappingDao.getBiomaterialType(laboratory, source.getCode());
+        if (mapping != null) {
+            log.info("BiomaterialType replaced by [{}]['{}', '{}']", mapping.getPk().getCode(), mapping.getReplaceCode(), mapping.getReplaceName());
+            final RbBiomaterialType result = new RbBiomaterialType();
+            result.setId(source.getId());
+            result.setCode(StringUtils.isNotEmpty(mapping.getReplaceCode()) ? mapping.getReplaceCode() : source.getCode());
+            result.setName(StringUtils.isNotEmpty(mapping.getReplaceName()) ? mapping.getReplaceName() : source.getName());
+            result.setSex(source.getSex());
+            return result;
+        } else {
+            return source;
+        }
+    }
+
+    private Message constructMessage(
+            final String routingKey, final BiologicalMaterialMessage result, final MessageContext ctx, final String replyCode
+    ) {
+        final byte[] body = DeserializationFactory.serialize(result, DeserializationFactory.CONTENT_TYPE_APPLICATION_JSON, StandardCharsets.UTF_8);
+        messageDao.createOutMessage(body, ctx.getUUID(), routingKey, "BiologicalMaterialMessage", ctx.getBiomaterial());
         final MessagePropertiesBuilder propertiesBuilder = MessagePropertiesBuilder.newInstance();
-        propertiesBuilder.setAppId("LABORATORY_INTEGRATION");
+        propertiesBuilder.setAppId(appId);
         propertiesBuilder.setContentEncoding(StandardCharsets.UTF_8.name());
         propertiesBuilder.setRedelivered(false);
         propertiesBuilder.setContentLength(body.length);
         propertiesBuilder.setContentType(DeserializationFactory.CONTENT_TYPE_APPLICATION_JSON);
-        propertiesBuilder.setCorrelationIdString(uuid);
+        propertiesBuilder.setCorrelationIdString(ctx.getUUID());
         propertiesBuilder.setTimestamp(new LocalDateTime().toDate());
         propertiesBuilder.setType("BiologicalMaterialMessage");
+        propertiesBuilder.setHeader("replyCode", replyCode);
         return new Message(body, propertiesBuilder.build());
     }
 
-    private BiologicalMaterialMessage constructBiologicalMaterialMessage(
-            final Biomaterial biomaterial, final Set<SendResearchToLabaratoryStruct> toSend, final String logPrefix
-    ) {
-        final BiologicalMaterialMessage result = new BiologicalMaterialMessage();
-        result.setBiomaterial(biomaterial);
-        for (SendResearchToLabaratoryStruct parameters : toSend) {
-            log.info("{}-{}: Action[{}]", logPrefix, parameters.getResearch().getExternalId(), parameters.getResearch().getExternalId());
-            result.getResearch().add(createAnalysis(logPrefix, parameters, parameters.getResearch()));
-        }
-        log.info("{}: BiologicalMaterialMessage constructed", logPrefix);
-        return result;
-    }
 
-    private Analysis createAnalysis(final String tag, final SendResearchToLabaratoryStruct parameters, final Research research) {
-        final Analysis analysis = new Analysis();
-        analysis.setId(research.getExternalId());
-        analysis.setStatus(parameters.getAnalysis().getStatus());
-        analysis.setType(createActionType(tag + "-" + research.getExternalId(), parameters.getMapping()));
-        analysis.setIsUrgent(research.isUrgent());
-        analysis.setAssigner(createPerson(research.getAssigner()));
-        analysis.setBegDate(research.getBegDate() != null ? research.getBegDate().toDateTime() : null);
-        analysis.setEndDate(research.getEndDate() != null ? research.getEndDate().toDateTime() : null);
-        analysis.setTests(parameters.getAnalysis().getTests());
-        return analysis;
-    }
-
-    private ActionType createActionType(final String tag, final MapResearchTypeToLaboratory source) {
-        final ActionType result = new ActionType();
-        result.setId(source.getResearchType().getId());
-        if (StringUtils.isNotEmpty(source.getOverrideResearchTypeCode())) {
-            log.info("{}: Override ActionType.code to [{}]", tag, source.getOverrideResearchTypeCode());
-            result.setCode(source.getOverrideResearchTypeCode());
-        } else {
-            result.setCode(source.getResearchType().getCode());
-        }
-        if (StringUtils.isNotEmpty(source.getOverrideResearchTypeName())) {
-            log.info("{}: Override ActionType.name to [{}]", tag, source.getOverrideResearchTypeName());
-            result.setName(source.getOverrideResearchTypeName());
-        } else {
-            result.setName(source.getResearchType().getCode());
-        }
-        return result;
-    }
-
-    private ru.bars_open.medvtr.mq.entities.base.Person createPerson(final Person source) {
-        final ru.bars_open.medvtr.mq.entities.base.Person result = new ru.bars_open.medvtr.mq.entities.base.Person();
-        result.setId(source.getExternalId());
-        switch (source.getSex().getCode()) {
-            case "MALE":
-                result.setSex(Sex.MALE);
-                break;
-            case "FEMALE":
-                result.setSex(Sex.FEMALE);
-                break;
-            default:
-                result.setSex(Sex.UNKNOWN);
-                break;
-        }
-        result.setBirthDate(source.getBirthDate() != null ? source.getBirthDate().toDateTime() : null);
-        result.setFirstName(source.getFirstName());
-        result.setLastName(source.getLastName());
-        result.setPatrName(source.getPatrName());
-        return result;
-    }
 }

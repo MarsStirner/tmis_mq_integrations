@@ -6,16 +6,16 @@
   "properties": {
     "id": {
       "type": "integer",
-      "description": "Идентифкатор МИС",
+      "description": "Идентифкатор МИС (rbTest.id)",
       "minimum": 0
     },
     "code": {
       "type": "string",
-      "description": "Код записи справочника"
+      "description": "Код записи справочника (rbTest.code)"
     },
     "name": {
       "type": "string",
-      "description": "Наименование записи справочника"
+      "description": "Наименование записи справочника (rbTest.name)"
     }
   },
   "required": [

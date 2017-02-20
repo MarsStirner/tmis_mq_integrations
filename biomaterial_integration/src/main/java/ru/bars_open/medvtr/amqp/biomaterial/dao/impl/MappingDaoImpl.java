@@ -13,7 +13,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import ru.bars_open.medvtr.amqp.biomaterial.PersistenceConfig;
 import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.MappingDao;
-import ru.bars_open.medvtr.amqp.biomaterial.entities.*;
+import ru.bars_open.medvtr.amqp.biomaterial.entities.MapToLaboratory;
+import ru.bars_open.medvtr.amqp.biomaterial.entities.RbLaboratory;
+import ru.bars_open.medvtr.amqp.biomaterial.entities.laboratoryMappings.MapBiomaterialTypeToLaboratory;
+import ru.bars_open.medvtr.amqp.biomaterial.entities.laboratoryMappings.MapResearchTypeToLaboratory;
+import ru.bars_open.medvtr.amqp.biomaterial.entities.laboratoryMappings.MapTestTubeTypeToLaboratory;
+import ru.bars_open.medvtr.amqp.biomaterial.entities.laboratoryMappings.MapTestTypeToLaboratory;
+import ru.bars_open.medvtr.amqp.biomaterial.entities.mapped.LaboratoryMappingPK;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
@@ -31,7 +37,7 @@ import java.util.stream.Collectors;
 @Repository("mappingDao")
 public class MappingDaoImpl implements MappingDao {
 
-    protected final Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger log = LoggerFactory.getLogger(MappingDaoImpl.class);
 
     @Autowired
     @Qualifier(PersistenceConfig.SESSION_FACTORY)
@@ -42,54 +48,68 @@ public class MappingDaoImpl implements MappingDao {
         log.info("Init for work with SessionFactory[@{}]", Integer.toHexString(sessionFactory.hashCode()));
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public Map<RbLaboratory, MapResearchTypeToLaboratory> findLaboratoryMapping(final Research research, final Biomaterial biomaterial) {
-        if (research.getResearchType() == null) { return Collections.emptyMap(); }
-        final DetachedCriteria criteria = DetachedCriteria.forClass(MapResearchTypeToLaboratory.class);
+    @SuppressWarnings("unchecked")
+    public Set<MapToLaboratory> findLaboratoryMapping(final String researchType, final String biomaterialType, final String testTubeType) {
+        final DetachedCriteria criteria = DetachedCriteria.forClass(MapToLaboratory.class);
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         criteria.createAlias("laboratory", "laboratory", JoinType.INNER_JOIN);
-        criteria.createAlias("researchType", "researchType", JoinType.INNER_JOIN);
-        criteria.createAlias("biomaterialType", "biomaterialType", JoinType.LEFT_OUTER_JOIN);
-        criteria.createAlias("testTubeType", "testTubeType", JoinType.LEFT_OUTER_JOIN);
 
-        criteria.add(Restrictions.eq("researchType.code", research.getResearchType().getCode()));
-        criteria.add(Restrictions.or(
-                Restrictions.eq("biomaterialType.id", biomaterial.getBiomaterialType().getId()),
-                Restrictions.isNull("biomaterialType")
-        ));
-        criteria.add(Restrictions.or(
-                Restrictions.eq("testTubeType.id", biomaterial.getTestTybeType().getId()),
-                Restrictions.isNull("testTubeType")
-        ));
+        criteria.add(Restrictions.eq("researchType", researchType));
+        criteria.add(Restrictions.or(Restrictions.eq("biomaterialType", biomaterialType), Restrictions.isNull("biomaterialType")));
+        criteria.add(Restrictions.or(Restrictions.eq("testTubeType", testTubeType), Restrictions.isNull("testTubeType")));
         final Session session = sessionFactory.getCurrentSession();
-        final List<MapResearchTypeToLaboratory> resultList = criteria.getExecutableCriteria(session).list();
-        return !resultList.isEmpty() ? getBestMatch(resultList, biomaterial) : Collections.emptyMap();
+        final List<MapToLaboratory> resultList = criteria.getExecutableCriteria(session).list();
+        return !resultList.isEmpty() ? getBestMatch(resultList, biomaterialType, testTubeType) : Collections.emptySet();
     }
 
-    private Map<RbLaboratory, MapResearchTypeToLaboratory> getBestMatch(final List<MapResearchTypeToLaboratory> source, final Biomaterial biomaterial) {
+    @Override
+    public MapBiomaterialTypeToLaboratory getBiomaterialType(final RbLaboratory laboratory, final String code) {
+        return sessionFactory.getCurrentSession().find(MapBiomaterialTypeToLaboratory.class, new LaboratoryMappingPK(laboratory, code));
+    }
+
+    @Override
+    public MapTestTubeTypeToLaboratory getTestTubeType(final RbLaboratory laboratory, final String code) {
+        return sessionFactory.getCurrentSession().find(MapTestTubeTypeToLaboratory.class, new LaboratoryMappingPK(laboratory, code));
+    }
+
+    @Override
+    public MapTestTypeToLaboratory getTestType(final RbLaboratory laboratory, final String code) {
+        return sessionFactory.getCurrentSession().find(MapTestTypeToLaboratory.class, new LaboratoryMappingPK(laboratory, code));
+    }
+
+    @Override
+    public MapResearchTypeToLaboratory getResearchType(final RbLaboratory laboratory, final String code) {
+        return sessionFactory.getCurrentSession().find(MapResearchTypeToLaboratory.class, new LaboratoryMappingPK(laboratory, code));
+    }
+
+    private Set<MapToLaboratory> getBestMatch(final List<MapToLaboratory> source, final String biomaterialType, final String testTubeType) {
         final Set<RbLaboratory> laboratories = getDistinctLaboratories(source);
-        final Map<RbLaboratory, MapResearchTypeToLaboratory> result = new HashMap<>(laboratories.size());
+        final Set<MapToLaboratory> result = new HashSet<>(laboratories.size());
         for (RbLaboratory laboratory : laboratories) {
-            result.put(laboratory, getBestMatch(laboratory, source, biomaterial));
+            result.add(getBestMatch(laboratory, source, biomaterialType, testTubeType));
         }
         return result;
     }
 
-    private Set<RbLaboratory> getDistinctLaboratories(final List<MapResearchTypeToLaboratory> source) {
+    private Set<RbLaboratory> getDistinctLaboratories(final List<MapToLaboratory> source) {
         final Set<RbLaboratory> result = new HashSet<>(Math.min(5, source.size()));
-        for (MapResearchTypeToLaboratory entry : source) {
+        for (MapToLaboratory entry : source) {
             result.add(entry.getLaboratory());
         }
         return result;
     }
 
-    private MapResearchTypeToLaboratory getBestMatch(final RbLaboratory laboratory, final List<MapResearchTypeToLaboratory> source, final Biomaterial biomaterial) {
-        final Set<MapResearchTypeToLaboratory> filtered = source.stream().filter(x -> laboratory.equals(x.getLaboratory())).collect(Collectors.toSet());
-        Optional<MapResearchTypeToLaboratory> result;
-        final RbBiomaterialType biomaterialType = biomaterial.getBiomaterialType();
-        final RbTestTubeType testTybeType = biomaterial.getTestTybeType();
-        result = filtered.stream().filter(x -> biomaterialType.equals(x.getBiomaterialType()) && testTybeType.equals(x.getTestTubeType())).findFirst();
+    private MapToLaboratory getBestMatch(
+            final RbLaboratory laboratory,
+            final List<MapToLaboratory> source,
+            final String biomaterialType,
+            final String testTubeType
+    ) {
+        final Set<MapToLaboratory> filtered = source.stream().filter(x -> laboratory.equals(x.getLaboratory())).collect(Collectors.toSet());
+        Optional<MapToLaboratory> result;
+        result = filtered.stream().filter(x -> biomaterialType.equals(x.getBiomaterialType()) && testTubeType.equals(x.getTestTubeType()))
+                .findFirst();
         if (result.isPresent()) {
             log.debug("Lab[{}]: Best match by BT, TTT: {}", laboratory.getCode(), result.get());
             return result.get();
@@ -99,13 +119,13 @@ public class MappingDaoImpl implements MappingDao {
             log.debug("Lab[{}]: Best match by BT: {}", laboratory.getCode(), result.get());
             return result.get();
         }
-        result = filtered.stream().filter(x -> testTybeType.equals(x.getTestTubeType())).findFirst();
+        result = filtered.stream().filter(x -> testTubeType.equals(x.getTestTubeType())).findFirst();
         if (result.isPresent()) {
             log.debug("Lab[{}]: Best match by TTT: {}", laboratory.getCode(), result.get());
             return result.get();
         }
-        final Iterator<MapResearchTypeToLaboratory> iterator = filtered.iterator();
-        final MapResearchTypeToLaboratory typed = iterator.hasNext() ?  iterator.next() : null;
+        final Iterator<MapToLaboratory> iterator = filtered.iterator();
+        final MapToLaboratory typed = iterator.hasNext() ? iterator.next() : null;
         log.debug("Lab[{}]: BestMatch by WILDCARDS: {}", laboratory.getCode(), typed);
         return typed;
     }

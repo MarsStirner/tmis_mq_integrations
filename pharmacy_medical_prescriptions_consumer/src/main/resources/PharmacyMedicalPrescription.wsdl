@@ -47,7 +47,7 @@
                     <!--Идентифкатор в ТМИС-->
                     <xs:element name="id" type="xs:int"/>
                     <!--Код записи справочника -->
-                    <xs:element name="code" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
                     <!--Наименование записи справочника -->
                     <xs:element name="name" type="xs:string"/>
                     <!--Краткое Наименование записи справочника -->
@@ -209,7 +209,7 @@
                     <!--Идентифкатор в ТМИС-->
                     <xs:element name="id" type="xs:int"/>
                     <!--Код записи справочника -->
-                    <xs:element name="code" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
                     <!--Наименование записи справочника -->
                     <xs:element name="name" type="xs:string"/>
                 </xs:sequence>
@@ -263,7 +263,7 @@
                     <!--Идентифкатор в ТМИС-->
                     <xs:element name="id" type="xs:int"/>
                     <!--Код записи справочника -->
-                    <xs:element name="code" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
                     <!--Наименование записи справочника -->
                     <xs:element name="name" type="xs:string"/>
                 </xs:sequence>

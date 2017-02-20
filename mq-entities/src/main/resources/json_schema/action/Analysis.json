@@ -39,7 +39,7 @@
       "description": "список тестов в рамках исследования",
       "type" : "array",
       "items": {
-        "$ref": "../base/refbook/RbTest.json"
+        "$ref": "../base/util/Test.json"
       }
     }
   },

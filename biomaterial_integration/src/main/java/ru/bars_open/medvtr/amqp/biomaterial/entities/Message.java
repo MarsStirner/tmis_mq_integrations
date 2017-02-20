@@ -118,14 +118,14 @@ public class Message extends IdentifiedEntity{
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Message{");
-        sb.append("correlationId='").append(correlationId).append('\'');
+        final StringBuilder sb = new StringBuilder("Message[").append(id);
+        sb.append("]{correlationId='").append(correlationId).append('\'');
         sb.append(", direction=").append(direction);
-        sb.append(", routingKey='").append(routingKey).append('\'');
-        sb.append(", timestamp=").append(timestamp);
-        sb.append(", type='").append(type).append('\'');
-        sb.append(", body='").append(body).append('\'');
-        sb.append(", biomaterial=").append(biomaterial);
+        sb.append(", routingKey='").append(routingKey);
+        sb.append("', timestamp=").append(timestamp);
+        sb.append(", type='").append(type);
+        sb.append("', body=").append(body != null ? body.length() : 0);
+        sb.append(" chars, biomaterial=").append(biomaterial.toShortString());
         sb.append('}');
         return sb.toString();
     }

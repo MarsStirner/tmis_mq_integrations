@@ -1,14 +1,15 @@
 package ru.bars_open.medvtr.amqp.biomaterial.dao.impl;
 
+import org.joda.time.LocalDateTime;
 import org.springframework.stereotype.Repository;
 import ru.bars_open.medvtr.amqp.biomaterial.dao.impl.mapped.AbstractDaoImpl;
 import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.MessageDao;
-import ru.bars_open.medvtr.amqp.biomaterial.dao.util.EntityFactory;
 import ru.bars_open.medvtr.amqp.biomaterial.entities.Biomaterial;
 import ru.bars_open.medvtr.amqp.biomaterial.entities.Direction;
 import ru.bars_open.medvtr.amqp.biomaterial.entities.Message;
 
 import javax.transaction.Transactional;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Author: Upatov Egor <br>
@@ -25,7 +26,6 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
         return Message.class;
     }
 
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public Message createMessage(
             final byte[] body,
             final String uuid,
@@ -34,7 +34,14 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
             final Direction direction,
             final Biomaterial biomaterial
     ) {
-        final Message result = EntityFactory.createMessage(body, uuid, routingKey, type, direction, biomaterial);
+        final Message result = new Message();
+        result.setCorrelationId(uuid);
+        result.setBody(new String(body, StandardCharsets.UTF_8));
+        result.setDirection(direction);
+        result.setRoutingKey(routingKey);
+        result.setTimestamp(new LocalDateTime());
+        result.setType(type);
+        result.setBiomaterial(biomaterial);
         save(result);
         return result;
     }

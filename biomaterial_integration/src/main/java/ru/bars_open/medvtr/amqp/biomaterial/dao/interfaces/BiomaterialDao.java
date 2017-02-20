@@ -11,9 +11,9 @@ import ru.bars_open.medvtr.amqp.biomaterial.entities.Biomaterial;
  * Description:
  */
 public interface BiomaterialDao extends AbstractDao<Biomaterial>{
-    Biomaterial findOrCreate(ru.bars_open.medvtr.mq.entities.base.Biomaterial biomaterial);
+    Biomaterial findOrCreate(final ru.bars_open.medvtr.mq.entities.base.Biomaterial biomaterial);
 
-    Biomaterial create(ru.bars_open.medvtr.mq.entities.base.Biomaterial biomaterial);
+    Biomaterial create(final ru.bars_open.medvtr.mq.entities.base.Biomaterial biomaterial);
 
-    Biomaterial getByExternalId(Integer number);
+    Biomaterial getByExternalId(final String number);
 }

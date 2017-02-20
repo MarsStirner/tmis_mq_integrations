@@ -13,10 +13,6 @@ import ru.bars_open.medvtr.mq.entities.action.Analysis;
  * Description:
  */
 public interface ResearchDao extends AbstractDao<Research> {
-
     Research create(Analysis research, Biomaterial biomaterial, Message message);
-
-    Research getByExternalId(Integer number);
-
     Research findOrCreate(Analysis research, Biomaterial biomaterial, Message message);
 }

@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import static ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.listeners.StupidEncodingConverterListener.convertFromDb;
+
 /**
  * Author: Upatov Egor <br>
  * Date: 10.02.2017, 19:00 <br>
@@ -12,26 +14,26 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="operator")
-public class Operator extends IdentifiedEntity{
+public class Operator extends IdentifiedEntity implements Nameable{
 
     @Column(name= "uname")
-    private String code;
+    private String name;
 
     public Operator() {
     }
 
-    public String getCode() {
-        return code;
+    public String getName() {
+        return name;
     }
 
-    public void setCode(final String code) {
-        this.code = code;
+    public void setName(final String name) {
+        this.name = name;
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Operator{");
-        sb.append("code='").append(code).append('\'');
+        sb.append("name='").append(convertFromDb(name)).append('\'');
         sb.append('}');
         return sb.toString();
     }

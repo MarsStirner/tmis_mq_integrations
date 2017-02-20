@@ -4,21 +4,21 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValue;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jndi.JndiTemplate;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
 
 import javax.naming.NamingException;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Properties;
 
@@ -32,12 +32,11 @@ import java.util.Properties;
 @EnableTransactionManagement
 public class PersistenceConfig {
 
-    public static final String SESSION_FACTORY = "databaseSessionFactory";
-
     private static final Logger log = LoggerFactory.getLogger("CONFIG");
+    public static final String PERSISTENCE_UNIT_NAME_HEPA = "hepa";
 
-    @Bean("hospitalDataSource")
-    public DataSource lookupHospitalDatasource(final ConfigurationHolder cfg) {
+    @Bean("dataSource")
+    public DataSource lookupDatasource(final ConfigurationHolder cfg) {
         final Config dsCfg = cfg.getConfig("datasource");
         if (dsCfg.hasPath("jndiName")) {
             final String jndiName = dsCfg.getString("jndiName");
@@ -69,44 +68,43 @@ public class PersistenceConfig {
         }
     }
 
-    @Bean("hospitalHibernateProperties")
-    public Properties hospitalHibernateProperties() {
+    @Bean("hibernateProperties")
+    public Properties hibernateProperties() {
         final Properties result = new Properties();
         result.put("hibernate.dialect", "org.hibernate.dialect.MySQLInnoDBDialect");
-        result.put("hibernate.show_sql", "true");
+        result.put("hibernate.show_sql", "false");
         result.put("hibernate.format_sql", "true");
         result.put("hibernate.max_fetch_depth", "3");
         result.put("hibernate.hbm2ddl.auto", ""); // means "NONE"
         return result;
     }
 
-
-    @Bean(SESSION_FACTORY)
-    public LocalSessionFactoryBean hospitalSessionFactory(
-            @Qualifier("hospitalDataSource") final DataSource dataSource, @Qualifier("hospitalHibernateProperties") final Properties props
-    ) {
-        final LocalSessionFactoryBean result = new LocalSessionFactoryBean();
+    @Bean("entityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+            @Qualifier("dataSource") final DataSource dataSource,
+            @Qualifier("hibernateProperties") final Properties properties) {
+        final LocalContainerEntityManagerFactoryBean result = new LocalContainerEntityManagerFactoryBean();
         result.setDataSource(dataSource);
-        result.setPackagesToScan("ru.bars_open.medvtr");
-        result.setHibernateProperties(props);
-        log.info("Initialized 'hospitalSessionFactory'[@{}]", Integer.toHexString(result.hashCode()));
+        result.setJpaProperties(properties);
+        result.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        result.setPackagesToScan("ru.bars_open.medvtr.amqp.biomaterial.hepa.entities");
+        result.setPersistenceUnitName(PERSISTENCE_UNIT_NAME_HEPA);
+        log.info("hospitalEntityManagerFactory initialized [@{}] {}", Integer.toHexString(result.hashCode()), result);
         return result;
     }
 
-    @Bean("hospitalTransactionManager")
-    public HibernateTransactionManager hospitalTransactionManager(
-            @Qualifier(SESSION_FACTORY) final SessionFactory sessionFactory
+    @Bean(name = "transactionManager")
+    public JpaTransactionManager transactionManager(
+            @Qualifier("entityManagerFactory") final EntityManagerFactory emf
     ) {
-        final HibernateTransactionManager result = new HibernateTransactionManager(sessionFactory);
-        log.info("Initialized 'hospitalTransactionManager'[@{}]", Integer.toHexString(result.hashCode()));
+        final JpaTransactionManager result = new JpaTransactionManager(emf);
+        result.setDefaultTimeout(36000);
+        log.info("Initialized 'transactionManager'[@{}]: with EntityManagerFactory[@{}]",
+                 Integer.toHexString(result.hashCode()),
+                 Integer.toHexString(emf.hashCode())
+        );
         return result;
     }
 
-    public static String convertToPizdets(String utf8value){
-       return new String(utf8value.getBytes(Charset.forName("koi8-r")), Charset.forName("cp1252"));
-    }
 
-    public static String convertFromPizdets(String pizdets){
-        return new String(pizdets.getBytes(Charset.forName("cp1252")), Charset.forName("koi8-r"));
-    }
 }

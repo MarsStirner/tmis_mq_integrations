@@ -37,10 +37,12 @@ public class Research extends IdentifiedEntityWithExternal {
 
     /**
      * Тип исследования {rbResearchType}
+     * @ManyToOne(fetch = FetchType.LAZY)
+     * @JoinColumn(name = "researchType_id", nullable = true)
+     * private RbResearchType researchType;
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "researchType_id", nullable = true)
-    private RbResearchType researchType;
+    @Column(name = "researchType", nullable = true)
+    private String researchType;
 
     /**
      * Признак срочности
@@ -50,10 +52,13 @@ public class Research extends IdentifiedEntityWithExternal {
 
     /**
      * Ответственный  за исследование врач {Person}
+     * @ManyToOne(fetch = FetchType.LAZY)
+     * @JoinColumn(name = "assigner_id", nullable = false)
+     * private Person assigner;
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assigner_id", nullable = false)
-    private Person assigner;
+    @Column(name = "assigner", nullable = true)
+    private String assigner;
+
 
     /**
      * Дата начала исследования
@@ -100,11 +105,11 @@ public class Research extends IdentifiedEntityWithExternal {
         this.cancelled = cancelled;
     }
 
-    public RbResearchType getResearchType() {
+    public String getResearchType() {
         return researchType;
     }
 
-    public void setResearchType(final RbResearchType researchType) {
+    public void setResearchType(final String researchType) {
         this.researchType = researchType;
     }
 
@@ -116,11 +121,11 @@ public class Research extends IdentifiedEntityWithExternal {
         this.urgent = urgent;
     }
 
-    public Person getAssigner() {
+    public String getAssigner() {
         return assigner;
     }
 
-    public void setAssigner(final Person assigner) {
+    public void setAssigner(final String assigner) {
         this.assigner = assigner;
     }
 
@@ -156,7 +161,7 @@ public class Research extends IdentifiedEntityWithExternal {
         sb.append("], cancelled=").append(cancelled);
         sb.append(", researchType=").append(researchType);
         sb.append(", urgent=").append(urgent);
-        sb.append(", assigner[").append(assigner != null ? assigner.getId() : "null");
+        sb.append(", assigner[").append(assigner);
         sb.append("], begDate=").append(begDate);
         sb.append(", endDate=").append(endDate);
         sb.append(", note='").append(note).append('\'');

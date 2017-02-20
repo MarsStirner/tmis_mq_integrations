@@ -16,13 +16,13 @@ public abstract class IdentifiedEntityWithExternal extends IdentifiedEntity {
      * Внешний идентифкатор ТМИС
      */
     @Column(name = "externalId", nullable = false)
-    protected Integer externalId;
+    protected String externalId;
 
-    public Integer getExternalId() {
+    public String getExternalId() {
         return externalId;
     }
 
-    public void setExternalId(final Integer externalId) {
+    public void setExternalId(final String externalId) {
         this.externalId = externalId;
     }
 }

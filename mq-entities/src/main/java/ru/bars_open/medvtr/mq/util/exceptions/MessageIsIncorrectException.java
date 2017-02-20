@@ -13,10 +13,16 @@ public class MessageIsIncorrectException extends Exception {
 
     public MessageIsIncorrectException(final Set<String> errors) {
         super("Message is not correct");
-        this.errors= errors;
+        this.errors = errors;
     }
 
     public Set<String> getErrors() {
         return errors;
     }
+
+    @Override
+    public String getMessage() {
+        return super.getMessage() + "| Found errors=" + errors.toString();
+    }
+
 }

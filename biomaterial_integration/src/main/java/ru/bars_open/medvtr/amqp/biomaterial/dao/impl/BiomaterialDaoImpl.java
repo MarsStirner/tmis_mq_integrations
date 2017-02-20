@@ -1,18 +1,12 @@
 package ru.bars_open.medvtr.amqp.biomaterial.dao.impl;
 
-import org.hibernate.Session;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.sql.JoinType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.bars_open.medvtr.amqp.biomaterial.dao.impl.mapped.AbstractDaoImpl;
-import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.*;
-import ru.bars_open.medvtr.amqp.biomaterial.dao.util.EntityFactory;
-import ru.bars_open.medvtr.amqp.biomaterial.entities.*;
+import ru.bars_open.medvtr.amqp.biomaterial.dao.impl.mapped.AbstractDaoWithExternalImpl;
+import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.BiomaterialDao;
+import ru.bars_open.medvtr.amqp.biomaterial.entities.Biomaterial;
+import ru.bars_open.medvtr.mq.entities.base.Person;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 /**
  * Author: Upatov Egor <br>
@@ -23,17 +17,7 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 @Repository("biomaterialDao")
 @Transactional
-public class BiomaterialDaoImpl extends AbstractDaoImpl<Biomaterial> implements BiomaterialDao {
-
-    @Autowired
-    private MeasurementDao measurementDao;
-    @Autowired
-    private RbTestTubeTypeDao testTubeTypeDao;
-    @Autowired
-    private RbBiomaterialTypeDao biomaterialTypeDao;
-    @Autowired
-    private PersonDao personDao;
-
+public class BiomaterialDaoImpl extends AbstractDaoWithExternalImpl<Biomaterial> implements BiomaterialDao {
 
     @Override
     public Class<Biomaterial> getEntityClass() {
@@ -42,54 +26,28 @@ public class BiomaterialDaoImpl extends AbstractDaoImpl<Biomaterial> implements 
 
     @Override
     public Biomaterial findOrCreate(final ru.bars_open.medvtr.mq.entities.base.Biomaterial source) {
-        if (source == null) { return null; }
-        final Biomaterial result = getByExternalId(source.getId());
+        final Biomaterial result = getByExternalId(String.valueOf(source.getId()));
         return result != null ? result : create(source);
     }
 
 
     @Override
     public Biomaterial create(final ru.bars_open.medvtr.mq.entities.base.Biomaterial source) {
-        if (source == null) { return null; }
-        final Measurement amount = measurementDao.create(source.getAmount());
-        final RbTestTubeType testTubeType = testTubeTypeDao.findOrCreate(source.getTestTubeType());
-        final RbBiomaterialType biomaterialType = biomaterialTypeDao.findOrCreate(source.getBiomaterialType());
-        final Person person = personDao.findOrCreate(source.getPerson());
-
-        final Biomaterial result = EntityFactory.create(source, amount, testTubeType, biomaterialType, person);
+        log.debug("Biomaterial-create new entity");
+        final Biomaterial result = new Biomaterial();
+        result.setExternalId(String.valueOf(source.getId()));
+        result.setBarcodePrefix(String.valueOf(source.getBarcode().getPeriod()));
+        result.setBarcodeNumber(String.valueOf(source.getBarcode().getCode()));
+        result.setPlannedDateTime(source.getDatetimePlanned().toLocalDateTime());
+        if (source.getDatetimeTaken() != null) { result.setFacticalDateTime(source.getDatetimeTaken().toLocalDateTime()); }
+        //TODO Event
+        result.setAmount(source.getAmount().getValue() + " " + source.getAmount().getUnit().getName());
+        result.setTestTubeType(source.getTestTubeType().getCode());
+        result.setBiomaterialType(source.getBiomaterialType().getCode());
+        final Person person = source.getPerson();
+        result.setPerson("[" + person.getId() + "] " + person.getLastName() + " " + person.getFirstName() + " " + person.getPatrName());
+        result.setNote(source.getNote());
         save(result);
         return result;
     }
-
-    @Override
-    public Biomaterial getByExternalId(final Integer number) {
-        final DetachedCriteria criteria = getEntityCriteria();
-        criteria.add(Restrictions.eq("externalId", number));
-        final Session session = sessionFactory.getCurrentSession();
-        final List<Biomaterial> resultList = criteria.getExecutableCriteria(session).list();
-        switch (resultList.size()) {
-            case 0: {
-                log.debug("Not found by externalId[{}]", number);
-                return null;
-            }
-            case 1: {
-                return resultList.iterator().next();
-            }
-            default: {
-                log.warn("By externalId [{}] founded {} rows. Return first", number, resultList.size());
-                return resultList.iterator().next();
-            }
-        }
-    }
-
-    @Override
-    public DetachedCriteria getEntityCriteria() {
-        final DetachedCriteria result = getSimplestCriteria();
-        result.createAlias("amount", "amount", JoinType.INNER_JOIN);
-        result.createAlias("testTybeType", "testTybeType", JoinType.INNER_JOIN);
-        result.createAlias("biomaterialType", "biomaterialType", JoinType.INNER_JOIN);
-        result.createAlias("person", "person", JoinType.INNER_JOIN);
-        return result;
-    }
-
 }

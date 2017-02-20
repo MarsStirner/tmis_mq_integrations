@@ -1,8 +1,5 @@
 package ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.impl;
 
-import org.hibernate.Session;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.impl.mapped.AbstractDaoImpl;
@@ -10,9 +7,14 @@ import ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.interfaces.ClientDao;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.Client;
 import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.util.Date;
 import java.util.List;
 
-import static ru.bars_open.medvtr.amqp.biomaterial.hepa.PersistenceConfig.convertToPizdets;
+import static ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.listeners.StupidEncodingConverterListener.convertToDb;
+
 
 /**
  * Author: Upatov Egor <br>
@@ -27,9 +29,9 @@ public class ClientDaoImpl extends AbstractDaoImpl<Client> implements ClientDao 
 
     public Client create(final String lastName, final String firstName, final String patrName, final DateTime birthDate, final Sex sex) {
         final Client result = new Client();
-        result.setFirstName(convertToPizdets(firstName));
-        result.setLastName(convertToPizdets(lastName));
-        result.setPatrName(convertToPizdets(patrName));
+        result.setFirstName(convertToDb(firstName));
+        result.setLastName(convertToDb(lastName));
+        result.setPatrName(convertToDb(patrName));
         result.setBirthDate(birthDate.toDate());
         switch (sex) {
             case MALE:
@@ -57,13 +59,23 @@ public class ClientDaoImpl extends AbstractDaoImpl<Client> implements ClientDao 
     private Client getByNameAndBirthDate(
             final String lastName, final String firstName, final String patrName, final DateTime birthDate, final Sex sex
     ) {
-        final DetachedCriteria criteria = getEntityCriteria();
-        criteria.add(Restrictions.eq("lastName", convertToPizdets(lastName)));
-        criteria.add(Restrictions.eq("firstName", convertToPizdets(firstName)));
-        criteria.add(Restrictions.eq("patrName", convertToPizdets(patrName)));
-        criteria.add(Restrictions.eq("birthDate", birthDate.toLocalDate().toDate()));
-        final Session session = sessionFactory.getCurrentSession();
-        final List<Client> resultList = criteria.getExecutableCriteria(session).list();
+        final CriteriaBuilder qb = em.getCriteriaBuilder();
+        final CriteriaQuery<Client> query = qb.createQuery(getEntityClass());
+        final Root<Client> root = query.from(getEntityClass());
+        query.select(root).where(
+                qb.and(
+                        qb.equal(root.get("lastName"), qb.parameter(String.class, "lastName")),
+                        qb.equal(root.get("firstName"), qb.parameter(String.class, "firstName")),
+                        qb.equal(root.get("patrName"), qb.parameter(String.class, "patrName")),
+                        qb.equal(root.get("birthDate"), qb.parameter(Date.class, "birthDate"))
+                )
+        );
+        final List<Client> resultList = em.createQuery(query)
+                .setParameter("lastName", convertToDb(lastName))
+                .setParameter("firstName",convertToDb(firstName))
+                .setParameter("patrName", convertToDb(patrName))
+                .setParameter("birthDate", birthDate.toLocalDate().toDate())
+                .getResultList();
         switch (resultList.size()) {
             case 0: {
                 log.debug("Not found by FIO and BirthDate");

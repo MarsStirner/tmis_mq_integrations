@@ -20,6 +20,7 @@ public class ConfigurationHolder {
     private static final Logger log = LoggerFactory.getLogger("CONFIG");
 
     private final Config object;
+    private final String appId;
 
     public ConfigurationHolder(final Config baseCfg) {
         final Config defaultCfg = baseCfg.hasPath("default") ? baseCfg.getConfig("default") : ConfigFactory.empty();
@@ -31,6 +32,7 @@ public class ConfigurationHolder {
         if (object.isEmpty()) {
             throw new IllegalStateException("Parsed Configuration is not valid, cause empty!");
         }
+        this.appId = object.getString("appId");
     }
 
     private Config loadConfigFromConfigService(final Config cfg) {
@@ -67,6 +69,12 @@ public class ConfigurationHolder {
     public String toString() {
         return "ConfigurationHolder[\n" + object.root().render(ConfigRenderOptions.defaults().setOriginComments(false).setJson(false)) + ']';
     }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public ConfigObject root() {
         return object.root();
@@ -212,4 +220,6 @@ public class ConfigurationHolder {
     public Config withValue(final String path, final ConfigValue value) {
         return object.withValue(path, value);
     }
+
+
 }

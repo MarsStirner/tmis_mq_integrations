@@ -27,7 +27,7 @@ public class DeserializationFactory {
     }
 
     public static <T> T parse(final byte[] content, final String contentType, final String encoding, final Class<T> clazz){
-        return parse(content, contentType, Charset.forName(encoding), clazz);
+        return parse(content, contentType, getEncoding(encoding), clazz);
     }
 
     public static <T> T parse(final byte[] content, final String contentType, final Charset encoding, final Class<T> clazz){
@@ -56,25 +56,20 @@ public class DeserializationFactory {
 
 
 
-    public static Charset getEncoding(final Logger log, final long logTag, final String contentEncoding) {
+    public static Charset getEncoding(final Logger log, final String contentEncoding) {
         if (StringUtils.isNotEmpty(contentEncoding)) {
             try {
                 return Charset.forName(contentEncoding);
             } catch (UnsupportedCharsetException e) {
-                log.warn("#{}: Encoding with name '{}' is not supported, will use UTF-8", logTag, contentEncoding);
+                log.warn("Encoding with name '{}' is not supported, will use UTF-8", contentEncoding);
                 return StandardCharsets.UTF_8;
             }
         }
-        log.warn("#{}: Encoding not set, will use UTF-8", logTag, contentEncoding);
+        log.warn("Encoding not set, will use UTF-8", contentEncoding);
         return StandardCharsets.UTF_8;
     }
 
-    public static Charset getEncoding(final long logTag, final String contentEncoding) {
-       return getEncoding(log, logTag, contentEncoding);
-    }
-
     public static Charset getEncoding(final String contentEncoding) {
-        return getEncoding(0, contentEncoding);
-    }
-
+       return getEncoding(log, contentEncoding);
+    }   
 }

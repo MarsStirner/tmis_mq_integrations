@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Тест (экшен проперти и ФСЛИ-шный тест к нему)",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.util.Test",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентификатор ActionProperty",
+      "minimum": 0
+    },
+    "test": {
+      "description": "Тип лабораторного теста из справочника",
+      "$ref": "./../refbook/RbTest.json"
+    }
+  },
+  "required": [
+    "id",
+    "test"
+  ]
+}

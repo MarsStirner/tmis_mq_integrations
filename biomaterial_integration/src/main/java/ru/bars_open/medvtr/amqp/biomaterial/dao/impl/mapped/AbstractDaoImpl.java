@@ -65,14 +65,14 @@ public abstract class AbstractDaoImpl<T extends IdentifiedEntity> implements Abs
     @Override
     public Integer save(T entity) {
         final Serializable assignedID = sessionFactory.getCurrentSession().save(entity);
-        log.debug("Save entity: {}", entity.toShortString());
+        log.trace("Save entity: {}", entity.toShortString());
         return (Integer) assignedID;
     }
 
     @Override
     public void update(T entity) {
         sessionFactory.getCurrentSession().update(entity);
-        log.debug("Update entity: {}", entity);
+        log.trace("Update entity: {}", entity);
     }
 
 

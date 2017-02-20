@@ -1,20 +1,17 @@
 package ru.bars_open.medvtr.amqp.biomaterial;
 
 import com.rabbitmq.client.Channel;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.BiomaterialDao;
-import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.MappingDao;
-import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.MessageDao;
-import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.ResearchDao;
-import ru.bars_open.medvtr.amqp.biomaterial.entities.*;
-import ru.bars_open.medvtr.mq.entities.action.Analysis;
+import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.*;
+import ru.bars_open.medvtr.amqp.biomaterial.dto.MessageContext;
+import ru.bars_open.medvtr.amqp.biomaterial.dto.ResearchContext;
+import ru.bars_open.medvtr.amqp.biomaterial.entities.RbLaboratory;
+import ru.bars_open.medvtr.amqp.biomaterial.util.LoggingPostProcessor;
 import ru.bars_open.medvtr.mq.entities.message.BiologicalMaterialMessage;
 import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
 import ru.bars_open.medvtr.mq.util.DeserializationFactory;
@@ -22,8 +19,10 @@ import ru.bars_open.medvtr.mq.util.exceptions.MessageIsIncorrectException;
 import ru.bars_open.medvtr.mq.util.exceptions.UnknownRoutingKeyException;
 
 import javax.transaction.Transactional;
-import java.nio.charset.Charset;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Author: Upatov Egor <br>
@@ -40,131 +39,111 @@ public class Consumer implements ChannelAwareMessageListener {
     private final Set<String> possibleKeys;
 
     @Autowired
-    private MessageDao messageDao;
-
-    @Autowired
-    private BiomaterialDao biomaterialDao;
-
-    @Autowired
-    private ResearchDao researchDao;
-
-
-    @Autowired
-    private MappingDao mappingDao;
+    private LaboratoryMapper laboratoryMapper;
 
     @Autowired
     private LaboratorySender laboratorySender;
+
+    @Autowired
+    private ResponseSender responseSender;
+
+    @Autowired
+    private MessagePersister messagePersister;
 
 
     @Autowired
     public Consumer(final ConfigurationHolder cfg) {
         this.possibleKeys = new HashSet<>(1);
         this.ROUTING_KEY_SEND = cfg.getString(ConfigurationKeys.REQUEST_SEND_ROUTING_KEY);
+        possibleKeys.add(ROUTING_KEY_SEND);
         log.info("Constructor called. Possible keys = {}", possibleKeys);
     }
 
 
+    /**
+     * Типовой случай обработки сообщения:
+     * ********************************************************************************************
+     * [A] Логгирование: >> {@link LoggingPostProcessor#postProcessMessage}
+     * -- [A.1] выставить недостающие свойства сообщению >> {@link LoggingPostProcessor#enrichMessageProperties}
+     * -- [A.2] заллогировать сообщение  >> {@link LoggingPostProcessor#logMessage} }
+     * ********************************************************************************************
+     * [B] Преобразование: >> {@link Consumer#parse}
+     * -- [B.1] Спарсить байтовый массив в структуры  >> {@link DeserializationFactory#parse}
+     * -- [B.2] Валидация
+     * ********************************************************************************************
+     * [C] Сохранить данные сообщения в локальную БД (с проверкой уже существующих данных) >> {@link MessagePersister#saveMessageToDb}
+     * -- [C.1] Сохранить или найти биоматериал >> {@link BiomaterialDao#findOrCreate}
+     * -- [C.2] Сохранить сообщение >> {@link MessageDao#createInMessage}
+     * -- [C.3] Сохранить список исследований (или найти) >> {@link MessagePersister#addResearchInfo} >> {@link ResearchDao#findOrCreate}
+     * -- [C.4] Сохранить список тестов (или найти) >> {@link MessagePersister#addResearchInfo} >> {@link TestDao#findOrCreate}
+     * ********************************************************************************************
+     * [D] Деление на лаборатории: >> {@link LaboratoryMapper#map}
+     * -- [D.1] Найти лаборатории в которые надо разослать части сообщения >> {@link MappingDao#findLaboratoryMapping}
+     * -- [D.2] Поделить данные на части для каждой из лабораторий >> Частично {@link LaboratoryMapper#mergeSendStructures }
+     * ********************************************************************************************
+     * [E] Отправка в лаборатории:
+     * -- [E.1] Поиск маппингов справочников для конкретной лаборатории
+     * -- [E.2] Формирование сообщений с учетом маппингов
+     * -- [E.3] Отправка в ЛИС-ы
+     * -- [E.4] Сохранить в БД связки Исследований и Лабораторий
+     * ********************************************************************************************
+     * [Z] Обработка ошибок: >> {@link ErrorHandler#handleError}
+     * -- [Z.1] MessageIsIncorrectException Сообщение нельзя преобразовать, или отсутствует часть полей
+     * -- [Z.2] UnknownRoutingKeyException Неизвестный программе ключ (неизвестный тип события)
+     */
     @Override
     @Transactional
-    public void onMessage(final org.springframework.amqp.core.Message amqpMessage, final Channel channel) throws Exception {
-        final MessageProperties props = amqpMessage.getMessageProperties();
-        final long tag = props.getDeliveryTag();
-        final String routingKey = props.getReceivedRoutingKey();
-        final Charset encoding = DeserializationFactory.getEncoding(log, tag, props.getContentEncoding());
-        log.info("###{}: Receive new amqpMessage[RK='{}']({}):\n{}", tag, routingKey, encoding, new String(amqpMessage.getBody(), encoding));
-        if (log.isDebugEnabled()) { log.debug("#{}: {}", tag, props); }
-        validateMessageProperties(amqpMessage.getMessageProperties(), tag, routingKey);
-        final BiologicalMaterialMessage message = DeserializationFactory.parse(amqpMessage.getBody(),
-                                                                               amqpMessage.getMessageProperties().getContentType(),
-                                                                               encoding,
-                                                                               BiologicalMaterialMessage.class
-        );
-        if (!validate(message)) {
-            throw new MessageIsIncorrectException(null);
-        }
-        final Biomaterial dbBiomaterial = biomaterialDao.findOrCreate(message.getBiomaterial());
-        final Message dbMessage = messageDao.createInMessage(amqpMessage, dbBiomaterial);
-        if (ROUTING_KEY_SEND.equals(routingKey)) {
-            final List<Analysis> researchList = message.getResearch();
-            if (!CollectionUtils.isEmpty(researchList)) {
-                final Map<RbLaboratory, Set<SendResearchToLabaratoryStruct>> toSend = processResearchList(researchList,
-                                                                                                          dbBiomaterial,
-                                                                                                          dbMessage,
-                                                                                                          tag
-                );
-                if (!toSend.isEmpty()) {
-                    laboratorySender.send(tag, dbMessage.getCorrelationId(), dbBiomaterial, message.getBiomaterial(), toSend);
-                } else {
-                    //TODO
-                    log.warn("#{}: Nothing to send!!!", tag);
-                }
-            } else {
-                //TODO
-                log.warn("#{} Research list is empty.", tag);
+    public void onMessage(final Message amqpMessage, final Channel channel) throws MessageIsIncorrectException, UnknownRoutingKeyException {
+        //[B] Преобразование
+        final MessageContext ctx = new MessageContext(amqpMessage, parse(amqpMessage));
+        log.debug("Message parsed");
+        //[C] Сохранить данные сообщения в локальную БД (с проверкой уже существующих данных)
+        messagePersister.saveMessageToDb(ctx);
+        log.debug("Message persisted");
+        if (ROUTING_KEY_SEND.equals(ctx.getRoutingKey())) {
+            //[D] Деление на лаборатории
+            final Map<RbLaboratory, Set<ResearchContext>> laboratoryMapping = laboratoryMapper.map(ctx);
+            if(laboratoryMapping.isEmpty()){
+                log.warn("Mapping complete. No laboratory mapped!");
+                responseSender.noLaboratoryAssigned(ctx.getUUID(), ctx.getParsed());
+                return;
             }
-
-        } else {
-            throw new UnknownRoutingKeyException(routingKey, possibleKeys);
+            //[E] Отправка в лаборатории
+            for (Map.Entry<RbLaboratory, Set<ResearchContext>> entry : laboratoryMapping.entrySet()) {
+                  laboratorySender.send(entry.getKey(), ctx, entry.getValue());
+            }
+            responseSender.wait(ctx.getUUID(), ctx.getParsed(), laboratoryMapping.keySet());
+            log.info("### End. Successfully processed");
+            return;
         }
-        log.info("###{}: End. Successfully processed", tag);
+        // [Z.2] UnknownRoutingKeyException Неизвестный программе ключ (неизвестный тип события)
+        throw new UnknownRoutingKeyException(ctx.getRoutingKey(), possibleKeys);
     }
 
-    private Map<RbLaboratory, Set<SendResearchToLabaratoryStruct>> processResearchList(
-            final List<Analysis> researchList, final Biomaterial biomaterial, final Message message, final long tag
-    ) {
-        final Map<RbLaboratory, Set<SendResearchToLabaratoryStruct>> result = new HashMap<>(5);
-        for (Analysis analysis : researchList) {
-            log.warn("#{}-{}: Start", tag, analysis.getId());
-            final Research research = researchDao.findOrCreate(analysis, biomaterial, message);
-            if (research.getResearchType() != null) {
-                final Map<RbLaboratory, MapResearchTypeToLaboratory> mapping = mappingDao.findLaboratoryMapping(research, biomaterial);
-                mergeSendStructures(result, mapping, analysis, research);
-            } else {
-                log.warn("#{}-{}: No such ResearchType. Skip to next.", tag, analysis.getId());
-            }
+    /**
+     * [B] Преобразование:
+     * -- [B.1] Спарсить байтовый массив в структуры  {@link DeserializationFactory#parse}
+     * -- [B.2] Валидация //TODO https://docs.jboss.org/hibernate/validator/4.1/reference/en-US/html/programmaticapi.html#programmaticapi
+     *
+     * @param message AMQP сообщение для преобразования и проверки
+     * @return Преобразованное в структуру и отвалидированное сообщение
+     * @throws MessageIsIncorrectException [Z.1] MessageIsIncorrectException Сообщение нельзя преобразовать, или отсутствует часть полей
+     */
+    private BiologicalMaterialMessage parse(final Message message) throws MessageIsIncorrectException {
+        //[B.1] Спарсить байтовый массив в структуры
+        final BiologicalMaterialMessage result = DeserializationFactory.parse(message.getBody(),
+                                                                              message.getMessageProperties().getContentType(),
+                                                                              message.getMessageProperties().getContentEncoding(),
+                                                                              BiologicalMaterialMessage.class
+        );
+        //[B.2] Валидация
+        if (result == null) {
+            // -- [Z.1] MessageIsIncorrectException Сообщение нельзя преобразовать, или отсутствует часть полей
+            throw new MessageIsIncorrectException(Collections.singleton("Message is not parsed from json String"));
         }
         return result;
     }
 
-    private void mergeSendStructures(
-            final Map<RbLaboratory, Set<SendResearchToLabaratoryStruct>> result,
-            final Map<RbLaboratory, MapResearchTypeToLaboratory> mapping,
-            final Analysis analysis,
-            final Research research
-    ) {
-        for (Map.Entry<RbLaboratory, MapResearchTypeToLaboratory> entry : mapping.entrySet()) {
-            final Set<SendResearchToLabaratoryStruct> resultSet = result.getOrDefault(entry.getKey(), new HashSet<>());
-            resultSet.add(new SendResearchToLabaratoryStruct(analysis, research, entry.getValue()));
-            result.put(entry.getKey(), resultSet);
-        }
-    }
 
-    //TODO Реализовать кастомный конвертер пропертей сообщения org.springframework.amqp.rabbit.support.MessagePropertiesConverter
-    private void validateMessageProperties(final MessageProperties messageProperties, final long tag, final String routingKey) {
-        if (StringUtils.isEmpty(messageProperties.getCorrelationIdString())) {
-            final String value = UUID.randomUUID().toString();
-            log.warn("#{}: CorrelationId NOT SET!!!! Assign '{}' by RANDOM", tag, value);
-            messageProperties.setCorrelationIdString(value);
-        }
-        if (StringUtils.isEmpty(messageProperties.getType())) {
-            if (ROUTING_KEY_SEND.equalsIgnoreCase(routingKey)) {
-                final String value = BiologicalMaterialMessage.class.getSimpleName();
-                log.warn("#{}: Type NOT SET!!!! Assign '{}' by RK[{}]", tag, value, routingKey);
-                messageProperties.setType(value);
-            }
-        }
-        if (StringUtils.isEmpty(messageProperties.getContentType())) {
-            if (ROUTING_KEY_SEND.equalsIgnoreCase(routingKey)) {
-                final String value = "application/json";
-                log.warn("#{}: ContentType NOT SET!!!! Assign '{}' by RK[{}]", tag, value, routingKey);
-                messageProperties.setContentType(value);
-            }
-        }
-    }
-
-    //TODO
-    private boolean validate(final BiologicalMaterialMessage parsed) {
-        return true;
-    }
 }
 

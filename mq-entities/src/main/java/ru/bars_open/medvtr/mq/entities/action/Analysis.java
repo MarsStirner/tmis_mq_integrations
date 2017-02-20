@@ -19,8 +19,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.DateTime;
 import ru.bars_open.medvtr.mq.entities.base.ActionType;
 import ru.bars_open.medvtr.mq.entities.base.Person;
-import ru.bars_open.medvtr.mq.entities.base.refbook.RbTest;
 import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.ActionStatus;
+import ru.bars_open.medvtr.mq.entities.base.util.Test;
 
 
 /**
@@ -100,10 +100,10 @@ public class Analysis implements Serializable
      */
     @JsonProperty("tests")
     @JsonPropertyDescription("\u0441\u043f\u0438\u0441\u043e\u043a \u0442\u0435\u0441\u0442\u043e\u0432 \u0432 \u0440\u0430\u043c\u043a\u0430\u0445 \u0438\u0441\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u043d\u0438\u044f")
-    private List<RbTest> tests = new ArrayList<RbTest>();
+    private List<Test> tests = new ArrayList<Test>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = 9196112133692812332L;
+    private final static long serialVersionUID = 682985982128861479L;
 
     /**
      * Идентификатор экшена
@@ -245,7 +245,7 @@ public class Analysis implements Serializable
      * 
      */
     @JsonProperty("tests")
-    public List<RbTest> getTests() {
+    public List<Test> getTests() {
         return tests;
     }
 
@@ -255,7 +255,7 @@ public class Analysis implements Serializable
      * 
      */
     @JsonProperty("tests")
-    public void setTests(List<RbTest> tests) {
+    public void setTests(List<Test> tests) {
         this.tests = tests;
     }
 

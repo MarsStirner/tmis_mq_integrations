@@ -3,6 +3,8 @@ package ru.bars_open.medvtr.amqp.biomaterial.hepa.entities;
 import javax.persistence.*;
 import java.util.Date;
 
+import static ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.listeners.StupidEncodingConverterListener.convertFromDb;
+
 /**
  * Author: Upatov Egor <br>
  * Date: 10.02.2017, 18:29 <br>
@@ -86,12 +88,12 @@ public class Client extends IdentifiedEntity{
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Client[").append(id);
-        sb.append("{ lastName='").append(lastName).append('\'');
-        sb.append(", firstName='").append(firstName).append('\'');
-        sb.append(", patrName='").append(patrName).append('\'');
+        sb.append("]{ lastName='").append(convertFromDb(lastName)).append('\'');
+        sb.append(", firstName='").append(convertFromDb(firstName)).append('\'');
+        sb.append(", patrName='").append(convertFromDb(patrName)).append('\'');
         sb.append(", birthDate=").append(birthDate);
         sb.append(", sex=").append(sex);
-        sb.append(", comment='").append(comment).append('\'');
+        sb.append(", comment='").append(convertFromDb(comment)).append('\'');
         sb.append('}');
         return sb.toString();
     }
