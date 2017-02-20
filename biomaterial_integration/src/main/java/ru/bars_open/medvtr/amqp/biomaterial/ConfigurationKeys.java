@@ -21,4 +21,6 @@ public class ConfigurationKeys {
     public static final String REQUEST_SEND_QUEUE = "amqp.request.send.queue";
     public static final String REQUEST_SEND_ROUTING_KEY = "amqp.request.send.routing_key";
 
+    public static final String REQUEST_RESEND_ROUTING_KEY = "amqp.request.resend.routing_key";
+
 }

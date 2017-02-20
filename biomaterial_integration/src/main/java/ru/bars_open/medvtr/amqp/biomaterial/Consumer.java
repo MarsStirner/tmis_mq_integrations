@@ -11,6 +11,7 @@ import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.*;
 import ru.bars_open.medvtr.amqp.biomaterial.dto.MessageContext;
 import ru.bars_open.medvtr.amqp.biomaterial.dto.ResearchContext;
 import ru.bars_open.medvtr.amqp.biomaterial.entities.RbLaboratory;
+import ru.bars_open.medvtr.amqp.biomaterial.util.LaboratoryNotAssignedException;
 import ru.bars_open.medvtr.amqp.biomaterial.util.LoggingPostProcessor;
 import ru.bars_open.medvtr.mq.entities.message.BiologicalMaterialMessage;
 import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
@@ -34,6 +35,7 @@ import java.util.Set;
 public class Consumer implements ChannelAwareMessageListener {
     private static final Logger log = LoggerFactory.getLogger(Consumer.class);
 
+    private final String ROUTING_KEY_RESEND;
     private final String ROUTING_KEY_SEND;
 
     private final Set<String> possibleKeys;
@@ -55,7 +57,9 @@ public class Consumer implements ChannelAwareMessageListener {
     public Consumer(final ConfigurationHolder cfg) {
         this.possibleKeys = new HashSet<>(1);
         this.ROUTING_KEY_SEND = cfg.getString(ConfigurationKeys.REQUEST_SEND_ROUTING_KEY);
+        this.ROUTING_KEY_RESEND = cfg.getString(ConfigurationKeys.REQUEST_RESEND_ROUTING_KEY);
         possibleKeys.add(ROUTING_KEY_SEND);
+        possibleKeys.add(ROUTING_KEY_RESEND);
         log.info("Constructor called. Possible keys = {}", possibleKeys);
     }
 
@@ -93,26 +97,23 @@ public class Consumer implements ChannelAwareMessageListener {
      */
     @Override
     @Transactional
-    public void onMessage(final Message amqpMessage, final Channel channel) throws MessageIsIncorrectException, UnknownRoutingKeyException {
+    public void onMessage(final Message amqpMessage, final Channel channel)
+            throws MessageIsIncorrectException, UnknownRoutingKeyException, LaboratoryNotAssignedException {
         //[B] Преобразование
         final MessageContext ctx = new MessageContext(amqpMessage, parse(amqpMessage));
         log.debug("Message parsed");
         //[C] Сохранить данные сообщения в локальную БД (с проверкой уже существующих данных)
         messagePersister.saveMessageToDb(ctx);
         log.debug("Message persisted");
-        if (ROUTING_KEY_SEND.equals(ctx.getRoutingKey())) {
+        if (ROUTING_KEY_SEND.equals(ctx.getRoutingKey()) || ROUTING_KEY_RESEND.equals(ctx.getRoutingKey())) {
             //[D] Деление на лаборатории
             final Map<RbLaboratory, Set<ResearchContext>> laboratoryMapping = laboratoryMapper.map(ctx);
-            if(laboratoryMapping.isEmpty()){
-                log.warn("Mapping complete. No laboratory mapped!");
-                responseSender.noLaboratoryAssigned(ctx.getUUID(), ctx.getParsed());
-                return;
-            }
+            if(laboratoryMapping.isEmpty()){ throw new LaboratoryNotAssignedException(); }
             //[E] Отправка в лаборатории
             for (Map.Entry<RbLaboratory, Set<ResearchContext>> entry : laboratoryMapping.entrySet()) {
                   laboratorySender.send(entry.getKey(), ctx, entry.getValue());
             }
-            responseSender.wait(ctx.getUUID(), ctx.getParsed(), laboratoryMapping.keySet());
+            responseSender.wait(amqpMessage, laboratoryMapping.keySet());
             log.info("### End. Successfully processed");
             return;
         }

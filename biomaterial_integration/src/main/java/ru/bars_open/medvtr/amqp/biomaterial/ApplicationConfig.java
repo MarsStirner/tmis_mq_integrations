@@ -126,7 +126,7 @@ public class ApplicationConfig {
 
         result.setErrorHandler(errorHandler);
         result.setAfterReceivePostProcessors(postProcessor);
-        result.setDefaultRequeueRejected(true);
+        result.setDefaultRequeueRejected(false);
 
         result.setTaskExecutor(new SimpleAsyncTaskExecutor("consumerThread_"));
         result.setConsumerTagStrategy(queue -> config.getString(CONSUMER_TAG) + "_" + queue);

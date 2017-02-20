@@ -43,6 +43,6 @@ public class ResearchContext {
     }
 
     public String getResearchType() {
-        return research.getResearchType();
+        return analysis.getType().getCode();
     }
 }
