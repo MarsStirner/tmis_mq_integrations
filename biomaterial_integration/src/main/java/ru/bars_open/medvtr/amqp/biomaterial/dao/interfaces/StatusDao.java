@@ -5,6 +5,8 @@ import ru.bars_open.medvtr.amqp.biomaterial.entities.RbLaboratory;
 import ru.bars_open.medvtr.amqp.biomaterial.entities.Research;
 import ru.bars_open.medvtr.amqp.biomaterial.entities.ResearchToLaboratory;
 
+import java.util.List;
+
 /**
  * Author: Upatov Egor <br>
  * Date: 06.02.2017, 18:53 <br>
@@ -13,4 +15,8 @@ import ru.bars_open.medvtr.amqp.biomaterial.entities.ResearchToLaboratory;
  */
 public interface StatusDao {
     ResearchToLaboratory setLaboratoryStatus(Research research, RbLaboratory laboratory, LaboratoryStatus status);
+
+    boolean isSent(Research research);
+
+    List<ResearchToLaboratory> getByResearch(Research research);
 }

@@ -3,7 +3,10 @@ package ru.bars_open.medvtr.amqp.biomaterial;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.util.StatusPrinter;
-import com.typesafe.config.*;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.ConfigParseOptions;
+import com.typesafe.config.ConfigSyntax;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AcknowledgeMode;
@@ -135,7 +138,31 @@ public class ApplicationConfig {
         return result;
     }
 
+    @Bean("laboratoryResponseMessageListener")
+    public SimpleMessageListenerContainer laboratoryResponseMessageListener(
+            final ConnectionFactory connectionFactory,
+            final ConfigurationHolder config,
+            @Qualifier("laboratoryResponseConsumer") final ChannelAwareMessageListener consumer,
+            @Qualifier("amqpMessagePostProcessor") final LoggingPostProcessor postProcessor
+    ) {
+        final SimpleMessageListenerContainer result = new SimpleMessageListenerContainer(connectionFactory);
+        result.setMessageListener(consumer);
+        result.setQueueNames(config.getString(LABORATORY_RESPONSE_QUEUE));
+        result.setAcknowledgeMode(AcknowledgeMode.AUTO);
+        result.setAutoStartup(true);
+        result.setAutoDeclare(false);
+        result.setExclusive(false);
+        result.setConcurrentConsumers(1);
+        result.setPrefetchCount(1);
+        result.setMaxConcurrentConsumers(1);
 
+        result.setAfterReceivePostProcessors(postProcessor);
+        result.setDefaultRequeueRejected(false);
 
+        result.setTaskExecutor(new SimpleAsyncTaskExecutor("laboratoryResponseThread_"));
+        result.setConsumerTagStrategy(queue -> config.getString(CONSUMER_TAG) + "_" + queue);
 
+        log.info("{}", result);
+        return result;
+    }
 }

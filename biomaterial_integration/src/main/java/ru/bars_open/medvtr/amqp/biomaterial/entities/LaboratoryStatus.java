@@ -7,5 +7,5 @@ package ru.bars_open.medvtr.amqp.biomaterial.entities;
  * Description:
  */
 public enum LaboratoryStatus {
-    WAIT, SENT
+    WAIT, SENT, ERROR
 }

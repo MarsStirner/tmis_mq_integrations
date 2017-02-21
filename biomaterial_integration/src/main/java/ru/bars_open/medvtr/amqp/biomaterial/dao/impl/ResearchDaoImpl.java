@@ -1,6 +1,9 @@
 package ru.bars_open.medvtr.amqp.biomaterial.dao.impl;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import ru.bars_open.medvtr.amqp.biomaterial.dao.impl.mapped.AbstractDaoWithExternalImpl;
 import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.ResearchDao;
@@ -11,6 +14,7 @@ import ru.bars_open.medvtr.mq.entities.action.Analysis;
 import ru.bars_open.medvtr.mq.entities.base.Person;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 /**
  * Author: Upatov Egor <br>
@@ -51,6 +55,14 @@ public class ResearchDaoImpl extends AbstractDaoWithExternalImpl<Research> imple
     public Research findOrCreate(final Analysis source, final Biomaterial biomaterial, final Message message) {
         final Research result = getByExternalId(String.valueOf(source.getId()));
         return result != null ? result : create(source, biomaterial, message);
+    }
+
+    @Override
+    public List<Research> getByBiomaterial(final Biomaterial biomaterial) {
+        final DetachedCriteria criteria = getEntityCriteria();
+        criteria.add(Restrictions.eq("biomaterial.id", biomaterial.getId()));
+        final Session session = sessionFactory.getCurrentSession();
+        return criteria.getExecutableCriteria(session).list();
     }
 
 

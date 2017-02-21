@@ -3,12 +3,16 @@ package ru.bars_open.medvtr.amqp.biomaterial.hepa;
 import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.interfaces.*;
+import ru.bars_open.medvtr.amqp.biomaterial.hepa.dto.MessageContext;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.*;
+import ru.bars_open.medvtr.amqp.biomaterial.hepa.util.LoggingPostProcessor;
+import ru.bars_open.medvtr.amqp.biomaterial.hepa.util.MDCHelper;
+import ru.bars_open.medvtr.amqp.biomaterial.hepa.util.NoSuchBiomaterialTypeException;
 import ru.bars_open.medvtr.mq.entities.action.Analysis;
 import ru.bars_open.medvtr.mq.entities.base.Person;
 import ru.bars_open.medvtr.mq.entities.base.util.Test;
@@ -19,7 +23,7 @@ import ru.bars_open.medvtr.mq.util.exceptions.MessageIsIncorrectException;
 import ru.bars_open.medvtr.mq.util.exceptions.UnknownRoutingKeyException;
 
 import javax.transaction.Transactional;
-import java.nio.charset.Charset;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,7 +61,6 @@ public class Consumer implements ChannelAwareMessageListener {
     @Autowired
     private ResponseSender responseSender;
 
-
     @Autowired
     public Consumer(final ConfigurationHolder cfg, final SoiDao soiDao, final OperatorDao operatorDao) {
         this.possibleKeys = new HashSet<>(1);
@@ -69,71 +72,100 @@ public class Consumer implements ChannelAwareMessageListener {
     }
 
 
+    /**
+     * Типовой случай обработки сообщения:
+     * ********************************************************************************************
+     * [A] Логгирование: >> {@link LoggingPostProcessor#postProcessMessage}
+     * -- [A.1] выставить недостающие свойства сообщению >> {@link LoggingPostProcessor#enrichMessageProperties}
+     * -- [A.2] заллогировать сообщение  >> {@link LoggingPostProcessor#logMessage} }
+     * ********************************************************************************************
+     * [B] Преобразование: >> {@link Consumer#parse}
+     * -- [B.1] Спарсить байтовый массив в структуры  >> {@link DeserializationFactory#parse}
+     * -- [B.2] Валидация
+     * ********************************************************************************************
+     * TODO описание процесса
+     * ********************************************************************************************
+     * [Z] Обработка ошибок: >> {@link ErrorHandler#handleError}
+     * -- [Z.1] MessageIsIncorrectException Сообщение нельзя преобразовать, или отсутствует часть полей
+     * -- [Z.2] UnknownRoutingKeyException Неизвестный программе ключ (неизвестный тип события)
+     */
     @Override
     @Transactional
-    public void onMessage(final org.springframework.amqp.core.Message amqpMessage, final Channel channel) throws Exception {
-        final MessageProperties props = amqpMessage.getMessageProperties();
-        final long tag = props.getDeliveryTag();
-        final String routingKey = props.getReceivedRoutingKey();
-        final Charset encoding = DeserializationFactory.getEncoding(log, props.getContentEncoding());
-        log.info("###{}: Receive new amqpMessage[RK='{}']({}):\n{}", tag, routingKey, encoding, new String(amqpMessage.getBody(), encoding));
-        if (log.isDebugEnabled()) { log.debug("#{}: {}", tag, props); }
-        if (ROUTING_KEY_SEND.equals(routingKey)) {
-            final BiologicalMaterialMessage message = DeserializationFactory.parse(amqpMessage.getBody(),
-                                                                                   amqpMessage.getMessageProperties().getContentType(),
-                                                                                   encoding,
-                                                                                   BiologicalMaterialMessage.class
-            );
-            if (!validate(message)) {
-                throw new MessageIsIncorrectException(null);
-            }
-            final Person person = message.getBiomaterial().getEvent().getClient();
+    public void onMessage(final Message amqpMessage, final Channel channel)
+            throws MessageIsIncorrectException, UnknownRoutingKeyException, NoSuchBiomaterialTypeException {
+        //[B] Преобразование
+        final MessageContext ctx = new MessageContext(amqpMessage, parse(amqpMessage));
+        log.debug("Message parsed");
+        if (ROUTING_KEY_SEND.equals(ctx.getRoutingKey())) {
+            final Person person = ctx.getClient();
             final Client client = clientDao.findOrCreate(person.getLastName(),
                                                          person.getFirstName(),
                                                          person.getPatrName(),
                                                          person.getBirthDate(),
                                                          person.getSex()
             );
-            log.info("#{}: Client={}", tag, client);
-            final Tube tube = tubeDao.findOrCreate(client, message.getBiomaterial().getDatetimeTaken());
-            log.info("#{}: Tube={}", tag, tube);
-            final Material material = materialDao.get(message.getBiomaterial().getBiomaterialType());
-            log.info("#{}: Material={}", tag, material);
+            log.info("Client={}", client);
+            final Tube tube = tubeDao.findOrCreate(client, ctx.getMqBiomaterial().getDatetimeTaken());
+            log.info("Tube={}", tube);
+            final Material material = materialDao.get(ctx.getBiomaterialType());
+            log.info("Material={}", material);
             if (material == null) {
-                responseSender.noSuchBiomaterialType(tag, props.getCorrelationIdString(), message.getBiomaterial());
-                log.info("###{}: End. NO_SUCH_BIOMATERIAL_TYPE", tag);
-                return;
+                throw new NoSuchBiomaterialTypeException(ctx.getBiomaterialType().getCode(), ctx.getBiomaterialType().getName());
             }
-            for (Analysis item : message.getResearch()) {
-                log.info("#{}-{}: Start process Research[{}-{}]", tag, item.getId(), item.getType().getCode(), item.getType().getName());
+            for (Analysis item : ctx.getMqResearch()) {
+                MDCHelper.push(item.getId());
+                log.info("Start process Research[{}-{}]", item.getType().getCode(), item.getType().getName());
                 for (Test test : item.getTests()) {
-                    log.info("#{}-{}: Test[{}][{}-{}]", tag, item.getId(), test.getId(), test.getTest().getCode(), test.getTest().getName());
+                    MDCHelper.push(test.getId());
+                    log.info("Test[{}-{}]", test.getTest().getCode(), test.getTest().getName());
                     final ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.Analysis analysisType = analysisDao.get(test.getTest().getCode());
                     if (analysisType != null) {
-                        log.info("#{}-{}: Analysis={}", tag, item.getId(), analysisType);
-                        final Request request = requestDao.createRequest(
-                                client,
-                                soi,
-                                operator,
-                                analysisType,
-                                material,
-                                item.getId() + "-" + test.getId()
+                        log.info("Analysis={}", analysisType);
+                        final Request request = requestDao.createRequest(client,
+                                                                         soi,
+                                                                         operator,
+                                                                         analysisType,
+                                                                         material,
+                                                                         item.getId() + "-" + test.getId()
                         );
-                        log.info("#{}-{}: Request={}", tag, item.getId(), request);
+                        log.info("Request={}", request);
                     } else {
-                        log.info("#{}-{}: No such Analysis[{}] found", tag, item.getId(), test.getTest().getCode());
+                        log.warn("No such Analysis[{}] found", test.getTest().getCode());
                     }
+                    MDCHelper.pop();
                 }
+                MDCHelper.pop();
             }
-        } else {
-            throw new UnknownRoutingKeyException(routingKey, possibleKeys);
-        } log.info("###{}: End. Successfully processed", tag);
+            responseSender.sent(amqpMessage);
+            log.info("### End. Successfully processed");
+            return;
+        }
+        // [Z.2] UnknownRoutingKeyException Неизвестный программе ключ (неизвестный тип события)
+        throw new UnknownRoutingKeyException(ctx.getRoutingKey(), possibleKeys);
     }
 
-
-    //TODO
-    private boolean validate(final BiologicalMaterialMessage parsed) {
-        return true;
+    /**
+     * [B] Преобразование:
+     * -- [B.1] Спарсить байтовый массив в структуры  {@link DeserializationFactory#parse}
+     * -- [B.2] Валидация //TODO https://docs.jboss.org/hibernate/validator/4.1/reference/en-US/html/programmaticapi.html#programmaticapi
+     *
+     * @param message AMQP сообщение для преобразования и проверки
+     * @return Преобразованное в структуру и отвалидированное сообщение
+     * @throws MessageIsIncorrectException [Z.1] MessageIsIncorrectException Сообщение нельзя преобразовать, или отсутствует часть полей
+     */
+    private BiologicalMaterialMessage parse(final Message message) throws MessageIsIncorrectException {
+        //[B.1] Спарсить байтовый массив в структуры
+        final BiologicalMaterialMessage result = DeserializationFactory.parse(message.getBody(),
+                                                                              message.getMessageProperties().getContentType(),
+                                                                              message.getMessageProperties().getContentEncoding(),
+                                                                              BiologicalMaterialMessage.class
+        );
+        //[B.2] Валидация
+        if (result == null) {
+            // -- [Z.1] MessageIsIncorrectException Сообщение нельзя преобразовать, или отсутствует часть полей
+            throw new MessageIsIncorrectException(Collections.singleton("Message is not parsed from json String"));
+        }
+        return result;
     }
 }
 

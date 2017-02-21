@@ -23,4 +23,8 @@ public class ConfigurationKeys {
 
     public static final String REQUEST_RESEND_ROUTING_KEY = "amqp.request.resend.routing_key";
 
+    public static final String LABORATORY_RESPONSE_QUEUE ="amqp.laboratoryResponse.queue";
+    public static final String LABORATORY_RESPONSE_ROUTING_KEY_SENT ="amqp.laboratoryResponse.routing_key";
+
+    public static final String AMQP_RESPONSE = "amqp.response";
 }

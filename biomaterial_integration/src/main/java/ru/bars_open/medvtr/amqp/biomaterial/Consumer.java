@@ -13,14 +13,13 @@ import ru.bars_open.medvtr.amqp.biomaterial.dto.ResearchContext;
 import ru.bars_open.medvtr.amqp.biomaterial.entities.RbLaboratory;
 import ru.bars_open.medvtr.amqp.biomaterial.util.LaboratoryNotAssignedException;
 import ru.bars_open.medvtr.amqp.biomaterial.util.LoggingPostProcessor;
-import ru.bars_open.medvtr.mq.entities.message.BiologicalMaterialMessage;
+import ru.bars_open.medvtr.amqp.biomaterial.util.MessageParser;
 import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
 import ru.bars_open.medvtr.mq.util.DeserializationFactory;
 import ru.bars_open.medvtr.mq.util.exceptions.MessageIsIncorrectException;
 import ru.bars_open.medvtr.mq.util.exceptions.UnknownRoutingKeyException;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -71,7 +70,7 @@ public class Consumer implements ChannelAwareMessageListener {
      * -- [A.1] выставить недостающие свойства сообщению >> {@link LoggingPostProcessor#enrichMessageProperties}
      * -- [A.2] заллогировать сообщение  >> {@link LoggingPostProcessor#logMessage} }
      * ********************************************************************************************
-     * [B] Преобразование: >> {@link Consumer#parse}
+     * [B] Преобразование: >> {@link  MessageParser#parse}
      * -- [B.1] Спарсить байтовый массив в структуры  >> {@link DeserializationFactory#parse}
      * -- [B.2] Валидация
      * ********************************************************************************************
@@ -100,7 +99,7 @@ public class Consumer implements ChannelAwareMessageListener {
     public void onMessage(final Message amqpMessage, final Channel channel)
             throws MessageIsIncorrectException, UnknownRoutingKeyException, LaboratoryNotAssignedException {
         //[B] Преобразование
-        final MessageContext ctx = new MessageContext(amqpMessage, parse(amqpMessage));
+        final MessageContext ctx = new MessageContext(amqpMessage, MessageParser.parse(amqpMessage));
         log.debug("Message parsed");
         //[C] Сохранить данные сообщения в локальную БД (с проверкой уже существующих данных)
         messagePersister.saveMessageToDb(ctx);
@@ -121,29 +120,7 @@ public class Consumer implements ChannelAwareMessageListener {
         throw new UnknownRoutingKeyException(ctx.getRoutingKey(), possibleKeys);
     }
 
-    /**
-     * [B] Преобразование:
-     * -- [B.1] Спарсить байтовый массив в структуры  {@link DeserializationFactory#parse}
-     * -- [B.2] Валидация //TODO https://docs.jboss.org/hibernate/validator/4.1/reference/en-US/html/programmaticapi.html#programmaticapi
-     *
-     * @param message AMQP сообщение для преобразования и проверки
-     * @return Преобразованное в структуру и отвалидированное сообщение
-     * @throws MessageIsIncorrectException [Z.1] MessageIsIncorrectException Сообщение нельзя преобразовать, или отсутствует часть полей
-     */
-    private BiologicalMaterialMessage parse(final Message message) throws MessageIsIncorrectException {
-        //[B.1] Спарсить байтовый массив в структуры
-        final BiologicalMaterialMessage result = DeserializationFactory.parse(message.getBody(),
-                                                                              message.getMessageProperties().getContentType(),
-                                                                              message.getMessageProperties().getContentEncoding(),
-                                                                              BiologicalMaterialMessage.class
-        );
-        //[B.2] Валидация
-        if (result == null) {
-            // -- [Z.1] MessageIsIncorrectException Сообщение нельзя преобразовать, или отсутствует часть полей
-            throw new MessageIsIncorrectException(Collections.singleton("Message is not parsed from json String"));
-        }
-        return result;
-    }
+
 
 
 }

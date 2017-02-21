@@ -1,6 +1,10 @@
 package ru.bars_open.medvtr.amqp.biomaterial.dao.impl;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +21,7 @@ import ru.bars_open.medvtr.amqp.biomaterial.entities.mapped.ResearchToLaboratory
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Author: Upatov Egor <br>
@@ -26,7 +31,7 @@ import java.io.Serializable;
  */
 @Repository("statusDao")
 @Transactional
-public class StatusDaoImpl implements StatusDao{
+public class StatusDaoImpl implements StatusDao {
 
     private static final Logger log = LoggerFactory.getLogger(StatusDaoImpl.class);
 
@@ -40,18 +45,22 @@ public class StatusDaoImpl implements StatusDao{
     }
 
 
-
     @Override
     public ResearchToLaboratory setLaboratoryStatus(
             final Research research, final RbLaboratory laboratory, final LaboratoryStatus status
     ) {
         final ResearchToLaboratory previous = get(research, laboratory);
-        if(previous != null){
-            if(status.equals(previous.getStatus())){
+        if (previous != null) {
+            if (status.equals(previous.getStatus())) {
                 log.debug("Research[{}] already has relation with RbLaboratory[{}] in status '{}' ", research.getId(), laboratory.getCode(), status);
                 return previous;
             } else {
-                log.warn("Research[{}] already has relation with RbLaboratory[{}] in different status '{}'. Override!", research.getId(), laboratory.getCode(), previous.getStatus());
+                log.warn(
+                        "Research[{}] already has relation with RbLaboratory[{}] in different status '{}'. Override!",
+                        research.getId(),
+                        laboratory.getCode(),
+                        previous.getStatus()
+                );
                 previous.setStatus(status);
                 update(previous);
                 return previous;
@@ -63,6 +72,21 @@ public class StatusDaoImpl implements StatusDao{
             result.setStatus(status);
             return save(result);
         }
+    }
+
+    @Override
+    public boolean isSent(final Research research) {
+        return getByResearch(research).stream().allMatch(x -> LaboratoryStatus.SENT.equals(x.getStatus()));
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<ResearchToLaboratory> getByResearch(final Research research) {
+        final DetachedCriteria criteria = DetachedCriteria.forClass(ResearchToLaboratory.class);
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        criteria.add(Restrictions.eq("pk.research.id", research.getId()));
+        final Session session = sessionFactory.getCurrentSession();
+        return criteria.getExecutableCriteria(session).list();
     }
 
     private ResearchToLaboratory get(final Research research, final RbLaboratory laboratory) {

@@ -32,7 +32,7 @@ public class ResponseSender {
     private final String appId;
 
     private final Tuple<String, String> NOT_ASSIGNED;
-    private final Tuple<String, String> SENDED;
+    private final Tuple<String, String> SENT;
     private final Tuple<String, String> WAIT;
     private final Tuple<String, String> ERROR;
 
@@ -46,9 +46,9 @@ public class ResponseSender {
     @Autowired
     public ResponseSender(final ConfigurationHolder cfg) {
         this.appId = cfg.getAppId();
-        final Config responseCfg = cfg.getConfig("amqp.response");
+        final Config responseCfg = cfg.getConfig(ConfigurationKeys.AMQP_RESPONSE);
         this.NOT_ASSIGNED = createTupleFromCfg(responseCfg.getConfig("not_assigned"));
-        this.SENDED = createTupleFromCfg(responseCfg.getConfig("sended"));
+        this.SENT = createTupleFromCfg(responseCfg.getConfig("sent"));
         this.WAIT = createTupleFromCfg(responseCfg.getConfig("wait"));
         this.ERROR = createTupleFromCfg(responseCfg.getConfig("error"));
     }
@@ -99,5 +99,9 @@ public class ResponseSender {
 
     public void unknownException(final Message message, final String description) {
         template.send(ERROR.left, ERROR.right, postProcessMessage(message, MessageFormat.format(MessageHolder.UNKNOWN_EXCEPTION, description)));
+    }
+
+    public void sent(final Message message) {
+        template.send(SENT.left, SENT.right, postProcessMessage(message, MessageHolder.SENDED));
     }
 }

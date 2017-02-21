@@ -45,6 +45,9 @@ public class MessageContext {
         return amqpMessage.getMessageProperties().getReceivedRoutingKey();
     }
 
+    public org.springframework.amqp.core.Message getAmqpMessage() {
+        return amqpMessage;
+    }
 
     public ru.bars_open.medvtr.mq.entities.base.Biomaterial getMqBiomaterial() {
         return parsedMessage.getBiomaterial();
