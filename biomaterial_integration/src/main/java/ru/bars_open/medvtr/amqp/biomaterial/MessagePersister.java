@@ -13,6 +13,7 @@ import ru.bars_open.medvtr.amqp.biomaterial.entities.Research;
 import ru.bars_open.medvtr.amqp.biomaterial.entities.Test;
 import ru.bars_open.medvtr.amqp.biomaterial.util.MDCHelper;
 import ru.bars_open.medvtr.mq.entities.action.Analysis;
+import ru.bars_open.medvtr.mq.entities.message.BiologicalMaterialMessage;
 
 import java.util.HashSet;
 import java.util.List;
@@ -54,7 +55,12 @@ public class MessagePersister {
         ctx.setBiomaterial(biomaterialDao.findOrCreate(ctx.getMqBiomaterial()));
         log.debug("Biomaterial={}", ctx.getBiomaterial());
         //[C.2] Сохранить сообщение
-        ctx.setMessage(messageDao.createInMessage(ctx.getBody(), ctx.getUUID(), ctx.getRoutingKey(), "", ctx.getBiomaterial()));
+        ctx.setMessage(messageDao.createInMessage(ctx.getBody(),
+                                                  ctx.getUUID(),
+                                                  ctx.getRoutingKey(),
+                                                  BiologicalMaterialMessage.class.getSimpleName(),
+                                                  ctx.getBiomaterial()
+        ));
         log.debug("Message={}", ctx.getMessage());
         //[C.3] Сохранить список исследований (или найти)
         //[C.4] Сохранить список тестов (или найти)

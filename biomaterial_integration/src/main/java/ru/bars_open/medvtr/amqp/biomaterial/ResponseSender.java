@@ -40,6 +40,8 @@ public class ResponseSender {
     @Autowired
     private RabbitTemplate template;
 
+    
+
 
     @Autowired
     public ResponseSender(final ConfigurationHolder cfg) {
