@@ -1,4 +1,4 @@
-package ru.bars_open.medvtr.amqp.biomaterial.hepa;
+package ru.bars_open.medvtr.amqp.biomaterial.hepa.deprecated;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigRenderOptions;
@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jndi.JndiTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
 import ru.bars_open.medvtr.mq.util.JdbcUrlBuilder;
 
-import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
@@ -30,39 +28,27 @@ import static java.lang.Integer.toHexString;
 
 /**
  * Author: Upatov Egor <br>
- * Date: 08.11.2016, 14:51 <br>
+ * Date: 28.02.2017, 18:43 <br>
  * Company: Bars Group [ www.bars.open.ru ]
  * Description:
  */
-@Configuration("hepaPersistenceConfig")
+@Configuration("hospitalPersistenceConfig")
 @EnableTransactionManagement
 public class PersistenceConfig {
-
     private static final Logger log = LoggerFactory.getLogger("CONFIG");
-    public static final String PERSISTENCE_UNIT_NAME_HEPA = "hepa";
 
-    @Bean("hepaDatasource")
-    public DataSource hepaDatasource(final ConfigurationHolder cfg) {
-        final Config dsCfg = cfg.getConfig("datasource");
-        if (dsCfg.hasPath("jndiName")) {
-            final String jndiName = dsCfg.getString("jndiName");
-            log.info("HepaDatasource: Try initialize by jndiName[{}]", jndiName);
-            try {
-                final DataSource result = new JndiTemplate().lookup(jndiName, DataSource.class);
-                log.info("HepaDatasource: Initialized JNDI[{}] [@{}]", jndiName, toHexString(result.hashCode()));
-                return result;
-            } catch (NamingException e) {
-                throw new IllegalStateException("No Datasource with JNDI " + jndiName, e);
-            }
-        }
-        log.info("HepaDatasource: Try initialize by settings:\n{}", dsCfg.root().render(ConfigRenderOptions.concise().setFormatted(true)));
-        final String jdbcUrl = JdbcUrlBuilder.build(
-                dsCfg.getString("rdbms"),
-                dsCfg.getString("host"),
-                dsCfg.getInt("port"),
-                dsCfg.getString("schema")
+    public static final String PERSISTENCE_UNIT_NAME_HOSPITAL = "hospital";
+
+    @Bean("hospitalDatasource")
+    public static DataSource hospitalDatasource(final ConfigurationHolder cfg) {
+        final Config dsCfg = cfg.getConfig("datasourceHospital");
+        log.info("HospitalDatasource: Try initialize by settings:\n{}", dsCfg.root().render(ConfigRenderOptions.concise()));
+        final String jdbcUrl = JdbcUrlBuilder.build(dsCfg.getString("rdbms"),
+                                                    dsCfg.getString("host"),
+                                                    dsCfg.getInt("port"),
+                                                    dsCfg.getString("schema")
         );
-        log.info("HepaDatasource: JDBC URL = '{}'", jdbcUrl);
+        log.info("HospitalDatasource: JDBC URL = '{}'", jdbcUrl);
         final HikariConfig config = new HikariConfig();
         config.setJdbcUrl(jdbcUrl);
         config.setUsername(dsCfg.getString("username"));
@@ -75,9 +61,9 @@ public class PersistenceConfig {
         return new HikariDataSource(config);
     }
 
-    @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME_HEPA)
-    @Bean("hepaEntityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean hepaEntityManagerFactory(@Qualifier("hepaDatasource") final DataSource dataSource) {
+    @PersistenceContext(unitName = PERSISTENCE_UNIT_NAME_HOSPITAL)
+    @Bean("hospitalEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean hospitalEntityManagerFactory(@Qualifier("hospitalDatasource") final DataSource dataSource) {
         final LocalContainerEntityManagerFactoryBean result = new LocalContainerEntityManagerFactoryBean();
         result.setDataSource(dataSource);
 
@@ -90,19 +76,21 @@ public class PersistenceConfig {
         result.setJpaProperties(hibernateProperties);
 
         result.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        result.setPackagesToScan("ru.bars_open.medvtr.amqp.biomaterial.hepa.entities");
-        result.setPersistenceUnitName(PERSISTENCE_UNIT_NAME_HEPA);
-        log.info("hepaEntityManagerFactory initialized [@{}] {}", toHexString(result.hashCode()), result);
+        result.setPackagesToScan("ru.bars_open.medvtr.db.entities");
+        result.setPersistenceUnitName(PERSISTENCE_UNIT_NAME_HOSPITAL);
+        log.info("hospitalEntityManagerFactory initialized [@{}] {}", toHexString(result.hashCode()), result);
         return result;
     }
 
-    @Bean(name = "hepaTransactionManager")
-    public PlatformTransactionManager hepaTransactionManager(@Qualifier("hepaEntityManagerFactory") final EntityManagerFactory emf) {
+    @Bean("hospitalTransactionManager")
+    public PlatformTransactionManager hospitalTransactionManager(@Qualifier("hospitalEntityManagerFactory") final EntityManagerFactory emf) {
         final JpaTransactionManager result = new JpaTransactionManager();
         result.setEntityManagerFactory(emf);
-        result.setPersistenceUnitName(PERSISTENCE_UNIT_NAME_HEPA);
+        result.setPersistenceUnitName(PERSISTENCE_UNIT_NAME_HOSPITAL);
         result.setDefaultTimeout(36000);
-        log.info("HepaTransactionManager: <init> with EntityManagerFactory[@{}]", toHexString(result.hashCode()), toHexString(emf.hashCode()));
+        log.info("HospitalTransactionManager: <init> with EntityManagerFactory[@{}]", toHexString(result.hashCode()), toHexString(emf.hashCode()));
         return result;
     }
+
+
 }

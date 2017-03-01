@@ -3,6 +3,7 @@ package ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.impl.mapped;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.PersistenceConfig;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.interfaces.mapped.AbstractDao;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.IdentifiedEntity;
@@ -10,10 +11,9 @@ import ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.IdentifiedEntity;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 
-@Transactional
-@SuppressWarnings("unchecked")
+
+@Transactional(value = "hepaTransactionManager")
 public abstract class AbstractDaoImpl<T extends IdentifiedEntity> implements AbstractDao<T> {
 
     protected final Logger log = LoggerFactory.getLogger(this.getClass());

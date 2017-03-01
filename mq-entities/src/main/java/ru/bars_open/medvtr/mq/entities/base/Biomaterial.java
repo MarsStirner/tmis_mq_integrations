@@ -386,9 +386,11 @@ public class Biomaterial implements Serializable
 
     public enum Status {
 
-        STARTED("STARTED"),
         WAIT("WAIT"),
-        FINISHED("FINISHED");
+        IN_PROGRESS("IN_PROGRESS"),
+        FINISH("FINISH"),
+        SENT("SENT"),
+        FAILED("FAILED");
         private final String value;
         private final static Map<String, Biomaterial.Status> CONSTANTS = new HashMap<String, Biomaterial.Status>();
 

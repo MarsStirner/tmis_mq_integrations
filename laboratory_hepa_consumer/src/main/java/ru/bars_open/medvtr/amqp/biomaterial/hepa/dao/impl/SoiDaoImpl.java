@@ -27,8 +27,8 @@ public class SoiDaoImpl extends AbstractDaoImpl<Soi> implements SoiDao {
 
     @Override
     public Soi get(final String code) {
-        final List<Soi> resultList = em.createQuery("SELECT a FROM Soi a WHERE a.name = :name", getEntityClass())
-                .setParameter("name",convertToDb(code)).getResultList();
+        final List<Soi> resultList = em.createQuery("SELECT a FROM Soi a WHERE a.code = :code", getEntityClass())
+                .setParameter("code",convertToDb(code)).getResultList();
            switch (resultList.size()) {
             case 0: {
                 log.debug("Not found by code[{}]", code);

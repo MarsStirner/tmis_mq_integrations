@@ -18,6 +18,10 @@
     "name": {
       "type": "string",
       "description": "Наименование записи справочника"
+    },
+    "uuid": {
+      "type": "string",
+      "description": "dashed string uuid отделения (36 символов должно быть)"
     }
   },
   "required": [

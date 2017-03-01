@@ -38,9 +38,11 @@
     "status": {
       "description": "Статус биозабора",
       "enum": [
-        "STARTED",
         "WAIT",
-        "FINISHED"
+        "IN_PROGRESS",
+        "FINISH",
+        "SENT",
+        "FAILED"
       ]
     },
     "barcode": {

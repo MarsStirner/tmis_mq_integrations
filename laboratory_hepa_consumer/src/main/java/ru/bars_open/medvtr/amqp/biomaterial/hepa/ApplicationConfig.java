@@ -3,7 +3,10 @@ package ru.bars_open.medvtr.amqp.biomaterial.hepa;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.util.StatusPrinter;
-import com.typesafe.config.*;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.ConfigParseOptions;
+import com.typesafe.config.ConfigSyntax;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AcknowledgeMode;
@@ -24,6 +27,7 @@ import org.springframework.util.ErrorHandler;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.util.LoggingPostProcessor;
 import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
 
+import javax.naming.NamingException;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.StandardCharsets;
@@ -42,7 +46,7 @@ import static ru.bars_open.medvtr.amqp.biomaterial.hepa.ConfigurationKeys.*;
  */
 
 @Configuration
-@ComponentScan
+@ComponentScan(basePackages = {"ru.bars_open.medvtr"})
 public class ApplicationConfig {
     private static final Logger log = LoggerFactory.getLogger("CONFIG");
     private static ApplicationContext context;
@@ -70,7 +74,7 @@ public class ApplicationConfig {
     }
 
     @Bean("configurationHolder")
-    public ConfigurationHolder configurationHolder() {
+    public ConfigurationHolder configurationHolder() throws NamingException {
         final Config localCfg = ConfigFactory.parseResources("application.conf", ConfigParseOptions.defaults().setSyntax(ConfigSyntax.CONF));
         final ConfigurationHolder result = new ConfigurationHolder(localCfg);
         log.info("Initialized: {}", result);

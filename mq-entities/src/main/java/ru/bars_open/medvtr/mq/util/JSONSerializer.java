@@ -32,21 +32,20 @@ public class JSONSerializer implements Serializer {
         mapper = new ObjectMapper();
         mapper.registerModule(new JodaModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-      //  mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        //  mapper.enable(SerializationFeature.INDENT_OUTPUT);
     }
 
-    public static JSONSerializer getInstance(){
-        if(instance == null){
-           instance = new JSONSerializer();
+    public static JSONSerializer getInstance() {
+        if (instance == null) {
+            instance = new JSONSerializer();
         }
         return instance;
     }
 
 
-
     @Override
     public <T> T parse(final byte[] content, Charset encoding, final Class<T> clazz) {
-        if(encoding == null){
+        if (encoding == null) {
             encoding = StandardCharsets.UTF_8;
         }
         try {

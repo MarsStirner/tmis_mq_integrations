@@ -40,7 +40,6 @@ public class Consumer implements ChannelAwareMessageListener {
     private final String ROUTING_KEY_SEND;
 
     private final Set<String> possibleKeys;
-    private final Soi soi;
     private final Operator operator;
 
     @Autowired
@@ -62,13 +61,15 @@ public class Consumer implements ChannelAwareMessageListener {
     private ResponseSender responseSender;
 
     @Autowired
-    public Consumer(final ConfigurationHolder cfg, final SoiDao soiDao, final OperatorDao operatorDao) {
+    private SoiDao soiDao;
+
+    @Autowired
+    public Consumer(final ConfigurationHolder cfg, final OperatorDao operatorDao) {
         this.possibleKeys = new HashSet<>(1);
         this.ROUTING_KEY_SEND = cfg.getString(ConfigurationKeys.REQUEST_SEND_ROUTING_KEY);
         this.possibleKeys.add(ROUTING_KEY_SEND);
-        this.soi = soiDao.get(cfg.getString("soi"));
         this.operator = operatorDao.get(cfg.getString("operator"));
-        log.info("<init>: possibleKeys = {}; soi={}; operator={}", possibleKeys, soi, operator);
+        log.info("<init>: possibleKeys = {}; operator={}", possibleKeys,  operator);
     }
 
 
@@ -112,6 +113,7 @@ public class Consumer implements ChannelAwareMessageListener {
             if (material == null) {
                 throw new NoSuchBiomaterialTypeException(ctx.getBiomaterialType().getCode(), ctx.getBiomaterialType().getName());
             }
+            final Soi soi = soiDao.get(ctx.getMqBiomaterial().getEvent().getOrgStructure().getUuid());
             for (Analysis item : ctx.getMqResearch()) {
                 MDCHelper.push(item.getId());
                 log.info("Start process Research[{}-{}]", item.getType().getCode(), item.getType().getName());
@@ -121,13 +123,7 @@ public class Consumer implements ChannelAwareMessageListener {
                     final ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.Analysis analysisType = analysisDao.get(test.getTest().getCode());
                     if (analysisType != null) {
                         log.info("Analysis={}", analysisType);
-                        final Request request = requestDao.createRequest(client,
-                                                                         soi,
-                                                                         operator,
-                                                                         analysisType,
-                                                                         material,
-                                                                         item.getId() + "-" + test.getId()
-                        );
+                        final Request request = requestDao.createRequest(client, soi, operator, analysisType, material, String.valueOf(test.getId()));
                         log.info("Request={}", request);
                     } else {
                         log.warn("No such Analysis[{}] found", test.getTest().getCode());

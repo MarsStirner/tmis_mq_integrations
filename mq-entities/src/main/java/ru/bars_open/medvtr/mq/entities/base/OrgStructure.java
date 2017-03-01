@@ -26,7 +26,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @JsonPropertyOrder({
     "id",
     "code",
-    "name"
+    "name",
+    "uuid"
 })
 public class OrgStructure implements Serializable
 {
@@ -54,9 +55,16 @@ public class OrgStructure implements Serializable
     @JsonProperty("name")
     @JsonPropertyDescription("\u041d\u0430\u0438\u043c\u0435\u043d\u043e\u0432\u0430\u043d\u0438\u0435 \u0437\u0430\u043f\u0438\u0441\u0438 \u0441\u043f\u0440\u0430\u0432\u043e\u0447\u043d\u0438\u043a\u0430")
     private String name;
+    /**
+     * dashed string uuid отделения (36 символов должно быть)
+     * 
+     */
+    @JsonProperty("uuid")
+    @JsonPropertyDescription("dashed string uuid \u043e\u0442\u0434\u0435\u043b\u0435\u043d\u0438\u044f (36 \u0441\u0438\u043c\u0432\u043e\u043b\u043e\u0432 \u0434\u043e\u043b\u0436\u043d\u043e \u0431\u044b\u0442\u044c)")
+    private String uuid;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = -533627990294050315L;
+    private final static long serialVersionUID = 4659573668534591344L;
 
     /**
      * Идентифкатор МИС
@@ -116,6 +124,24 @@ public class OrgStructure implements Serializable
         this.name = name;
     }
 
+    /**
+     * dashed string uuid отделения (36 символов должно быть)
+     * 
+     */
+    @JsonProperty("uuid")
+    public String getUuid() {
+        return uuid;
+    }
+
+    /**
+     * dashed string uuid отделения (36 символов должно быть)
+     * 
+     */
+    @JsonProperty("uuid")
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -133,7 +159,7 @@ public class OrgStructure implements Serializable
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(code).append(name).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(id).append(code).append(name).append(uuid).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -145,7 +171,7 @@ public class OrgStructure implements Serializable
             return false;
         }
         OrgStructure rhs = ((OrgStructure) other);
-        return new EqualsBuilder().append(id, rhs.id).append(code, rhs.code).append(name, rhs.name).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(id, rhs.id).append(code, rhs.code).append(name, rhs.name).append(uuid, rhs.uuid).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

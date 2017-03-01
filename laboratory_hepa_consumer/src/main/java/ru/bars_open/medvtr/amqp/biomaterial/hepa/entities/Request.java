@@ -35,6 +35,21 @@ public class Request extends IdentifiedEntity {
     @JoinColumn(name="a_required")
     private Analysis analysis;
 
+    @Column(name="co_date")
+    @Temporal(TemporalType.DATE)
+    private Date completeDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="completedBy")
+    private Operator completedBy;
+
+    @Column(name="phoresis")
+    private String phoresis;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "a_result")
+    private Result result;      
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="material")
     private Material material;
@@ -156,14 +171,50 @@ public class Request extends IdentifiedEntity {
         this.amount3 = amount3;
     }
 
+    public Date getCompleteDate() {
+        return completeDate;
+    }
+
+    public void setCompleteDate(final Date completeDate) {
+        this.completeDate = completeDate;
+    }
+
+    public Operator getCompletedBy() {
+        return completedBy;
+    }
+
+    public void setCompletedBy(final Operator completedBy) {
+        this.completedBy = completedBy;
+    }
+
+    public String getPhoresis() {
+        return phoresis;
+    }
+
+    public void setPhoresis(final String phoresis) {
+        this.phoresis = phoresis;
+    }
+
+    public Result getResult() {
+        return result;
+    }
+
+    public void setResult(final Result result) {
+        this.result = result;
+    }
+
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Request{");
-        sb.append("client=").append(client);
+        final StringBuilder sb = new StringBuilder("Request[").append(id);
+        sb.append("]{ client=").append(client);
         sb.append(", soi=").append(soi);
         sb.append(", createDate=").append(createDate);
         sb.append(", createdBy=").append(createdBy);
         sb.append(", analysis=").append(analysis);
+        sb.append(", completeDate=").append(completeDate);
+        sb.append(", completeBy=").append(completedBy);
+        sb.append(", phoresis='").append(convertFromDb(phoresis)).append('\'');
+        sb.append(", result=").append(result);
         sb.append(", material=").append(material);
         sb.append(", comment='").append(convertFromDb(comment)).append('\'');
         sb.append(", sent=").append(sent);
