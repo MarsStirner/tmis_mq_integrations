@@ -69,7 +69,7 @@ public class Consumer implements ChannelAwareMessageListener {
         final MessageProperties props = message.getMessageProperties();
         final long tag = props.getDeliveryTag();
         final String routingKey = props.getReceivedRoutingKey();
-        final Charset encoding = DeserializationFactory.getEncoding(log, tag, props.getContentEncoding());
+        final Charset encoding = DeserializationFactory.getEncoding(props.getContentEncoding());
         log.info("###{}: Receive new message[RK='{}']({}):\n{}", tag, routingKey, encoding, new String(message.getBody(), encoding));
         if (log.isDebugEnabled()) {
             log.debug("#{}: {}", tag, props);

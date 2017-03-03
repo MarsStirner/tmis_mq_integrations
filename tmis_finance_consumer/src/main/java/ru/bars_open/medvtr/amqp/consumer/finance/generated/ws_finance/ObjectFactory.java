@@ -30,6 +30,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link ServiceCompleteInfo }
+     * 
+     */
+    public ServiceCompleteInfo createServiceCompleteInfo() {
+        return new ServiceCompleteInfo();
+    }
+
+    /**
      * Create an instance of {@link PutReturnResponse }
      * 
      */
@@ -38,11 +46,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link PutTreatmentResponse }
+     * Create an instance of {@link PersonName }
      * 
      */
-    public PutTreatmentResponse createPutTreatmentResponse() {
-        return new PutTreatmentResponse();
+    public PersonName createPersonName() {
+        return new PersonName();
     }
 
     /**
@@ -62,19 +70,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link PersonName }
+     * Create an instance of {@link PutTreatmentResponse }
      * 
      */
-    public PersonName createPersonName() {
-        return new PersonName();
-    }
-
-    /**
-     * Create an instance of {@link ServiceCompleteInfo }
-     * 
-     */
-    public ServiceCompleteInfo createServiceCompleteInfo() {
-        return new ServiceCompleteInfo();
+    public PutTreatmentResponse createPutTreatmentResponse() {
+        return new PutTreatmentResponse();
     }
 
 }

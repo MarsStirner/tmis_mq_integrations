@@ -53,6 +53,7 @@
                 <module>pharmacy_hospitalization_consumer</module>
                 <module>pharmacy_medical_prescriptions_consumer</module>
                 <module>biomaterial_integration</module>
+                <module>laboratory_hepa_consumer</module>
             </modules>
         </profile>
         <profile>
