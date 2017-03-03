@@ -23,7 +23,7 @@
         <maven.build.timestamp.format>yyyy-MMdd-HHmm</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
         <logs.directory>./logs</logs.directory>
-        <log.format>[%date{ISO8601}][%level][%thread][%logger]:%X{prefix}%message%n</log.format>
+        <log.format>[%date{ISO8601}][%level][%thread][%logger{0}]:%X{prefix}%message%n</log.format>
         <!--<log.format>[%date{ISO8601}][%level][%thread][%logger]: %message%n</log.format>-->
     </properties>
 

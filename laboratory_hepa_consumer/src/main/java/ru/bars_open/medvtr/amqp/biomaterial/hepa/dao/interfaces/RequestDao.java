@@ -2,6 +2,7 @@ package ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.interfaces;
 
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.interfaces.mapped.AbstractDao;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.*;
+import ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.view.SendAnalysisResultsToTMIS;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface RequestDao extends AbstractDao<Request> {
 
     Request createRequest(Client client, Soi soi, Operator operator, Analysis analysisType, Material material, String feedback);
 
-    List<Request> getNotSent();
+    List<SendAnalysisResultsToTMIS> getReadyForSend();
 
     Request setSent(Request request);
 }

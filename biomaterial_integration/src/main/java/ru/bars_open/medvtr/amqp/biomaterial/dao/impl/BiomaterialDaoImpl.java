@@ -41,7 +41,12 @@ public class BiomaterialDaoImpl extends AbstractDaoWithExternalImpl<Biomaterial>
         result.setPlannedDateTime(source.getDatetimePlanned().toLocalDateTime());
         if (source.getDatetimeTaken() != null) { result.setFacticalDateTime(source.getDatetimeTaken().toLocalDateTime()); }
         //TODO Event
-        result.setAmount(source.getAmount().getValue() + " " + source.getAmount().getUnit().getName());
+        if (source.getAmount().getUnit() != null) {
+            result.setAmount(source.getAmount().getValue() + " " + source.getAmount().getUnit().getName());
+        } else {
+            result.setAmount(source.getAmount().getValue() + " " + "<Единица измерения не указана>");
+            log.warn("Biomaterial.amount.unit is NULL");
+        }
         result.setTestTubeType(source.getTestTubeType().getCode());
         result.setBiomaterialType(source.getBiomaterialType().getCode());
         final Person person = source.getPerson();

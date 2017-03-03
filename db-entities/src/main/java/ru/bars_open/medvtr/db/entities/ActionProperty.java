@@ -1,7 +1,7 @@
 package ru.bars_open.medvtr.db.entities;
 
 
-import ru.bars_open.medvtr.db.entities.mapped.IdentifiedEntity;
+import ru.bars_open.medvtr.db.entities.mapped.DeletableEntity;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,19 +13,27 @@ import java.util.Date;
  * Description:
  */
 @Entity
-@Table(name="ActionProperty")
-public class ActionProperty extends IdentifiedEntity {
+@Table(name = "ActionProperty")
+@NamedQueries({@NamedQuery(name = "ActionProperty.getAssignedByAction", query = "SELECT a FROM ActionProperty a WHERE a.deleted = 0 AND a.isAssigned = 1 AND a.action.id = :actionId")})
+public class ActionProperty extends DeletableEntity {
 
     @Column(name = "modifyDatetime")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifyDatetime;
 
-    @Column(name = "deleted", nullable = false)
-    private boolean deleted = false;
+    /**
+     * Действие к которому относится это свойство {Action}
+     */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "action_id", nullable = false)
+    private Action action;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "type_id", nullable = false)
     private ActionPropertyType type;
+
+    @Column(name = "isAssigned", nullable = false)
+    private boolean isAssigned = false;
 
     @Version
     @Column(name = "version")
@@ -42,14 +50,6 @@ public class ActionProperty extends IdentifiedEntity {
         this.modifyDatetime = modifyDatetime;
     }
 
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(final boolean deleted) {
-        this.deleted = deleted;
-    }
-
     public ActionPropertyType getType() {
         return type;
     }
@@ -64,5 +64,27 @@ public class ActionProperty extends IdentifiedEntity {
 
     public void setVersion(final int version) {
         this.version = version;
+    }
+
+    public Action getAction() {
+        return action;
+    }
+
+    public void setAction(final Action action) {
+        this.action = action;
+    }
+
+    public boolean isAssigned() {
+        return isAssigned;
+    }
+
+    public void setAssigned(final boolean assigned) {
+        isAssigned = assigned;
+    }
+
+    public String toLogString() {
+        final StringBuilder sb = new StringBuilder("AP[").append(id).append(']');
+        sb.append('{').append(type.toLogString()).append('}');
+        return sb.toString();
     }
 }

@@ -1,12 +1,14 @@
 package ru.bars_open.medvtr.amqp.biomaterial.hepa;
 
 import com.rabbitmq.client.Channel;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.interfaces.*;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.dto.MessageContext;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.*;
@@ -14,6 +16,7 @@ import ru.bars_open.medvtr.amqp.biomaterial.hepa.util.LoggingPostProcessor;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.util.MDCHelper;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.util.NoSuchBiomaterialTypeException;
 import ru.bars_open.medvtr.mq.entities.action.Analysis;
+import ru.bars_open.medvtr.mq.entities.base.OrgStructure;
 import ru.bars_open.medvtr.mq.entities.base.Person;
 import ru.bars_open.medvtr.mq.entities.base.util.Test;
 import ru.bars_open.medvtr.mq.entities.message.BiologicalMaterialMessage;
@@ -22,7 +25,6 @@ import ru.bars_open.medvtr.mq.util.DeserializationFactory;
 import ru.bars_open.medvtr.mq.util.exceptions.MessageIsIncorrectException;
 import ru.bars_open.medvtr.mq.util.exceptions.UnknownRoutingKeyException;
 
-import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -41,6 +43,7 @@ public class Consumer implements ChannelAwareMessageListener {
 
     private final Set<String> possibleKeys;
     private final Operator operator;
+    private final String defaultSoi;
 
     @Autowired
     private ClientDao clientDao;
@@ -69,7 +72,8 @@ public class Consumer implements ChannelAwareMessageListener {
         this.ROUTING_KEY_SEND = cfg.getString(ConfigurationKeys.REQUEST_SEND_ROUTING_KEY);
         this.possibleKeys.add(ROUTING_KEY_SEND);
         this.operator = operatorDao.get(cfg.getString("operator"));
-        log.info("<init>: possibleKeys = {}; operator={}", possibleKeys,  operator);
+        this.defaultSoi = cfg.getString("defaultSoi");
+        log.info("<init>: possibleKeys = {}; operator={}", possibleKeys, operator);
     }
 
 
@@ -91,7 +95,7 @@ public class Consumer implements ChannelAwareMessageListener {
      * -- [Z.2] UnknownRoutingKeyException Неизвестный программе ключ (неизвестный тип события)
      */
     @Override
-    @Transactional
+    @Transactional(value = "hepaTransactionManager")
     public void onMessage(final Message amqpMessage, final Channel channel)
             throws MessageIsIncorrectException, UnknownRoutingKeyException, NoSuchBiomaterialTypeException {
         //[B] Преобразование
@@ -113,7 +117,8 @@ public class Consumer implements ChannelAwareMessageListener {
             if (material == null) {
                 throw new NoSuchBiomaterialTypeException(ctx.getBiomaterialType().getCode(), ctx.getBiomaterialType().getName());
             }
-            final Soi soi = soiDao.get(ctx.getMqBiomaterial().getEvent().getOrgStructure().getUuid());
+            final Soi soi = getSoi(ctx.getMqBiomaterial().getEvent().getOrgStructure());
+            log.info("Soi={}", soi);
             for (Analysis item : ctx.getMqResearch()) {
                 MDCHelper.push(item.getId());
                 log.info("Start process Research[{}-{}]", item.getType().getCode(), item.getType().getName());
@@ -138,6 +143,23 @@ public class Consumer implements ChannelAwareMessageListener {
         }
         // [Z.2] UnknownRoutingKeyException Неизвестный программе ключ (неизвестный тип события)
         throw new UnknownRoutingKeyException(ctx.getRoutingKey(), possibleKeys);
+    }
+
+    private Soi getSoi(final OrgStructure orgStructure) {
+        if (orgStructure != null) {
+            if (StringUtils.isNotEmpty(orgStructure.getUuid())) {
+                final Soi result = soiDao.get(orgStructure.getUuid());
+                if (result != null) {
+                    return result;
+                }
+                log.warn("No Soi found by [{}]. Try default soi [{}]", orgStructure.getUuid(), defaultSoi);
+            } else {
+                log.warn("biomaterial.event.orgStructure.uuid is NULL or empty. Try default soi [{}]", defaultSoi);
+            }
+        } else {
+            log.warn("biomaterial.event.orgStructure is NULL. Try default soi [{}]", defaultSoi);
+        }
+        return soiDao.get(defaultSoi);
     }
 
     /**

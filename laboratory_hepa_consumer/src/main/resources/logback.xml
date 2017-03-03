@@ -91,6 +91,10 @@
         <appender-ref ref="APPENDER_SQL"/>
     </logger>
 
+    <logger name="org.quartz">
+        <level value="INFO" />
+    </logger>
+
     <root level="DEBUG">
         <appender-ref ref="APPENDER_ROOT"/>
     </root>

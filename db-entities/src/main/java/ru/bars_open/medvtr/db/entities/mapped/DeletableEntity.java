@@ -13,7 +13,7 @@ import javax.persistence.MappedSuperclass;
 public abstract class DeletableEntity extends IdentifiedEntity {
 
     @Column(name= "deleted", nullable = false)
-    protected boolean deleted;
+    protected boolean deleted = false;
 
     public boolean isDeleted() {
         return deleted;

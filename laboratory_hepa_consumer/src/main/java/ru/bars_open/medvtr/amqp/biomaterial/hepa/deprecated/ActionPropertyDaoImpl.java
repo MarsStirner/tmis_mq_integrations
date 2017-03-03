@@ -3,6 +3,7 @@ package ru.bars_open.medvtr.amqp.biomaterial.hepa.deprecated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import ru.bars_open.medvtr.db.entities.Action;
 import ru.bars_open.medvtr.db.entities.ActionProperty;
 import ru.bars_open.medvtr.db.entities.actionProperty.APValue;
 import ru.bars_open.medvtr.db.entities.actionProperty.APValueDouble;
@@ -14,6 +15,7 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -62,6 +64,19 @@ public class ActionPropertyDaoImpl implements ActionPropertyDao {
     }
 
     @Override
+    public List<ActionProperty> getAssignedByAction(final Action action) {
+        return em.createNamedQuery("ActionProperty.getAssignedByAction", ActionProperty.class).setParameter("actionId", action.getId())
+                .getResultList();
+    }
+
+    @Override
+    public ActionProperty getByActionAndCode(final Action action, final String actionPropertyTypeCode) {
+        return em.createQuery("SELECT a FROM ActionProperty a WHERE a.action.id = :actionId AND a.type.code = :aptCode AND a.deleted = 0",
+                              ActionProperty.class
+        ).setParameter("actionId", action.getId()).setParameter("aptCode", actionPropertyTypeCode).getResultList().stream().findFirst().orElse(null);
+    }
+
+    @Override
     public APValue setValue(final ActionProperty ap, int index, final Object value) {
         APValue result = getValue(ap, index);
         if (result == null) {
@@ -79,7 +94,7 @@ public class ActionPropertyDaoImpl implements ActionPropertyDao {
             result.setValue(value);
             em.persist(result);
             return result;
-        } catch (InstantiationException | IllegalAccessException ex ){
+        } catch (InstantiationException | IllegalAccessException ex) {
             log.error("Cannot create APValue for {}", ap, ex);
             return null;
         }

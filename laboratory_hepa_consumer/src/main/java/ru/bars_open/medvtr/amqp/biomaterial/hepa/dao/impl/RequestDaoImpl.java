@@ -1,15 +1,13 @@
 package ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.impl.mapped.AbstractDaoImpl;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.interfaces.RequestDao;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.*;
-import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
+import ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.view.SendAnalysisResultsToTMIS;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.listeners.StupidEncodingConverterListener.convertToDb;
 
@@ -22,15 +20,6 @@ import static ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.listeners.Stupi
 
 @Repository("requestDao")
 public class RequestDaoImpl extends AbstractDaoImpl<Request> implements RequestDao {
-
-    private final List<String> SOI_TO_SEND;
-
-    @Autowired
-    public RequestDaoImpl(ConfigurationHolder cfg) {
-        this.SOI_TO_SEND = cfg.getStringList("polling.soi");
-        log.info("<init> with SOI_TO_SEND:\n{}", SOI_TO_SEND.stream().collect(Collectors.joining(",\n")));
-    }
-
 
     @Override
     public Class<Request> getEntityClass() {
@@ -54,19 +43,10 @@ public class RequestDaoImpl extends AbstractDaoImpl<Request> implements RequestD
     }
 
     @Override
-    public List<Request> getNotSent() {
-        return em.createQuery("SELECT a " +
-                                      "FROM Request a " +
-                                      "INNER JOIN FETCH a.result " +
-                                      "INNER JOIN FETCH a.soi "+
-                                      "LEFT JOIN FETCH a.completedBy " +
-                                      "WHERE " +
-                                      "a.sent <> 1 " +
-                                      "AND a.feedback IS NOT NULL " +
-                                      "AND a.soi.code IN :soi_codes_to_send", Request.class)
-                .setParameter("soi_codes_to_send", SOI_TO_SEND)
-                .getResultList();
+    public List<SendAnalysisResultsToTMIS> getReadyForSend() {
+        return em.createNamedQuery("SendAnalysisResultsToTMIS.getAll", SendAnalysisResultsToTMIS.class).getResultList();
     }
+
 
     @Override
     public Request setSent(final Request request) {

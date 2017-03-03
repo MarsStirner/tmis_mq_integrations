@@ -41,7 +41,7 @@ public class PersistenceConfig {
 
     @Bean("hospitalDatasource")
     public static DataSource hospitalDatasource(final ConfigurationHolder cfg) {
-        final Config dsCfg = cfg.getConfig("datasourceHospital");
+        final Config dsCfg = cfg.getConfig("polling.datasourceHospital");
         log.info("HospitalDatasource: Try initialize by settings:\n{}", dsCfg.root().render(ConfigRenderOptions.concise()));
         final String jdbcUrl = JdbcUrlBuilder.build(dsCfg.getString("rdbms"),
                                                     dsCfg.getString("host"),

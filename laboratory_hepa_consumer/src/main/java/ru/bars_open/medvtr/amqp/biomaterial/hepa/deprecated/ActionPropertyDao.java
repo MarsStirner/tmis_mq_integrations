@@ -2,8 +2,11 @@ package ru.bars_open.medvtr.amqp.biomaterial.hepa.deprecated;
 
 
 import org.springframework.transaction.annotation.Transactional;
+import ru.bars_open.medvtr.db.entities.Action;
 import ru.bars_open.medvtr.db.entities.ActionProperty;
 import ru.bars_open.medvtr.db.entities.actionProperty.APValue;
+
+import java.util.List;
 
 
 /**
@@ -34,5 +37,8 @@ public interface ActionPropertyDao {
     void update(ActionProperty entity);
 
 
+    List<ActionProperty> getAssignedByAction(Action action);
+
+    ActionProperty getByActionAndCode(Action action, String actionPropertyTypeCode);
 }
 

@@ -13,7 +13,7 @@ import javax.persistence.*;
  * Description:
  */
 @Entity
-@Table(name="ActionPropertyType")
+@Table(name = "ActionPropertyType")
 public class ActionPropertyType extends IdentifiedEntity {
 
     @Column(name = "deleted", nullable = false)
@@ -73,5 +73,9 @@ public class ActionPropertyType extends IdentifiedEntity {
 
     public void setTypeName(final TypeName typeName) {
         this.typeName = typeName;
+    }
+
+    public String toLogString() {
+        return "APT[" + id + "]{code='" + code + "', name='" + name + "'}";
     }
 }
