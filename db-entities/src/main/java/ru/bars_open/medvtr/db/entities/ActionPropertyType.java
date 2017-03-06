@@ -28,7 +28,6 @@ public class ActionPropertyType extends IdentifiedEntity {
     @Column(name = "code", nullable = false)
     private String code;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "typeName", nullable = false)
     private TypeName typeName;
 

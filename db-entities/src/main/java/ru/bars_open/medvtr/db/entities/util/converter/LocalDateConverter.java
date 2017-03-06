@@ -1,4 +1,4 @@
-package ru.bars_open.medvtr.db.entities.util;
+package ru.bars_open.medvtr.db.entities.util.converter;
 
 import org.joda.time.LocalDate;
 

@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap12bind="http://schemas.xmlsoap.org/wsdl/soap12/"
+             xmlns:soapbind="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://schemas.xmlsoap.org/soap/envelope"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:xsd1="http://schemas.xmlsoap.org/soap/envelope"
+             name="PharmacyHospitalization"
+             targetNamespace="http://schemas.xmlsoap.org/soap/envelope">
+    <types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:xs1="http://schemas.xmlsoap.org/soap/envelope"
+                   targetNamespace="http://schemas.xmlsoap.org/soap/envelope"
+                   attributeFormDefault="unqualified"
+                   elementFormDefault="qualified">
+            <xs:element name="closeHospitalizationRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="event"
+                                    type="tns:Event"/>
+                        <xs:element name="leaved"
+                                    type="tns:StationaryLeaved"/>
+                        <xs:element name="moves"
+                                    type="tns:Мoves"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="closeHospitalizationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="return"
+                                    type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createHospitalizationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="return"
+                                    type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addMovingRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="event"
+                                    type="tns:Event"/>
+                        <xs:element name="moving"
+                                    type="tns:StationaryMoving"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addMovingResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="return"
+                                    type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createHospitalizationRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="event"
+                                    type="tns:Event"/>
+                        <xs:element name="received"
+                                    type="tns:StationaryReceived"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="Address">
+                <xs:sequence>
+                    <xs:element name="id"
+                                type="xs:int"/>
+                    <xs:element name="addressType"
+                                type="tns:AddressType"/>
+                    <xs:element name="value"
+                                type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:simpleType name="AddressType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="REGISTRATION"/>
+                    <xs:enumeration value="LIVING"/>
+                    <xs:enumeration value="UNKNOWN"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:complexType name="Contract">
+                <xs:sequence>
+                    <xs:element name="id"
+                                type="xs:int"/>
+                    <xs:element name="payer"
+                                type="tns:Person"/>
+                    <xs:element name="number"
+                                type="xs:string"/>
+                    <xs:element name="signDate"
+                                type="xs:date"/>
+                    <xs:element name="begDate"
+                                type="xs:date"/>
+                    <xs:element name="endDate"
+                                type="xs:date"/>
+                    <xs:element name="finance"
+                                type="tns:RbFinance"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Event">
+                <xs:sequence>
+                    <xs:element name="id"
+                                type="xs:int"/>
+                    <xs:element name="setDate"
+                                type="xs:date"/>
+                    <xs:element name="externalId"
+                                type="xs:string"/>
+                    <xs:element name="endDate"
+                                type="xs:date"/>
+                    <xs:element name="client"
+                                type="tns:Person"/>
+                    <xs:element name="contract"
+                                type="tns:Contract"/>
+                    <xs:element name="vmpTicket"
+                                type="tns:VmpTicket"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="OrgStructure">
+                <xs:sequence>
+                    <xs:element name="id"
+                                type="xs:int"/>
+                    <xs:element name="code"
+                                type="xs:string"/>
+                    <xs:element name="name"
+                                type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Person">
+                <xs:sequence>
+                    <xs:element name="id"
+                                type="xs:int"/>
+                    <xs:element name="lastName"
+                                type="xs:string"/>
+                    <xs:element name="firstName"
+                                type="xs:string"/>
+                    <xs:element name="patrName"
+                                type="xs:string"/>
+                    <xs:element name="sex"
+                                type="tns:Sex"/>
+                    <xs:element name="birthDate"
+                                type="xs:date"/>
+                    <xs:element name="addresses"
+                                type="tns:Address"
+                                maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="RbFinance">
+                <xs:sequence>
+                    <xs:element name="id"
+                                type="xs:int"/>
+                    <xs:element name="code"
+                                type="xs:string"/>
+                    <xs:element name="name"
+                                type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="RbTreatment">
+                <xs:sequence>
+                    <xs:element name="id"
+                                type="xs:int"/>
+                    <xs:element name="code"
+                                type="xs:string"/>
+                    <xs:element name="name"
+                                type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:simpleType name="Sex">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="MALE"/>
+                    <xs:enumeration value="FEMALE"/>
+                    <xs:enumeration value="UNKNOWN"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:complexType name="StationaryLeaved">
+                <xs:sequence>
+                    <xs:element name="id"
+                                type="xs:int"/>
+                    <xs:element name="status"
+                                type="tns:Status"/>
+                    <xs:element name="begDate"
+                                type="xs:date"/>
+                    <xs:element name="endDate"
+                                type="xs:date"/>
+                    <xs:element name="hospOutcome"
+                                type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="StationaryMoving">
+                <xs:sequence>
+                    <xs:element name="id"
+                                type="xs:int"/>
+                    <xs:element name="status"
+                                type="tns:Status"/>
+                    <xs:element name="begDate"
+                                type="xs:date"/>
+                    <xs:element name="endDate"
+                                type="xs:date"/>
+                    <xs:element name="orgStructReceived"
+                                type="tns:OrgStructure"/>
+                    <xs:element name="orgStructStay"
+                                type="tns:OrgStructure"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="StationaryReceived">
+                <xs:sequence>
+                    <xs:element name="id"
+                                type="xs:int"/>
+                    <xs:element name="status"
+                                type="tns:Status"/>
+                    <xs:element name="begDate"
+                                type="xs:date"/>
+                    <xs:element name="endDate"
+                                type="xs:date"/>
+                    <xs:element name="orgStructStay"
+                                type="tns:OrgStructure"/>
+                    <xs:element name="orgStructDirection"
+                                type="tns:OrgStructure"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:simpleType name="Status">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="STARTED"/>
+                    <xs:enumeration value="WAIT"/>
+                    <xs:enumeration value="FINISHED"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:complexType name="VmpTicket">
+                <xs:sequence>
+                    <xs:element name="id"
+                                type="xs:int"/>
+                    <xs:element name="number"
+                                type="xs:string"/>
+                    <xs:element name="begDate"
+                                type="xs:date"/>
+                    <xs:element name="endDate"
+                                type="xs:date"/>
+                    <xs:element name="treatment"
+                                type="tns:RbTreatment"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Мoves">
+                <xs:sequence>
+                    <xs:element name="Move"
+                                type="tns:StationaryMoving"
+                                minOccurs="0"
+                                maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="createHospitalization">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="event"
+                                    type="tns:Event"/>
+                        <xs:element name="received"
+                                    type="tns:StationaryReceived"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addMoving">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="event"
+                                    type="tns:Event"/>
+                        <xs:element name="moving"
+                                    type="tns:StationaryMoving"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="closeHospitalization">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="event"
+                                    type="tns:Event"/>
+                        <xs:element name="leaved"
+                                    type="tns:StationaryLeaved"/>
+                        <xs:element name="moves"
+                                    type="tns:Мoves"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </types>
+    <message name="createHospitalizationRequestMessage">
+        <part name="parameters"
+              element="tns:createHospitalization"/>
+    </message>
+    <message name="createHospitalizationResponseMessage">
+        <part name="parameters"
+              element="tns:createHospitalizationResponse"/>
+    </message>
+    <message name="addMovingRequestMessage">
+        <part name="parameters"
+              element="tns:addMoving"/>
+    </message>
+    <message name="addMovingResponseMessage">
+        <part name="parameters"
+              element="tns:addMovingResponse"/>
+    </message>
+    <message name="closeHospitalizationRequestMessage">
+        <part name="parameters"
+              element="tns:closeHospitalization"/>
+    </message>
+    <message name="closeHospitalizationResponseMessage">
+        <part name="parameters"
+              element="tns:closeHospitalizationResponse"/>
+    </message>
+    <portType name="PharmacyHospitalizationPortType">
+        <operation name="createHospitalization">
+            <input message="tns:createHospitalizationRequestMessage"/>
+            <output message="tns:createHospitalizationResponseMessage"/>
+        </operation>
+        <operation name="addMoving">
+            <input message="tns:addMovingRequestMessage"/>
+            <output message="tns:addMovingResponseMessage"/>
+        </operation>
+        <operation name="closeHospitalization">
+            <input message="tns:closeHospitalizationRequestMessage"/>
+            <output message="tns:closeHospitalizationResponseMessage"/>
+        </operation>
+    </portType>
+    <binding name="PharmacyHospitalizationSoapBinding"
+             type="tns:PharmacyHospitalizationPortType">
+        <soapbind:binding style="document"
+                          transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="createHospitalization">
+            <soapbind:operation style="document"
+                                soapAction="http://schemas.xmlsoap.org/soap/envelope#PharmacyHospitalization:createHospitalization"/>
+            <input>
+                <soapbind:body use="literal"/>
+            </input>
+            <output>
+                <soapbind:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="addMoving">
+            <soapbind:operation style="document"
+                                soapAction="http://schemas.xmlsoap.org/soap/envelope#PharmacyHospitalization:addMoving"/>
+            <input>
+                <soapbind:body use="literal"/>
+            </input>
+            <output>
+                <soapbind:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="closeHospitalization">
+            <soapbind:operation style="document"
+                                soapAction="http://schemas.xmlsoap.org/soap/envelope#PharmacyHospitalization:closeHospitalization"/>
+            <input>
+                <soapbind:body use="literal"/>
+            </input>
+            <output>
+                <soapbind:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <binding name="PharmacyHospitalizationSoap12Binding"
+             type="tns:PharmacyHospitalizationPortType">
+        <soap12bind:binding style="document"
+                            transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="createHospitalization">
+            <soap12bind:operation style="document"
+                                  soapAction="http://schemas.xmlsoap.org/soap/envelope#PharmacyHospitalization:createHospitalization"/>
+            <input>
+                <soap12bind:body use="literal"/>
+            </input>
+            <output>
+                <soap12bind:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="addMoving">
+            <soap12bind:operation style="document"
+                                  soapAction="http://schemas.xmlsoap.org/soap/envelope#PharmacyHospitalization:addMoving"/>
+            <input>
+                <soap12bind:body use="literal"/>
+            </input>
+            <output>
+                <soap12bind:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="closeHospitalization">
+            <soap12bind:operation style="document"
+                                  soapAction="http://schemas.xmlsoap.org/soap/envelope#PharmacyHospitalization:closeHospitalization"/>
+            <input>
+                <soap12bind:body use="literal"/>
+            </input>
+            <output>
+                <soap12bind:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="PharmacyHospitalization">
+        <port name="PharmacyHospitalizationSoap"
+              binding="tns:PharmacyHospitalizationSoapBinding">
+            <documentation>
+                <wsi:Claim xmlns:wsi="http://ws-i.org/schemas/conformanceClaim/"
+                           conformsTo="http://ws-i.org/profiles/basic/1.1"/>
+            </documentation>
+            <soapbind:address location="http://10.1.0.108/apteka_mis/ws/PharmacyHospitalization.1cws"/>
+        </port>
+        <port name="PharmacyHospitalizationSoap12"
+              binding="tns:PharmacyHospitalizationSoap12Binding">
+            <soap12bind:address location="http://10.1.0.108/apteka_mis/ws/PharmacyHospitalization.1cws"/>
+        </port>
+    </service>
+</definitions>

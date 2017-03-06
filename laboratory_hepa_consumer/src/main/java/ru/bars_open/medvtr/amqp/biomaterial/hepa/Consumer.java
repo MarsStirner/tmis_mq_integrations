@@ -184,6 +184,8 @@ public class Consumer implements ChannelAwareMessageListener {
             throw new MessageIsIncorrectException(Collections.singleton("Message is not parsed from json String"));
         }
         return result;
+
+
     }
 }
 

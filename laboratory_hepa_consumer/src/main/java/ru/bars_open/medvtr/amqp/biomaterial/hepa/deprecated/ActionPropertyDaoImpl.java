@@ -6,17 +6,12 @@ import org.springframework.stereotype.Repository;
 import ru.bars_open.medvtr.db.entities.Action;
 import ru.bars_open.medvtr.db.entities.ActionProperty;
 import ru.bars_open.medvtr.db.entities.actionProperty.APValue;
-import ru.bars_open.medvtr.db.entities.actionProperty.APValueDouble;
-import ru.bars_open.medvtr.db.entities.actionProperty.APValueString;
 import ru.bars_open.medvtr.db.entities.mapped.compositeKeys.IndexedIdentifiedPK;
-import ru.bars_open.medvtr.db.entities.util.TypeName;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -27,13 +22,6 @@ import java.util.Map;
  */
 @Repository("actionPropertyDao")
 public class ActionPropertyDaoImpl implements ActionPropertyDao {
-    public static final Map<TypeName, Class<? extends APValue>> TYPE_MAPPINGS = new HashMap<>();
-
-    static {
-        TYPE_MAPPINGS.put(TypeName.String, APValueString.class);
-        TYPE_MAPPINGS.put(TypeName.Text, APValueString.class);
-        TYPE_MAPPINGS.put(TypeName.Double, APValueDouble.class);
-    }
 
     protected static final Logger log = LoggerFactory.getLogger(ActionPropertyDaoImpl.class);
 
@@ -89,7 +77,7 @@ public class ActionPropertyDaoImpl implements ActionPropertyDao {
 
     public APValue createValue(final ActionProperty ap, final int index, final Object value) {
         try {
-            final APValue result = TYPE_MAPPINGS.get(ap.getType().getTypeName()).newInstance();
+            final APValue result = ap.getType().getTypeName().getValueClass().newInstance();
             result.setId(ap.getId(), index);
             result.setValue(value);
             em.persist(result);
@@ -103,6 +91,6 @@ public class ActionPropertyDaoImpl implements ActionPropertyDao {
 
     @Override
     public APValue getValue(final ActionProperty ap, int index) {
-        return em.find(TYPE_MAPPINGS.get(ap.getType().getTypeName()), new IndexedIdentifiedPK(ap.getId(), index));
+        return em.find(ap.getType().getTypeName().getValueClass(), new IndexedIdentifiedPK(ap.getId(), index));
     }
 }

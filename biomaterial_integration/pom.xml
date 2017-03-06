@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>biomaterial_integration</artifactId>
-    <name>[biomaterial_integration] Integration with LIS'es</name>
+    <name>[biomaterial_integration] Main TMIS to LIS sender</name>
     <description> Module for integration with laboratories</description>
     <version>1.0</version>
 
@@ -19,8 +19,11 @@
         <!-- Library Versions -->
         <version.spring-framework>4.3.3.RELEASE</version.spring-framework>
         <version.spring-amqp>1.6.3.RELEASE</version.spring-amqp>
+        <version.jdbc-mysql>6.0.5</version.jdbc-mysql>
+
         <maven.build.timestamp.format>yyyy-MMdd-HHmm</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
+        
         <logs.directory>./logs</logs.directory>
         <log.format>[%date{ISO8601}][%level][%thread][%logger{0}]:%X{prefix}%message%n</log.format>
         <!--<log.format>[%date{ISO8601}][%level][%thread][%logger]: %message%n</log.format>-->
@@ -35,7 +38,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.7.21</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -72,11 +74,6 @@
             <version>${version.spring-framework}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.amqp</groupId>
-            <artifactId>spring-amqp</artifactId>
-            <version>${version.spring-amqp}</version>
-        </dependency>
-        <dependency>
             <!--Implementation of spring-amqp-->
             <groupId>org.springframework.amqp</groupId>
             <artifactId>spring-rabbit</artifactId>
@@ -98,7 +95,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>6.0.5</version>
+            <version>${version.jdbc-mysql}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -123,7 +120,7 @@
 
 
     <build>
-        <finalName>biomaterial_integration</finalName>
+        <finalName>${artifactId}</finalName>
         <plugins>
             <plugin>
                 <!-- Copy all used libraries to destination folder -->
@@ -169,7 +166,7 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <finalName>${project.artifactId}-full</finalName>
+                    <finalName>${project.build.finalName}-full</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
