@@ -6,12 +6,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.bars_open.medvtr.mq.util.exceptions.MessageIsIncorrectException;
-import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.CloseHospitalizationRequest;
-import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.CloseHospitalizationResponse;
+import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.Event;
+import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.Moves;
+import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.StationaryLeaved;
 import ru.bars_open.medvtr.mq.entities.message.HospitalizationFinishMessage;
 import ru.bars_open.medvtr.mq.util.DeserializationFactory;
 import ru.bars_open.medvtr.mq.util.ValidationFactory;
+import ru.bars_open.medvtr.mq.util.exceptions.MessageIsIncorrectException;
 
 import javax.xml.ws.WebServiceException;
 import java.net.MalformedURLException;
@@ -39,16 +40,15 @@ public class HospitalizationCloseSender {
         );
         validateMessage(message);
         log.info("#{}: message is valid", tag);
-        final CloseHospitalizationRequest request = webserviceFactory.createHospitalizationRequest(message);
+        final Event event = webserviceFactory.createEvent(message.getEvent());
+        final Moves moves = webserviceFactory.createMoves(message.getMovings());
+        final StationaryLeaved leaved = webserviceFactory.createLeaved(message.getLeaved());
         log.info("#{}: Request parameters constructed", tag);
-        final CloseHospitalizationResponse response = webserviceFactory.getWebService().closeHospitalization(request);
-        log.info("#{}: Response from WS = {}", tag, response != null ? response.getReturn() : "null");
-        if (response == null || StringUtils.isEmpty(response.getReturn()) || !"OK".equals(response.getReturn())) {
-            throw new WebServiceException(
-                    "Webservice['" + webserviceFactory.getServiceURL()
-                            + "'] after processing createHospitalization returned unexpected result="
-                            + (response != null ? response.getReturn() : "null")
-            );
+        final String response = webserviceFactory.getWebService().closeHospitalization(event, leaved, moves);
+        log.info("#{}: Response from WS = {}", tag, response);
+        if (StringUtils.isEmpty(response) || !"OK".equals(response)) {
+            throw new WebServiceException("Webservice['" + webserviceFactory
+                    .getServiceURL() + "'] after processing closeHospitalization returned unexpected result=" + response);
         }
         return true;
     }

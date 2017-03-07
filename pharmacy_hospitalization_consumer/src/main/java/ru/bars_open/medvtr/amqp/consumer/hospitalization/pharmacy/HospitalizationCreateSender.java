@@ -6,12 +6,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.bars_open.medvtr.mq.util.exceptions.MessageIsIncorrectException;
-import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.CreateHospitalizationRequest;
-import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.CreateHospitalizationResponse;
+import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.Event;
+import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.StationaryReceived;
 import ru.bars_open.medvtr.mq.entities.message.HospitalizationCreateMessage;
 import ru.bars_open.medvtr.mq.util.DeserializationFactory;
 import ru.bars_open.medvtr.mq.util.ValidationFactory;
+import ru.bars_open.medvtr.mq.util.exceptions.MessageIsIncorrectException;
 
 import javax.xml.ws.WebServiceException;
 import java.net.MalformedURLException;
@@ -39,23 +39,21 @@ public class HospitalizationCreateSender {
         );
         validateMessage(message);
         log.info("#{}: message is valid", tag);
-        final CreateHospitalizationRequest request = webserviceFactory.createHospitalizationRequest(message);
+        final Event event = webserviceFactory.createEvent(message.getEvent());
+        final StationaryReceived received = webserviceFactory.createReceived(message.getReceived());
         log.info("#{}: Request parameters constructed", tag);
-        final CreateHospitalizationResponse response = webserviceFactory.getWebService().createHospitalization(request);
-        log.info("#{}: Response from WS = {}", tag, response != null ? response.getReturn() : "null");
-        if (response == null || StringUtils.isEmpty(response.getReturn()) || !"OK".equals(response.getReturn())) {
-            throw new WebServiceException(
-                    "Webservice['" + webserviceFactory.getServiceURL()
-                            + "'] after processing createHospitalization returned unexpected result="
-                            + (response != null ? response.getReturn() : "null")
-            );
+        final String response = webserviceFactory.getWebService().createHospitalization(event, received);
+        log.info("#{}: Response from WS = {}", tag, response);
+        if (StringUtils.isEmpty(response) || !"OK".equals(response)) {
+            throw new WebServiceException("Webservice['" + webserviceFactory
+                    .getServiceURL() + "'] after processing createHospitalization returned unexpected result=" + response);
         }
         return true;
     }
 
     private void validateMessage(final HospitalizationCreateMessage message) throws MessageIsIncorrectException {
         final Set<String> errors = ValidationFactory.getErrors(message, "HospitalizationCreateMessage");
-        if(!errors.isEmpty()){
+        if (!errors.isEmpty()) {
             throw new MessageIsIncorrectException(errors);
         }
     }

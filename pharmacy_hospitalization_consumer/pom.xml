@@ -151,12 +151,12 @@
                 <configuration>
                     <wsdlDirectory>${project.basedir}/src/main/resources/</wsdlDirectory>
                     <wsdlFiles>
-                        <wsdlFile>PharmacyHospitalization.wsdl</wsdlFile>
+                        <wsdlFile>1C_PharmacyHospitalization.wsdl</wsdlFile>
                     </wsdlFiles>
                     <keep>true</keep>
                     <packageName>ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws</packageName>
                     <sourceDestDir>${project.basedir}/src/main/java/</sourceDestDir>
-                    <wsdlLocation>/PharmacyHospitalization.wsdl</wsdlLocation>
+                    <wsdlLocation>/1C_PharmacyHospitalization.wsdl</wsdlLocation>
                 </configuration>
             </plugin>
         </plugins>

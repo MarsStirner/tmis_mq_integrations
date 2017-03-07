@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.*;
 import ru.bars_open.medvtr.mq.entities.base.VMPTicket;
-import ru.bars_open.medvtr.mq.entities.message.HospitalizationCreateMessage;
-import ru.bars_open.medvtr.mq.entities.message.HospitalizationFinishMessage;
-import ru.bars_open.medvtr.mq.entities.message.HospitalizationMovingMessage;
 import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
 import ru.bars_open.medvtr.mq.util.SoapLoggingHandler;
 
@@ -21,10 +18,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.GregorianCalendar;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class WSFactory{
@@ -87,17 +82,17 @@ public class WSFactory{
         }
     }
 
-    public CloseHospitalizationRequest createHospitalizationRequest(final HospitalizationFinishMessage message) {
-        final CloseHospitalizationRequest result = OBJECT_FACTORY.createCloseHospitalizationRequest();
-        result.setEvent(createEvent(message.getEvent()));
-        for (ru.bars_open.medvtr.mq.entities.action.StationaryMoving moving : message.getMovings()) {
-            result.getMoves().add(createMoving(moving));
-        }
-        result.setLeaved(createLeaved(message.getLeaved()));
-        return result;
-    }
+//    public CloseHospitalizationRequest createHospitalizationRequest(final HospitalizationFinishMessage message) {
+//        final CloseHospitalizationRequest result = OBJECT_FACTORY.createCloseHospitalizationRequest();
+//        result.setEvent(createEvent(message.getEvent()));
+//        for (ru.bars_open.medvtr.mq.entities.action.StationaryMoving moving : message.getMovings()) {
+//            result.getMoves().add(createMoving(moving));
+//        }
+//        result.setLeaved(createLeaved(message.getLeaved()));
+//        return result;
+//    }
 
-    private StationaryLeaved createLeaved(final ru.bars_open.medvtr.mq.entities.action.StationaryLeaved source) {
+    public StationaryLeaved createLeaved(final ru.bars_open.medvtr.mq.entities.action.StationaryLeaved source) {
         final StationaryLeaved result = OBJECT_FACTORY.createStationaryLeaved();
         result.setId(source.getId());
         result.setStatus(wrapStatus(source.getStatus().value()));
@@ -107,22 +102,22 @@ public class WSFactory{
         return result;
     }
 
+//
+//    public CreateHospitalizationRequest createHospitalizationRequest(final HospitalizationCreateMessage message) {
+//        final CreateHospitalizationRequest result = OBJECT_FACTORY.createCreateHospitalizationRequest();
+//        result.setEvent(createEvent(message.getEvent()));
+//        result.setReceived(createReceived(message.getReceived()));
+//        return result;
+//    }
+//
+//    public AddMovingRequest createAddMovingRequest(final HospitalizationMovingMessage message) {
+//        final AddMovingRequest result = OBJECT_FACTORY.createAddMovingRequest();
+//        result.setEvent(createEvent(message.getEvent()));
+//        result.setMoving(createMoving(message.getMoving()));
+//        return result;
+//    }
 
-    public CreateHospitalizationRequest createHospitalizationRequest(final HospitalizationCreateMessage message) {
-        final CreateHospitalizationRequest result = OBJECT_FACTORY.createCreateHospitalizationRequest();
-        result.setEvent(createEvent(message.getEvent()));
-        result.setReceived(createReceived(message.getReceived()));
-        return result;
-    }
-
-    public AddMovingRequest createAddMovingRequest(final HospitalizationMovingMessage message) {
-        final AddMovingRequest result = OBJECT_FACTORY.createAddMovingRequest();
-        result.setEvent(createEvent(message.getEvent()));
-        result.setMoving(createMoving(message.getMoving()));
-        return result;
-    }
-
-    private StationaryMoving createMoving(final ru.bars_open.medvtr.mq.entities.action.StationaryMoving source) {
+    public StationaryMoving createMoving(final ru.bars_open.medvtr.mq.entities.action.StationaryMoving source) {
         final StationaryMoving result = OBJECT_FACTORY.createStationaryMoving();
         result.setId(source.getId());
         result.setStatus(wrapStatus(source.getStatus().value()));
@@ -133,7 +128,7 @@ public class WSFactory{
         return result;
     }
 
-    private StationaryReceived createReceived(final ru.bars_open.medvtr.mq.entities.action.StationaryReceived source) {
+    public StationaryReceived createReceived(final ru.bars_open.medvtr.mq.entities.action.StationaryReceived source) {
         final StationaryReceived result = OBJECT_FACTORY.createStationaryReceived();
         result.setId(source.getId());
         result.setStatus(wrapStatus(source.getStatus().value()));
@@ -159,7 +154,7 @@ public class WSFactory{
         return result;
     }
 
-    private Event createEvent(final ru.bars_open.medvtr.mq.entities.base.Event source) {
+    public Event createEvent(final ru.bars_open.medvtr.mq.entities.base.Event source) {
         final ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.Event result = OBJECT_FACTORY.createEvent();
         result.setId(source.getId());
         result.setSetDate(wrapDate(source.getSetDate()));
@@ -268,5 +263,11 @@ public class WSFactory{
 
     private Sex wrapSex(final ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex source) {
         return source != null ? Sex.valueOf(source.value()) : Sex.UNKNOWN;
+    }
+
+    public Moves  createMoves(final List<ru.bars_open.medvtr.mq.entities.action.StationaryMoving> movings) {
+        final Moves result = OBJECT_FACTORY.createMoves();
+        result.getMove().addAll(movings.stream().map(this::createMoving).collect(Collectors.toList()));
+        return result;
     }
 }

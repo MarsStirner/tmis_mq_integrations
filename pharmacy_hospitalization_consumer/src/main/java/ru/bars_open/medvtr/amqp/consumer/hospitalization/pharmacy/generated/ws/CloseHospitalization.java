@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="event" type="{http://schemas.xmlsoap.org/soap/envelope}Event"/>
  *         &lt;element name="leaved" type="{http://schemas.xmlsoap.org/soap/envelope}StationaryLeaved"/>
- *         &lt;element name="moves" type="{http://schemas.xmlsoap.org/soap/envelope}Мoves"/>
+ *         &lt;element name="moves" type="{http://schemas.xmlsoap.org/soap/envelope}Moves"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -43,7 +43,7 @@ public class CloseHospitalization {
     @XmlElement(required = true)
     protected StationaryLeaved leaved;
     @XmlElement(required = true)
-    protected Мoves moves;
+    protected Moves moves;
 
     /**
      * Gets the value of the event property.
@@ -98,10 +98,10 @@ public class CloseHospitalization {
      * 
      * @return
      *     possible object is
-     *     {@link Мoves }
+     *     {@link Moves }
      *     
      */
-    public Мoves getMoves() {
+    public Moves getMoves() {
         return moves;
     }
 
@@ -110,10 +110,10 @@ public class CloseHospitalization {
      * 
      * @param value
      *     allowed object is
-     *     {@link Мoves }
+     *     {@link Moves }
      *     
      */
-    public void setMoves(Мoves value) {
+    public void setMoves(Moves value) {
         this.moves = value;
     }
 

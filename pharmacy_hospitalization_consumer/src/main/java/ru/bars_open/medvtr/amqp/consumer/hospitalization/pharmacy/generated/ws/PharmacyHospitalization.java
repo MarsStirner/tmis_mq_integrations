@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.1
  * 
  */
-@WebServiceClient(name = "PharmacyHospitalization", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", wsdlLocation = "/PharmacyHospitalization.wsdl")
+@WebServiceClient(name = "PharmacyHospitalization", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", wsdlLocation = "/1C_PharmacyHospitalization.wsdl")
 public class PharmacyHospitalization
     extends Service
 {
@@ -30,9 +30,9 @@ public class PharmacyHospitalization
         try {
             URL baseUrl;
             baseUrl = ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.PharmacyHospitalization.class.getResource(".");
-            url = new URL(baseUrl, "/PharmacyHospitalization.wsdl");
+            url = new URL(baseUrl, "/1C_PharmacyHospitalization.wsdl");
         } catch (MalformedURLException e) {
-            logger.warning("Failed to create URL for the wsdl Location: '/PharmacyHospitalization.wsdl', retrying as a local file");
+            logger.warning("Failed to create URL for the wsdl Location: '/1C_PharmacyHospitalization.wsdl', retrying as a local file");
             logger.warning(e.getMessage());
         }
         PHARMACYHOSPITALIZATION_WSDL_LOCATION = url;

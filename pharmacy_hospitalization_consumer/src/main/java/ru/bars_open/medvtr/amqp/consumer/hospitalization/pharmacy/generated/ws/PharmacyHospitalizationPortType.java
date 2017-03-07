@@ -5,8 +5,9 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
-import javax.jws.soap.SOAPBinding;
 import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.ws.RequestWrapper;
+import javax.xml.ws.ResponseWrapper;
 
 
 /**
@@ -16,7 +17,6 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  * 
  */
 @WebService(name = "PharmacyHospitalizationPortType", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
-@SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
 @XmlSeeAlso({
     ObjectFactory.class
 })
@@ -25,38 +25,56 @@ public interface PharmacyHospitalizationPortType {
 
     /**
      * 
-     * @param parameters
+     * @param received
+     * @param event
      * @return
-     *     returns ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.CreateHospitalizationResponse
+     *     returns java.lang.String
      */
     @WebMethod(action = "http://schemas.xmlsoap.org/soap/envelope#PharmacyHospitalization:createHospitalization")
-    @WebResult(name = "createHospitalizationResponse", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", partName = "parameters")
-    public CreateHospitalizationResponse createHospitalization(
-        @WebParam(name = "createHospitalizationRequest", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", partName = "parameters")
-        CreateHospitalizationRequest parameters);
+    @WebResult(targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+    @RequestWrapper(localName = "createHospitalization", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", className = "ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.CreateHospitalization")
+    @ResponseWrapper(localName = "createHospitalizationResponse", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", className = "ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.CreateHospitalizationResponse")
+    public String createHospitalization(
+        @WebParam(name = "event", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+        Event event,
+        @WebParam(name = "received", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+        StationaryReceived received);
 
     /**
      * 
-     * @param parameters
+     * @param event
+     * @param moving
      * @return
-     *     returns ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.AddMovingResponse
+     *     returns java.lang.String
      */
     @WebMethod(action = "http://schemas.xmlsoap.org/soap/envelope#PharmacyHospitalization:addMoving")
-    @WebResult(name = "addMovingResponse", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", partName = "parameters")
-    public AddMovingResponse addMoving(
-        @WebParam(name = "addMovingRequest", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", partName = "parameters")
-        AddMovingRequest parameters);
+    @WebResult(targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+    @RequestWrapper(localName = "addMoving", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", className = "ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.AddMoving")
+    @ResponseWrapper(localName = "addMovingResponse", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", className = "ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.AddMovingResponse")
+    public String addMoving(
+        @WebParam(name = "event", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+        Event event,
+        @WebParam(name = "moving", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+        StationaryMoving moving);
 
     /**
      * 
-     * @param parameters
+     * @param leaved
+     * @param moves
+     * @param event
      * @return
-     *     returns ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.CloseHospitalizationResponse
+     *     returns java.lang.String
      */
     @WebMethod(action = "http://schemas.xmlsoap.org/soap/envelope#PharmacyHospitalization:closeHospitalization")
-    @WebResult(name = "closeHospitalizationResponse", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", partName = "parameters")
-    public CloseHospitalizationResponse closeHospitalization(
-        @WebParam(name = "closeHospitalizationRequest", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", partName = "parameters")
-        CloseHospitalizationRequest parameters);
+    @WebResult(targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+    @RequestWrapper(localName = "closeHospitalization", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", className = "ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.CloseHospitalization")
+    @ResponseWrapper(localName = "closeHospitalizationResponse", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope", className = "ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.CloseHospitalizationResponse")
+    public String closeHospitalization(
+        @WebParam(name = "event", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+        Event event,
+        @WebParam(name = "leaved", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+        StationaryLeaved leaved,
+        @WebParam(name = "moves", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+        Moves moves);
 
 }
