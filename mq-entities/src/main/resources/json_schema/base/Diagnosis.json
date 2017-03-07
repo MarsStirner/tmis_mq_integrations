@@ -16,6 +16,11 @@
     "MKB": {
       "description": "Диагноз по МКБ-10",
       "$ref": "./refbook/MKB.json"
+    },
+    "date":{
+      "description": "Дата установления диагноза",
+      "type": "string",
+      "format": "date-time"
     }
   },
   "required": [

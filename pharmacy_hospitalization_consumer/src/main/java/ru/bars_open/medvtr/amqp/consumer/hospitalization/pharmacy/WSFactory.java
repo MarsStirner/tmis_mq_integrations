@@ -10,6 +10,7 @@ import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
 import ru.bars_open.medvtr.mq.util.SoapLoggingHandler;
 
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
@@ -22,7 +23,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
-public class WSFactory{
+public class WSFactory {
 
     private static final Logger log = LoggerFactory.getLogger(WSFactory.class);
     private final static ObjectFactory OBJECT_FACTORY = new ObjectFactory();
@@ -36,7 +37,10 @@ public class WSFactory{
     public WSFactory(ConfigurationHolder cfg) throws MalformedURLException {
         this.serviceURL = new URL(cfg.getString(ConfigurationKeys.WEBSERVICE_URL));
         this.serviceName = new QName(cfg.getString(ConfigurationKeys.WEBSERVICE_NAMESPACE), cfg.getString(ConfigurationKeys.WEBSERVICE_NAME));
-        final PharmacyHospitalization service = new PharmacyHospitalization(getClass().getClassLoader().getResource("PharmacyHospitalization.wsdl"), serviceName);
+        final PharmacyHospitalization service = new PharmacyHospitalization(
+                getClass().getClassLoader().getResource("PharmacyHospitalization.wsdl"),
+                serviceName
+        );
         service.setHandlerResolver(portInfo -> new ArrayList<>(Collections.singletonList(new SoapLoggingHandler())));
         // Timeout in millis
         int requestTimeout = 10000;
@@ -74,8 +78,14 @@ public class WSFactory{
     }
 
     public static XMLGregorianCalendar wrapDate(final LocalDateTime date) {
+        if (date == null) {
+            return null;
+        }
         try {
-            return date ==null ? null : DatatypeFactory.newInstance().newXMLGregorianCalendar(GregorianCalendar.from(date.atZone(ZoneId.systemDefault())));
+            final XMLGregorianCalendar result = DatatypeFactory.newInstance().newXMLGregorianCalendar(GregorianCalendar
+                                                                                                              .from(date.atZone(ZoneId.systemDefault())));
+            result.setTimezone(DatatypeConstants.FIELD_UNDEFINED);
+            return result;
         } catch (DatatypeConfigurationException e) {
             log.error("Cannot convert Date[{}] to XMLGregorianCalendar", date, e);
             return null;
@@ -257,7 +267,28 @@ public class WSFactory{
         result.setLastName(source.getLastName());
         result.setPatrName(source.getPatrName());
         result.setSex(wrapSex(source.getSex()));
-        //TODO addresses
+        if (source.getAddresses() != null && !source.getAddresses().isEmpty()) {
+            result.getAddresses().addAll(source.getAddresses().stream().filter(Objects::nonNull).map(this::createAddress)
+                                                 .collect(Collectors.toList()));
+        }
+        return result;
+    }
+
+    private Address createAddress(final ru.bars_open.medvtr.mq.entities.base.Address source) {
+        final Address result = OBJECT_FACTORY.createAddress();
+        result.setId(source.getId());
+        result.setValue(source.getValue());
+        switch (source.getAddressType()) {
+            case REGISTRATION:
+                result.setAddressType(AddressType.REGISTRATION);
+                break;
+            case LIVING:
+                result.setAddressType(AddressType.LIVING);
+                break;
+            case UNKNOWN:
+                result.setAddressType(AddressType.UNKNOWN);
+                break;
+        }
         return result;
     }
 
@@ -265,7 +296,7 @@ public class WSFactory{
         return source != null ? Sex.valueOf(source.value()) : Sex.UNKNOWN;
     }
 
-    public Moves  createMoves(final List<ru.bars_open.medvtr.mq.entities.action.StationaryMoving> movings) {
+    public Moves createMoves(final List<ru.bars_open.medvtr.mq.entities.action.StationaryMoving> movings) {
         final Moves result = OBJECT_FACTORY.createMoves();
         result.getMove().addAll(movings.stream().map(this::createMoving).collect(Collectors.toList()));
         return result;

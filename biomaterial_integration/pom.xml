@@ -17,9 +17,10 @@
     <properties>
         <main-class>ru.bars_open.medvtr.amqp.biomaterial.ApplicationConfig</main-class>
         <!-- Library Versions -->
-        <version.spring-framework>4.3.3.RELEASE</version.spring-framework>
-        <version.spring-amqp>1.6.3.RELEASE</version.spring-amqp>
+        <version.spring-framework>4.3.7.RELEASE</version.spring-framework>
+        <version.spring-amqp>1.7.1.RELEASE</version.spring-amqp>
         <version.jdbc-mysql>6.0.5</version.jdbc-mysql>
+        <version.hikari>2.6.0</version.hikari>
 
         <maven.build.timestamp.format>yyyy-MMdd-HHmm</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
@@ -51,12 +52,6 @@
             <version>LATEST</version>
         </dependency>
 
-        <dependency>
-            <!-- RabbitMQ java library -->
-            <groupId>com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-        </dependency>
-
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -85,11 +80,10 @@
             <version>${version.spring-framework}</version>
         </dependency>
 
-        <!-- Hibernate -->
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>2.6.0</version>
+            <version>${version.hikari}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
         <dependency>
