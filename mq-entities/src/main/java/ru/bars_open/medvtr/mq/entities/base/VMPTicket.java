@@ -2,6 +2,7 @@
 package ru.bars_open.medvtr.mq.entities.base;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -14,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.joda.time.DateTime;
 import ru.bars_open.medvtr.mq.entities.base.refbook.RbTreatment;
 
 
@@ -57,14 +57,14 @@ public class VMPTicket implements Serializable
      */
     @JsonProperty("begDate")
     @JsonPropertyDescription("\u0434\u0430\u0442\u0430 \u0438 \u0432\u0440\u0435\u043c\u044f \u043d\u0430\u0447\u0430\u043b\u0430 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044f \u0442\u0430\u043b\u043e\u043d\u0430")
-    private DateTime begDate;
+    private LocalDateTime begDate;
     /**
      * дата и время окончания действия талона
      * 
      */
     @JsonProperty("endDate")
     @JsonPropertyDescription("\u0434\u0430\u0442\u0430 \u0438 \u0432\u0440\u0435\u043c\u044f \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u044f \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044f \u0442\u0430\u043b\u043e\u043d\u0430")
-    private DateTime endDate;
+    private LocalDateTime endDate;
     /**
      * RbTreatment
      * <p>
@@ -76,7 +76,7 @@ public class VMPTicket implements Serializable
     private RbTreatment treatment;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = 8363359112178761410L;
+    private final static long serialVersionUID = 2961150635178832381L;
 
     /**
      * Идентифкатор МИС
@@ -123,7 +123,7 @@ public class VMPTicket implements Serializable
      * 
      */
     @JsonProperty("begDate")
-    public DateTime getBegDate() {
+    public LocalDateTime getBegDate() {
         return begDate;
     }
 
@@ -132,7 +132,7 @@ public class VMPTicket implements Serializable
      * 
      */
     @JsonProperty("begDate")
-    public void setBegDate(DateTime begDate) {
+    public void setBegDate(LocalDateTime begDate) {
         this.begDate = begDate;
     }
 
@@ -141,7 +141,7 @@ public class VMPTicket implements Serializable
      * 
      */
     @JsonProperty("endDate")
-    public DateTime getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
@@ -150,7 +150,7 @@ public class VMPTicket implements Serializable
      * 
      */
     @JsonProperty("endDate")
-    public void setEndDate(DateTime endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 

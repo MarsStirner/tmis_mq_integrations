@@ -2,6 +2,7 @@
 package ru.bars_open.medvtr.mq.entities.action;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -14,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.joda.time.DateTime;
 import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.ActionStatus;
 
 
@@ -50,14 +50,14 @@ public class StationaryLeaved implements Serializable
      */
     @JsonProperty("begDate")
     @JsonPropertyDescription("\u0414\u0430\u0442\u0430 \u043d\u0430\u0447\u0430\u043b\u0430 \u0440\u0430\u0431\u043e\u0442\u044b")
-    private DateTime begDate;
+    private LocalDateTime begDate;
     /**
      * Дата окончания работы
      * 
      */
     @JsonProperty("endDate")
     @JsonPropertyDescription("\u0414\u0430\u0442\u0430 \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u044f \u0440\u0430\u0431\u043e\u0442\u044b")
-    private DateTime endDate;
+    private LocalDateTime endDate;
     /**
      * Исход госпитализации
      * 
@@ -67,7 +67,7 @@ public class StationaryLeaved implements Serializable
     private String hospOutcome;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = -2912659168589599655L;
+    private final static long serialVersionUID = -1480832921992569590L;
 
     /**
      * Идентификатор экшена
@@ -102,7 +102,7 @@ public class StationaryLeaved implements Serializable
      * 
      */
     @JsonProperty("begDate")
-    public DateTime getBegDate() {
+    public LocalDateTime getBegDate() {
         return begDate;
     }
 
@@ -111,7 +111,7 @@ public class StationaryLeaved implements Serializable
      * 
      */
     @JsonProperty("begDate")
-    public void setBegDate(DateTime begDate) {
+    public void setBegDate(LocalDateTime begDate) {
         this.begDate = begDate;
     }
 
@@ -120,7 +120,7 @@ public class StationaryLeaved implements Serializable
      * 
      */
     @JsonProperty("endDate")
-    public DateTime getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
@@ -129,7 +129,7 @@ public class StationaryLeaved implements Serializable
      * 
      */
     @JsonProperty("endDate")
-    public void setEndDate(DateTime endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 

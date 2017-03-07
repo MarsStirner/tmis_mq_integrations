@@ -2,7 +2,6 @@ package ru.bars_open.medvtr.amqp.biomaterial.hepa;
 
 import com.typesafe.config.Config;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -16,6 +15,7 @@ import ru.bars_open.medvtr.mq.util.Tuple;
 
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -52,7 +52,7 @@ public class ResponseSender {
         final MessageProperties messageProperties = source.getMessageProperties();
         messageProperties.setAppId(appId);
         messageProperties.setCorrelationId(messageProperties.getCorrelationIdString().getBytes(StandardCharsets.UTF_8));
-        messageProperties.setTimestamp(new LocalDateTime().toDate());
+        messageProperties.setTimestamp(new Date());
         if (StringUtils.isNotEmpty(message)) {
             messageProperties.setHeader("message", message);
         }

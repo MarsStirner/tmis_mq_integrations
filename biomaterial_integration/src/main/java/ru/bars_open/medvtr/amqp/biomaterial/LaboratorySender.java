@@ -2,7 +2,6 @@ package ru.bars_open.medvtr.amqp.biomaterial;
 
 import com.typesafe.config.Config;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -34,6 +33,7 @@ import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
 import ru.bars_open.medvtr.mq.util.DeserializationFactory;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -230,7 +230,7 @@ public class LaboratorySender {
         propertiesBuilder.setContentLength(body.length);
         propertiesBuilder.setContentType(DeserializationFactory.CONTENT_TYPE_APPLICATION_JSON);
         propertiesBuilder.setCorrelationIdString(ctx.getUUID());
-        propertiesBuilder.setTimestamp(new LocalDateTime().toDate());
+        propertiesBuilder.setTimestamp(new Date());
         propertiesBuilder.setType("BiologicalMaterialMessage");
         propertiesBuilder.setHeader("replyCode", replyCode);
         return new Message(body, propertiesBuilder.build());

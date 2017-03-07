@@ -1,9 +1,9 @@
 package ru.bars_open.medvtr.db.entities;
 
-import org.joda.time.LocalDate;
 import ru.bars_open.medvtr.db.entities.mapped.DeletableEntity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "Contract_Contragent")

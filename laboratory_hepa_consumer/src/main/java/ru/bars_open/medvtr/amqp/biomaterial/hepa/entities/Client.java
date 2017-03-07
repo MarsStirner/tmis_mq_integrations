@@ -1,7 +1,9 @@
 package ru.bars_open.medvtr.amqp.biomaterial.hepa.entities;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.time.LocalDate;
 
 import static ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.listeners.StupidEncodingConverterListener.convertFromDb;
 
@@ -25,8 +27,7 @@ public class Client extends IdentifiedEntity{
     private String patrName;
 
     @Column(name = "yob")
-    @Temporal(TemporalType.DATE)
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Column(name = "gender", nullable = true)
     private Integer sex;
@@ -61,11 +62,11 @@ public class Client extends IdentifiedEntity{
         this.patrName = patrName;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(final Date birthDate) {
+    public void setBirthDate(final LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 

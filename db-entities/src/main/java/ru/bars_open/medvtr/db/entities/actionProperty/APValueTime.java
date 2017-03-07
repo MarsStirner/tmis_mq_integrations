@@ -1,6 +1,6 @@
 package ru.bars_open.medvtr.db.entities.actionProperty;
 
-import org.joda.time.LocalTime;
+import java.time.LocalTime;
 
 /**
  * Author: Upatov Egor <br>

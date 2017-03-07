@@ -1,12 +1,12 @@
 package ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.impl;
 
-import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.impl.mapped.AbstractDaoImpl;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.interfaces.TubeDao;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.Client;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.Tube;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -25,35 +25,35 @@ public class TubeDaoImpl extends AbstractDaoImpl<Tube> implements TubeDao {
         return Tube.class;
     }
 
-    public Tube getByClientAndDate(final Client client, final DateTime datetimeTaken) {
+    public Tube getByClientAndDate(final Client client, final LocalDateTime datetimeTaken) {
         final List<Tube> resultList = em.createQuery("SELECT a FROM Tube a WHERE a.client.id = :client AND a.adate = :adate", getEntityClass())
           .setParameter("client", client.getId())
-          .setParameter("adate", datetimeTaken.toLocalDate().toDate())
+          .setParameter("adate", datetimeTaken.toLocalDate())
           .getResultList();
         switch (resultList.size()) {
             case 0: {
-                log.debug("Not found by client[{}] and date[{}]", client.getId(), datetimeTaken.toLocalDate().toDate());
+                log.debug("Not found by client[{}] and date[{}]", client.getId(), datetimeTaken.toLocalDate());
                 return null;
             }
             case 1: {
                 return resultList.iterator().next();
             }
             default: {
-                log.warn("By by client[{}] and date[{}] founded {} rows. Return first", client.getId(), datetimeTaken.toLocalDate().toDate(), resultList.size());
+                log.warn("By by client[{}] and date[{}] founded {} rows. Return first", client.getId(), datetimeTaken.toLocalDate(), resultList.size());
                 return resultList.iterator().next();
             }
         }
     }
 
     @Override
-    public Tube findOrCreate(final Client client, final DateTime datetimeTaken) {
+    public Tube findOrCreate(final Client client, final LocalDateTime datetimeTaken) {
         final Tube result = getByClientAndDate(client, datetimeTaken);
         return result != null ? result : create(client, datetimeTaken);
     }
 
-    private Tube create(final Client client, final DateTime datetimeTaken) {
+    private Tube create(final Client client, final LocalDateTime datetimeTaken) {
         final Tube result = new Tube();
-        result.setAdate(datetimeTaken.toLocalDate().toDate());
+        result.setAdate(datetimeTaken.toLocalDate());
         result.setClient(client);
         save(result);
         return result;

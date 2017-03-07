@@ -2,6 +2,7 @@
 package ru.bars_open.medvtr.mq.entities.base;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -14,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.joda.time.DateTime;
 import ru.bars_open.medvtr.mq.entities.base.refbook.RbFinance;
 
 
@@ -69,21 +69,21 @@ public class Contract implements Serializable
      */
     @JsonProperty("signDate")
     @JsonPropertyDescription("\u0434\u0430\u0442\u0430+\u0432\u0440\u0435\u043c \u043f\u043e\u0434\u043f\u0438\u0441\u0430\u043d\u0438\u044f \u0434\u043e\u0433\u043e\u0432\u043e\u0440\u0430")
-    private DateTime signDate;
+    private LocalDateTime signDate;
     /**
      * дата+время начала действия договора
      * 
      */
     @JsonProperty("begDate")
     @JsonPropertyDescription("\u0434\u0430\u0442\u0430+\u0432\u0440\u0435\u043c\u044f \u043d\u0430\u0447\u0430\u043b\u0430 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044f \u0434\u043e\u0433\u043e\u0432\u043e\u0440\u0430")
-    private DateTime begDate;
+    private LocalDateTime begDate;
     /**
      * дата+время окончания действия договора
      * 
      */
     @JsonProperty("endDate")
     @JsonPropertyDescription("\u0434\u0430\u0442\u0430+\u0432\u0440\u0435\u043c\u044f \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u044f \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044f \u0434\u043e\u0433\u043e\u0432\u043e\u0440\u0430")
-    private DateTime endDate;
+    private LocalDateTime endDate;
     /**
      * RbFinance
      * <p>
@@ -95,7 +95,7 @@ public class Contract implements Serializable
     private RbFinance finance;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = 4752750516294568027L;
+    private final static long serialVersionUID = -5405440341103564892L;
 
     /**
      * Идентифкатор
@@ -166,7 +166,7 @@ public class Contract implements Serializable
      * 
      */
     @JsonProperty("signDate")
-    public DateTime getSignDate() {
+    public LocalDateTime getSignDate() {
         return signDate;
     }
 
@@ -175,7 +175,7 @@ public class Contract implements Serializable
      * 
      */
     @JsonProperty("signDate")
-    public void setSignDate(DateTime signDate) {
+    public void setSignDate(LocalDateTime signDate) {
         this.signDate = signDate;
     }
 
@@ -184,7 +184,7 @@ public class Contract implements Serializable
      * 
      */
     @JsonProperty("begDate")
-    public DateTime getBegDate() {
+    public LocalDateTime getBegDate() {
         return begDate;
     }
 
@@ -193,7 +193,7 @@ public class Contract implements Serializable
      * 
      */
     @JsonProperty("begDate")
-    public void setBegDate(DateTime begDate) {
+    public void setBegDate(LocalDateTime begDate) {
         this.begDate = begDate;
     }
 
@@ -202,7 +202,7 @@ public class Contract implements Serializable
      * 
      */
     @JsonProperty("endDate")
-    public DateTime getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
@@ -211,7 +211,7 @@ public class Contract implements Serializable
      * 
      */
     @JsonProperty("endDate")
-    public void setEndDate(DateTime endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 

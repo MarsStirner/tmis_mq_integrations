@@ -128,7 +128,7 @@ public class Consumer implements ChannelAwareMessageListener {
                     final ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.Analysis analysisType = analysisDao.get(test.getTest().getCode());
                     if (analysisType != null) {
                         log.info("Analysis={}", analysisType);
-                        final Request request = requestDao.createRequest(client, soi, operator, analysisType, material, String.valueOf(test.getId()));
+                        final Request request = requestDao.findOrCreate(client, soi, operator, analysisType, material, String.valueOf(test.getId()));
                         log.info("Request={}", request);
                     } else {
                         log.warn("No such Analysis[{}] found", test.getTest().getCode());

@@ -4,7 +4,7 @@ package ru.bars_open.medvtr.db.entities;
 import ru.bars_open.medvtr.db.entities.mapped.DeletableEntity;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * Author: Upatov Egor <br>
@@ -18,8 +18,7 @@ import java.util.Date;
 public class ActionProperty extends DeletableEntity {
 
     @Column(name = "modifyDatetime")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date modifyDatetime;
+    private LocalDateTime modifyDatetime;
 
     /**
      * Действие к которому относится это свойство {Action}
@@ -42,11 +41,11 @@ public class ActionProperty extends DeletableEntity {
     public ActionProperty() {
     }
 
-    public Date getModifyDatetime() {
+    public LocalDateTime getModifyDatetime() {
         return modifyDatetime;
     }
 
-    public void setModifyDatetime(final Date modifyDatetime) {
+    public void setModifyDatetime(final LocalDateTime modifyDatetime) {
         this.modifyDatetime = modifyDatetime;
     }
 

@@ -1,9 +1,10 @@
 package ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.interfaces;
 
-import org.joda.time.DateTime;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.interfaces.mapped.AbstractDao;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.Client;
 import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex;
+
+import java.time.LocalDateTime;
 
 /**
  * Author: Upatov Egor <br>
@@ -13,5 +14,5 @@ import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex;
  */
 public interface ClientDao extends AbstractDao<Client>{
 
-    Client findOrCreate(String lastName, String firstName, String patrName, DateTime birthDate, final Sex sex);
+    Client findOrCreate(String lastName, String firstName, String patrName, LocalDateTime birthDate, final Sex sex);
 }

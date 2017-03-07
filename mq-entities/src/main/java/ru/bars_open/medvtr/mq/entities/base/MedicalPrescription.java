@@ -2,6 +2,7 @@
 package ru.bars_open.medvtr.mq.entities.base;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -16,7 +17,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.joda.time.DateTime;
 import ru.bars_open.medvtr.mq.entities.base.refbook.RlsNomen;
 import ru.bars_open.medvtr.mq.entities.base.util.ValueAndUnit;
 
@@ -103,7 +103,7 @@ public class MedicalPrescription implements Serializable
      */
     @JsonProperty("begDate")
     @JsonPropertyDescription("\u0414\u0430\u0442\u0430 \u043d\u0430\u0447\u0430\u043b\u0430 \u041b\u041d")
-    private DateTime begDate;
+    private LocalDateTime begDate;
     /**
      * Примечание
      * 
@@ -120,7 +120,7 @@ public class MedicalPrescription implements Serializable
     private String reasonOfCancel;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = -543307683127420850L;
+    private final static long serialVersionUID = -663812241813056588L;
 
     /**
      * Идентифкатор
@@ -261,7 +261,7 @@ public class MedicalPrescription implements Serializable
      * 
      */
     @JsonProperty("begDate")
-    public DateTime getBegDate() {
+    public LocalDateTime getBegDate() {
         return begDate;
     }
 
@@ -270,7 +270,7 @@ public class MedicalPrescription implements Serializable
      * 
      */
     @JsonProperty("begDate")
-    public void setBegDate(DateTime begDate) {
+    public void setBegDate(LocalDateTime begDate) {
         this.begDate = begDate;
     }
 

@@ -26,7 +26,7 @@
       "$ref": "./refbook/enum/Sex.json"
     },
     "birthDate": {
-      "description": "дата и время рождения пациента",
+      "description": "дата рождения пациента",
       "type": "string",
       "format": "date-time"
     },

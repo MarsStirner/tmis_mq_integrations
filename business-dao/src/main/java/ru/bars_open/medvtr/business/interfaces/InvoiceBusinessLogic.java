@@ -1,10 +1,10 @@
 package ru.bars_open.medvtr.business.interfaces;
 
-import org.joda.time.LocalDateTime;
 import ru.bars_open.medvtr.db.entities.ContractContragent;
 import ru.bars_open.medvtr.db.entities.Invoice;
 import ru.bars_open.medvtr.db.entities.RbPayType;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**

@@ -2,6 +2,7 @@
 package ru.bars_open.medvtr.mq.entities.base;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.joda.time.DateTime;
 
 
 /**
@@ -70,14 +70,14 @@ public class Event implements Serializable
      */
     @JsonProperty("setDate")
     @JsonPropertyDescription("\u0434\u0430\u0442\u0430 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f \u043e\u0431\u0440\u0430\u0449\u0435\u043d\u0438\u044f")
-    private DateTime setDate;
+    private LocalDateTime setDate;
     /**
      * дата закрытия обращения
      * 
      */
     @JsonProperty("endDate")
     @JsonPropertyDescription("\u0434\u0430\u0442\u0430 \u0437\u0430\u043a\u0440\u044b\u0442\u0438\u044f \u043e\u0431\u0440\u0430\u0449\u0435\u043d\u0438\u044f")
-    private DateTime endDate;
+    private LocalDateTime endDate;
     /**
      * Описание пациента МИС ()
      * 
@@ -128,7 +128,7 @@ public class Event implements Serializable
     private VMPTicket vmpTicket;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = 3770161331212346812L;
+    private final static long serialVersionUID = 4203950882940039764L;
 
     /**
      * Идентифкатор МИС
@@ -195,7 +195,7 @@ public class Event implements Serializable
      * 
      */
     @JsonProperty("setDate")
-    public DateTime getSetDate() {
+    public LocalDateTime getSetDate() {
         return setDate;
     }
 
@@ -204,7 +204,7 @@ public class Event implements Serializable
      * 
      */
     @JsonProperty("setDate")
-    public void setSetDate(DateTime setDate) {
+    public void setSetDate(LocalDateTime setDate) {
         this.setDate = setDate;
     }
 
@@ -213,7 +213,7 @@ public class Event implements Serializable
      * 
      */
     @JsonProperty("endDate")
-    public DateTime getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
@@ -222,7 +222,7 @@ public class Event implements Serializable
      * 
      */
     @JsonProperty("endDate")
-    public void setEndDate(DateTime endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 

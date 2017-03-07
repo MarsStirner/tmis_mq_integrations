@@ -1,9 +1,11 @@
 package ru.bars_open.medvtr.amqp.biomaterial.entities;
 
-import org.joda.time.LocalDateTime;
 import ru.bars_open.medvtr.amqp.biomaterial.entities.mapped.IdentifiedEntityWithExternal;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 /**
  * Author: Upatov Egor <br>

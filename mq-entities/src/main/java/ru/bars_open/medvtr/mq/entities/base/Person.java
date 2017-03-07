@@ -2,6 +2,7 @@
 package ru.bars_open.medvtr.mq.entities.base;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.joda.time.DateTime;
 import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex;
 
 
@@ -69,12 +69,12 @@ public class Person implements Serializable
     @JsonProperty("sex")
     private Sex sex;
     /**
-     * дата и время рождения пациента
+     * дата рождения пациента
      * 
      */
     @JsonProperty("birthDate")
-    @JsonPropertyDescription("\u0434\u0430\u0442\u0430 \u0438 \u0432\u0440\u0435\u043c\u044f \u0440\u043e\u0436\u0434\u0435\u043d\u0438\u044f \u043f\u0430\u0446\u0438\u0435\u043d\u0442\u0430")
-    private DateTime birthDate;
+    @JsonPropertyDescription("\u0434\u0430\u0442\u0430 \u0440\u043e\u0436\u0434\u0435\u043d\u0438\u044f \u043f\u0430\u0446\u0438\u0435\u043d\u0442\u0430")
+    private LocalDateTime birthDate;
     /**
      * Адреса пациента (тип адреса внутри элемента)
      * 
@@ -84,7 +84,7 @@ public class Person implements Serializable
     private List<Address> addresses = new ArrayList<Address>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = -929455486148392373L;
+    private final static long serialVersionUID = -5066195088784190865L;
 
     /**
      * Идентифкатор МИС
@@ -171,20 +171,20 @@ public class Person implements Serializable
     }
 
     /**
-     * дата и время рождения пациента
+     * дата рождения пациента
      * 
      */
     @JsonProperty("birthDate")
-    public DateTime getBirthDate() {
+    public LocalDateTime getBirthDate() {
         return birthDate;
     }
 
     /**
-     * дата и время рождения пациента
+     * дата рождения пациента
      * 
      */
     @JsonProperty("birthDate")
-    public void setBirthDate(DateTime birthDate) {
+    public void setBirthDate(LocalDateTime birthDate) {
         this.birthDate = birthDate;
     }
 

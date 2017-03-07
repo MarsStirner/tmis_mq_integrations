@@ -38,8 +38,8 @@ public class BiomaterialDaoImpl extends AbstractDaoWithExternalImpl<Biomaterial>
         result.setExternalId(String.valueOf(source.getId()));
         result.setBarcodePrefix(String.valueOf(source.getBarcode().getPeriod()));
         result.setBarcodeNumber(String.valueOf(source.getBarcode().getCode()));
-        result.setPlannedDateTime(source.getDatetimePlanned().toLocalDateTime());
-        if (source.getDatetimeTaken() != null) { result.setFacticalDateTime(source.getDatetimeTaken().toLocalDateTime()); }
+        result.setPlannedDateTime(source.getDatetimePlanned());
+        result.setFacticalDateTime(source.getDatetimeTaken());
         //TODO Event
         if (source.getAmount().getUnit() != null) {
             result.setAmount(source.getAmount().getValue() + " " + source.getAmount().getUnit().getName());

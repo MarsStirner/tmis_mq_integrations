@@ -1,24 +1,26 @@
 package ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy;
 
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.bars_open.medvtr.amqp.consumer.hospitalization.pharmacy.generated.ws.*;
-import ru.bars_open.medvtr.mq.util.SoapLoggingHandler;
 import ru.bars_open.medvtr.mq.entities.base.VMPTicket;
 import ru.bars_open.medvtr.mq.entities.message.HospitalizationCreateMessage;
 import ru.bars_open.medvtr.mq.entities.message.HospitalizationFinishMessage;
 import ru.bars_open.medvtr.mq.entities.message.HospitalizationMovingMessage;
 import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
+import ru.bars_open.medvtr.mq.util.SoapLoggingHandler;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
@@ -76,13 +78,13 @@ public class WSFactory{
         return serviceName;
     }
 
-    public static XMLGregorianCalendar wrapDate(final DateTime date) {
-        if (date == null) {
+    public static XMLGregorianCalendar wrapDate(final LocalDateTime date) {
+        try {
+            return date ==null ? null : DatatypeFactory.newInstance().newXMLGregorianCalendar(GregorianCalendar.from(date.atZone(ZoneId.systemDefault())));
+        } catch (DatatypeConfigurationException e) {
+            log.error("Cannot convert Date[{}] to XMLGregorianCalendar", date, e);
             return null;
         }
-        final GregorianCalendar calendar = new GregorianCalendar(date.getZone().toTimeZone());
-        calendar.setTimeInMillis(date.getMillis());
-        return new XMLGregorianCalendarImpl(calendar);
     }
 
     public CloseHospitalizationRequest createHospitalizationRequest(final HospitalizationFinishMessage message) {

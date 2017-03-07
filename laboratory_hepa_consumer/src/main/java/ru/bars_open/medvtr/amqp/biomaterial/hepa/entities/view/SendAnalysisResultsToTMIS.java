@@ -3,7 +3,7 @@ package ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.view;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.*;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 import static ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.listeners.StupidEncodingConverterListener.convertFromDb;
 
@@ -38,8 +38,7 @@ public class SendAnalysisResultsToTMIS {
     private Soi soi;
 
     @Column(name="cr_date")
-    @Temporal(TemporalType.DATE)
-    private Date createDate;
+    private LocalDate createDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="createdby")
@@ -50,8 +49,7 @@ public class SendAnalysisResultsToTMIS {
     private Analysis analysis;
 
     @Column(name="co_date")
-    @Temporal(TemporalType.DATE)
-    private Date completeDate;
+    private LocalDate completeDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="completedBy")
@@ -99,7 +97,7 @@ public class SendAnalysisResultsToTMIS {
         return soi;
     }
 
-    public Date getCreateDate() {
+    public LocalDate getCreateDate() {
         return createDate;
     }
 
@@ -111,7 +109,7 @@ public class SendAnalysisResultsToTMIS {
         return analysis;
     }
 
-    public Date getCompleteDate() {
+    public LocalDate getCompleteDate() {
         return completeDate;
     }
 

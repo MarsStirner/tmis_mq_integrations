@@ -1,7 +1,7 @@
 package ru.bars_open.medvtr.amqp.biomaterial.hepa.entities;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Author: Upatov Egor <br>
@@ -18,8 +18,7 @@ public class Tube extends IdentifiedEntity{
     private Client client;
 
     @Column(name = "adate")
-    @Temporal(TemporalType.DATE)
-    private Date adate;
+    private LocalDate adate;
 
     public Tube() {
     }
@@ -32,11 +31,11 @@ public class Tube extends IdentifiedEntity{
         this.client = client;
     }
 
-    public Date getAdate() {
+    public LocalDate getAdate() {
         return adate;
     }
 
-    public void setAdate(final Date adate) {
+    public void setAdate(final LocalDate adate) {
         this.adate = adate;
     }
 

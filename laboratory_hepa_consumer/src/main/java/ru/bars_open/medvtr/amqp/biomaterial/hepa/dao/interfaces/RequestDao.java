@@ -19,4 +19,6 @@ public interface RequestDao extends AbstractDao<Request> {
     List<SendAnalysisResultsToTMIS> getReadyForSend();
 
     Request setSent(Request request);
+
+    Request findOrCreate(Client client, Soi soi, Operator operator, Analysis analysisType, Material material, String feedback);
 }

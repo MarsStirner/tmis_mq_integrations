@@ -1,7 +1,7 @@
 package ru.bars_open.medvtr.amqp.biomaterial.hepa.entities;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 import static ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.listeners.StupidEncodingConverterListener.convertFromDb;
 
@@ -24,8 +24,7 @@ public class Request extends IdentifiedEntity {
     private Soi soi;
 
     @Column(name="cr_date")
-    @Temporal(TemporalType.DATE)
-    private Date createDate;
+    private LocalDate createDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="createdby")
@@ -36,8 +35,7 @@ public class Request extends IdentifiedEntity {
     private Analysis analysis;
 
     @Column(name="co_date")
-    @Temporal(TemporalType.DATE)
-    private Date completeDate;
+    private LocalDate completeDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="completedBy")
@@ -91,11 +89,11 @@ public class Request extends IdentifiedEntity {
         this.soi = soi;
     }
 
-    public Date getCreateDate() {
+    public LocalDate getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(final Date createDate) {
+    public void setCreateDate(final LocalDate createDate) {
         this.createDate = createDate;
     }
 
@@ -171,11 +169,11 @@ public class Request extends IdentifiedEntity {
         this.amount3 = amount3;
     }
 
-    public Date getCompleteDate() {
+    public LocalDate getCompleteDate() {
         return completeDate;
     }
 
-    public void setCompleteDate(final Date completeDate) {
+    public void setCompleteDate(final LocalDate completeDate) {
         this.completeDate = completeDate;
     }
 

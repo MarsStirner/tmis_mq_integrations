@@ -1,10 +1,10 @@
 package ru.bars_open.medvtr.db.entities.util.converter;
 
-import org.joda.time.LocalDate;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-import java.util.Date;
+import java.time.LocalDate;
+import java.sql.Date;
 
 /**
  * Author: Upatov Egor <br>
@@ -15,13 +15,15 @@ import java.util.Date;
 
 @Converter(autoApply = true)
 public class LocalDateConverter implements AttributeConverter<LocalDate, Date> {
+
+
     @Override
-    public Date convertToDatabaseColumn(final LocalDate ld) {
-        return ld == null ? null : ld.toDate();
+    public Date convertToDatabaseColumn(final LocalDate attribute) {
+        return (attribute == null ? null : Date.valueOf(attribute));
     }
 
     @Override
     public LocalDate convertToEntityAttribute(final Date date) {
-        return date == null ? null : new LocalDate(date);
+        return date == null ? null : date.toLocalDate();
     }
 }

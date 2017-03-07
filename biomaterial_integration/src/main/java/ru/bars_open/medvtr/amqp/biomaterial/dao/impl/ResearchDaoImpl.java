@@ -43,8 +43,8 @@ public class ResearchDaoImpl extends AbstractDaoWithExternalImpl<Research> imple
             final Person person = source.getAssigner();
             result.setAssigner("["+ person.getId()+ "] "+ person.getLastName() + " "+ person.getFirstName() +" "+ person.getPatrName());
         }
-        if (source.getBegDate() != null) { result.setBegDate(source.getBegDate().toLocalDateTime()); }
-        if (source.getEndDate() != null) { result.setEndDate(source.getEndDate().toLocalDateTime()); }
+        result.setBegDate(source.getBegDate());
+        result.setEndDate(source.getEndDate());
         result.setResearchType(source.getType().getCode());
         result.setNote(null);
         save(result);

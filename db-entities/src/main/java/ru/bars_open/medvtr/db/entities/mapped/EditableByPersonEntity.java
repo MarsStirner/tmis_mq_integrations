@@ -1,9 +1,9 @@
 package ru.bars_open.medvtr.db.entities.mapped;
 
-import org.joda.time.LocalDateTime;
 import ru.bars_open.medvtr.db.entities.Person;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * Author: Upatov Egor <br>

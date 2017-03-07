@@ -1,6 +1,5 @@
 package ru.bars_open.medvtr.amqp.biomaterial.dao.impl;
 
-import org.joda.time.LocalDateTime;
 import org.springframework.stereotype.Repository;
 import ru.bars_open.medvtr.amqp.biomaterial.dao.impl.mapped.AbstractDaoImpl;
 import ru.bars_open.medvtr.amqp.biomaterial.dao.interfaces.MessageDao;
@@ -10,6 +9,7 @@ import ru.bars_open.medvtr.amqp.biomaterial.entities.Message;
 
 import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 
 /**
  * Author: Upatov Egor <br>
@@ -39,7 +39,7 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
         result.setBody(new String(body, StandardCharsets.UTF_8));
         result.setDirection(direction);
         result.setRoutingKey(routingKey);
-        result.setTimestamp(new LocalDateTime());
+        result.setTimestamp(LocalDateTime.now());
         result.setType(type);
         result.setBiomaterial(biomaterial);
         save(result);

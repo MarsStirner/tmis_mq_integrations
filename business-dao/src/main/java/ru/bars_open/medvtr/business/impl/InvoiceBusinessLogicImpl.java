@@ -1,6 +1,5 @@
 package ru.bars_open.medvtr.business.impl;
 
-import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.bars_open.medvtr.business.interfaces.InvoiceBusinessLogic;
@@ -12,6 +11,7 @@ import ru.bars_open.medvtr.db.entities.*;
 import ru.bars_open.medvtr.db.entities.util.EntityFactory;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**

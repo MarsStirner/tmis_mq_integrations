@@ -23,10 +23,6 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
@@ -51,7 +47,7 @@
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-joda</artifactId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
     </dependencies>
 
@@ -66,12 +62,13 @@
                     <targetPackage>ru.bars_open.medvtr.mq.entities</targetPackage>
                     <annotationStyle>jackson2</annotationStyle>
                     <useCommonsLang3>true</useCommonsLang3>
-                    <useJodaDates>true</useJodaDates>
+                    <useJodaDates>false</useJodaDates>
+                    <dateType>java.time.LocalDate</dateType>
+                    <dateTimeType>java.time.LocalDateTime</dateTimeType>
 
                     <initializeCollections>true</initializeCollections>
                     <includeToString>true</includeToString>
                     <includeHashcodeAndEquals>true</includeHashcodeAndEquals>
-                    <!--<includeJsr303Annotations>true</includeJsr303Annotations>-->
                     <serializable>true</serializable>
 
                     <outputEncoding>UTF-8</outputEncoding>

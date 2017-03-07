@@ -1,7 +1,6 @@
 package ru.bars_open.medvtr.amqp.consumer.finance;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,8 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
@@ -83,9 +84,8 @@ public class WSFactory{
         return serviceName;
     }
 
-    public XMLGregorianCalendar wrapDate(final DateTime date) {
-        final GregorianCalendar calendar = new GregorianCalendar(date.getZone().toTimeZone());
-        calendar.setTimeInMillis(date.getMillis());
+    public XMLGregorianCalendar wrapDate(final LocalDateTime date) {
+        final GregorianCalendar calendar = GregorianCalendar.from(date.atZone(ZoneId.systemDefault()));
         return new XMLGregorianCalendarImpl(calendar);
     }
 

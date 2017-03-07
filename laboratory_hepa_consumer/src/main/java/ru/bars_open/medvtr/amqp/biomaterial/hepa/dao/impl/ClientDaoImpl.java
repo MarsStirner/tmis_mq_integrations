@@ -1,6 +1,5 @@
 package ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.impl;
 
-import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.impl.mapped.AbstractDaoImpl;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.interfaces.ClientDao;
@@ -10,7 +9,8 @@ import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.listeners.StupidEncodingConverterListener.convertToDb;
@@ -27,12 +27,12 @@ import static ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.listeners.Stupi
 public class ClientDaoImpl extends AbstractDaoImpl<Client> implements ClientDao {
 
 
-    public Client create(final String lastName, final String firstName, final String patrName, final DateTime birthDate, final Sex sex) {
+    public Client create(final String lastName, final String firstName, final String patrName, final LocalDateTime birthDate, final Sex sex) {
         final Client result = new Client();
         result.setFirstName(convertToDb(firstName));
         result.setLastName(convertToDb(lastName));
         result.setPatrName(convertToDb(patrName));
-        result.setBirthDate(birthDate.toDate());
+        result.setBirthDate(birthDate.toLocalDate());
         switch (sex) {
             case MALE:
                 result.setSex(1);
@@ -51,13 +51,13 @@ public class ClientDaoImpl extends AbstractDaoImpl<Client> implements ClientDao 
 
 
     @Override
-    public Client findOrCreate(final String lastName, final String firstName, final String patrName, final DateTime birthDate, final Sex sex) {
+    public Client findOrCreate(final String lastName, final String firstName, final String patrName, final LocalDateTime birthDate, final Sex sex) {
         final Client result = getByNameAndBirthDate(lastName, firstName, patrName, birthDate, sex);
         return result != null ? result : create(lastName, firstName, patrName, birthDate, sex);
     }
 
     private Client getByNameAndBirthDate(
-            final String lastName, final String firstName, final String patrName, final DateTime birthDate, final Sex sex
+            final String lastName, final String firstName, final String patrName, final LocalDateTime birthDate, final Sex sex
     ) {
         final CriteriaBuilder qb = em.getCriteriaBuilder();
         final CriteriaQuery<Client> query = qb.createQuery(getEntityClass());
@@ -67,14 +67,14 @@ public class ClientDaoImpl extends AbstractDaoImpl<Client> implements ClientDao 
                         qb.equal(root.get("lastName"), qb.parameter(String.class, "lastName")),
                         qb.equal(root.get("firstName"), qb.parameter(String.class, "firstName")),
                         qb.equal(root.get("patrName"), qb.parameter(String.class, "patrName")),
-                        qb.equal(root.get("birthDate"), qb.parameter(Date.class, "birthDate"))
+                        qb.equal(root.get("birthDate"), qb.parameter(LocalDate.class, "birthDate"))
                 )
         );
         final List<Client> resultList = em.createQuery(query)
                 .setParameter("lastName", convertToDb(lastName))
                 .setParameter("firstName",convertToDb(firstName))
                 .setParameter("patrName", convertToDb(patrName))
-                .setParameter("birthDate", birthDate.toLocalDate().toDate())
+                .setParameter("birthDate", birthDate.toLocalDate())
                 .getResultList();
         switch (resultList.size()) {
             case 0: {

@@ -7,6 +7,7 @@ import ru.bars_open.medvtr.db.entities.util.ActionStatus;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 
 /**
  * Author: Upatov Egor <br>
@@ -35,7 +36,7 @@ public class ActionDaoImpl implements ActionDao {
             case WAITING:
                 break;
             case FINISHED:
-                action.setEndDate(new org.joda.time.LocalDateTime());
+                action.setEndDate(LocalDateTime.now());
                 break;
             case CANCELLED:
                 break;

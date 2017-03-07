@@ -1,7 +1,7 @@
 package ru.bars_open.medvtr.soap.ws.finance;
 
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +63,7 @@ public class PaymentResultService {
                  request.getContragentId(),
                  request.isRefund()
         );
-        final LocalDateTime transactionDateTime = new LocalDateTime(request.getTrxDatetime().toGregorianCalendar());
+        final LocalDateTime transactionDateTime = request.getTrxDatetime().toGregorianCalendar().toZonedDateTime().toLocalDateTime();
         final ApplyPaymentResponse response = new ApplyPaymentResponse();
         // Ищем счет по номеру
         final Invoice invoice = invoiceDao.get(request.getInvoiceId());

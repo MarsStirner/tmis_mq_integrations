@@ -1,7 +1,8 @@
 package ru.bars_open.medvtr.db.entities.util;
 
-import org.joda.time.LocalDateTime;
 import ru.bars_open.medvtr.db.entities.*;
+
+import java.time.LocalDateTime;
 
 /**
  * Фабрика конструирующая новые сущности БД

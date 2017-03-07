@@ -2,6 +2,7 @@
 package ru.bars_open.medvtr.mq.entities.base;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -16,7 +17,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.joda.time.DateTime;
 import ru.bars_open.medvtr.mq.entities.base.refbook.RbBiomaterialType;
 import ru.bars_open.medvtr.mq.entities.base.refbook.RbTestTubeType;
 import ru.bars_open.medvtr.mq.entities.base.util.ValueAndUnit;
@@ -92,14 +92,14 @@ public class Biomaterial implements Serializable
      */
     @JsonProperty("datetimePlanned")
     @JsonPropertyDescription("\u0434\u0430\u0442\u0430 \u0438 \u0432\u0440\u0435\u043c\u044f \u043f\u043b\u0430\u043d\u0438\u0440\u0443\u0435\u043c\u043e\u0433\u043e \u0432\u0437\u044f\u0442\u0438\u044f \u0442\u043a\u0430\u043d\u0435\u0439")
-    private DateTime datetimePlanned;
+    private LocalDateTime datetimePlanned;
     /**
      * дата и время фактического взятия тканей
      * 
      */
     @JsonProperty("datetimeTaken")
     @JsonPropertyDescription("\u0434\u0430\u0442\u0430 \u0438 \u0432\u0440\u0435\u043c\u044f \u0444\u0430\u043a\u0442\u0438\u0447\u0435\u0441\u043a\u043e\u0433\u043e \u0432\u0437\u044f\u0442\u0438\u044f \u0442\u043a\u0430\u043d\u0435\u0439")
-    private DateTime datetimeTaken;
+    private LocalDateTime datetimeTaken;
     /**
      * Статус биозабора
      * (Required)
@@ -132,7 +132,7 @@ public class Biomaterial implements Serializable
     private Person person;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = -5060724009271326872L;
+    private final static long serialVersionUID = 8367537359990838607L;
 
     /**
      * Идентифкатор МИС
@@ -244,7 +244,7 @@ public class Biomaterial implements Serializable
      * 
      */
     @JsonProperty("datetimePlanned")
-    public DateTime getDatetimePlanned() {
+    public LocalDateTime getDatetimePlanned() {
         return datetimePlanned;
     }
 
@@ -254,7 +254,7 @@ public class Biomaterial implements Serializable
      * 
      */
     @JsonProperty("datetimePlanned")
-    public void setDatetimePlanned(DateTime datetimePlanned) {
+    public void setDatetimePlanned(LocalDateTime datetimePlanned) {
         this.datetimePlanned = datetimePlanned;
     }
 
@@ -263,7 +263,7 @@ public class Biomaterial implements Serializable
      * 
      */
     @JsonProperty("datetimeTaken")
-    public DateTime getDatetimeTaken() {
+    public LocalDateTime getDatetimeTaken() {
         return datetimeTaken;
     }
 
@@ -272,7 +272,7 @@ public class Biomaterial implements Serializable
      * 
      */
     @JsonProperty("datetimeTaken")
-    public void setDatetimeTaken(DateTime datetimeTaken) {
+    public void setDatetimeTaken(LocalDateTime datetimeTaken) {
         this.datetimeTaken = datetimeTaken;
     }
 

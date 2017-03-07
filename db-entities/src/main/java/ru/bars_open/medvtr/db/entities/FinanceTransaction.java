@@ -1,10 +1,10 @@
 package ru.bars_open.medvtr.db.entities;
 
 
-import org.joda.time.LocalDateTime;
 import ru.bars_open.medvtr.db.entities.mapped.IdentifiedEntity;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * Транзакции с оплатами счетов
