@@ -35,7 +35,8 @@ public class MockFinanceWebService implements ExchangeMISPortType {
             @WebParam(name = "codePayer", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final String codePayer,
             @WebParam(name = "payerName", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final PersonName payerName,
             @WebParam(name = "remove", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int remove,
-            @WebParam(name = "invoice_id", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int invoiceId
+            @WebParam(name = "invoice_id", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int invoiceId,
+            @WebParam(name = "employeeID", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") int employeeID
     ) {
         return BigInteger.valueOf(idTreatment);
     }
@@ -47,7 +48,8 @@ public class MockFinanceWebService implements ExchangeMISPortType {
             @WebParam(name = "sumReturn", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final double sumReturn,
             @WebParam(name = "remove", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int remove,
             @WebParam(name = "invoice_id", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int invoiceId,
-            @WebParam(name = "parentInvoice_id", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int parentInvoiceId
+            @WebParam(name = "parentInvoice_id", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int parentInvoiceId,
+            @WebParam(name = "employeeID", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") int employeeID
     ) {
         return numInvoice;
     }

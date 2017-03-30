@@ -30,11 +30,75 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link AddMovingResponse }
+     * Create an instance of {@link Moves }
      * 
      */
-    public AddMovingResponse createAddMovingResponse() {
-        return new AddMovingResponse();
+    public Moves createMoves() {
+        return new Moves();
+    }
+
+    /**
+     * Create an instance of {@link RbFinance }
+     * 
+     */
+    public RbFinance createRbFinance() {
+        return new RbFinance();
+    }
+
+    /**
+     * Create an instance of {@link RbTreatment }
+     * 
+     */
+    public RbTreatment createRbTreatment() {
+        return new RbTreatment();
+    }
+
+    /**
+     * Create an instance of {@link Event }
+     * 
+     */
+    public Event createEvent() {
+        return new Event();
+    }
+
+    /**
+     * Create an instance of {@link CreateHospitalizationResponse }
+     * 
+     */
+    public CreateHospitalizationResponse createCreateHospitalizationResponse() {
+        return new CreateHospitalizationResponse();
+    }
+
+    /**
+     * Create an instance of {@link CloseHospitalization }
+     * 
+     */
+    public CloseHospitalization createCloseHospitalization() {
+        return new CloseHospitalization();
+    }
+
+    /**
+     * Create an instance of {@link CreateHospitalization }
+     * 
+     */
+    public CreateHospitalization createCreateHospitalization() {
+        return new CreateHospitalization();
+    }
+
+    /**
+     * Create an instance of {@link AddMoving }
+     * 
+     */
+    public AddMoving createAddMoving() {
+        return new AddMoving();
+    }
+
+    /**
+     * Create an instance of {@link Address }
+     * 
+     */
+    public Address createAddress() {
+        return new Address();
     }
 
     /**
@@ -54,75 +118,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link CreateHospitalization }
+     * Create an instance of {@link StationaryMoving }
      * 
      */
-    public CreateHospitalization createCreateHospitalization() {
-        return new CreateHospitalization();
-    }
-
-    /**
-     * Create an instance of {@link Organisation }
-     * 
-     */
-    public Organisation createOrganisation() {
-        return new Organisation();
-    }
-
-    /**
-     * Create an instance of {@link CloseHospitalization }
-     * 
-     */
-    public CloseHospitalization createCloseHospitalization() {
-        return new CloseHospitalization();
-    }
-
-    /**
-     * Create an instance of {@link RbTreatment }
-     * 
-     */
-    public RbTreatment createRbTreatment() {
-        return new RbTreatment();
-    }
-
-    /**
-     * Create an instance of {@link Moves }
-     * 
-     */
-    public Moves createMoves() {
-        return new Moves();
-    }
-
-    /**
-     * Create an instance of {@link StationaryReceived }
-     * 
-     */
-    public StationaryReceived createStationaryReceived() {
-        return new StationaryReceived();
-    }
-
-    /**
-     * Create an instance of {@link Event }
-     * 
-     */
-    public Event createEvent() {
-        return new Event();
-    }
-
-    /**
-     * Create an instance of {@link Contragent }
-     * 
-     */
-    public Contragent createContragent() {
-        return new Contragent();
-    }
-
-    /**
-     * Create an instance of {@link RbFinance }
-     * 
-     */
-    public RbFinance createRbFinance() {
-        return new RbFinance();
+    public StationaryMoving createStationaryMoving() {
+        return new StationaryMoving();
     }
 
     /**
@@ -134,19 +134,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link StationaryLeaved }
+     * Create an instance of {@link Organisation }
      * 
      */
-    public StationaryLeaved createStationaryLeaved() {
-        return new StationaryLeaved();
-    }
-
-    /**
-     * Create an instance of {@link CloseHospitalizationResponse }
-     * 
-     */
-    public CloseHospitalizationResponse createCloseHospitalizationResponse() {
-        return new CloseHospitalizationResponse();
+    public Organisation createOrganisation() {
+        return new Organisation();
     }
 
     /**
@@ -158,35 +150,43 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link AddMoving }
+     * Create an instance of {@link Contragent }
      * 
      */
-    public AddMoving createAddMoving() {
-        return new AddMoving();
+    public Contragent createContragent() {
+        return new Contragent();
     }
 
     /**
-     * Create an instance of {@link StationaryMoving }
+     * Create an instance of {@link CloseHospitalizationResponse }
      * 
      */
-    public StationaryMoving createStationaryMoving() {
-        return new StationaryMoving();
+    public CloseHospitalizationResponse createCloseHospitalizationResponse() {
+        return new CloseHospitalizationResponse();
     }
 
     /**
-     * Create an instance of {@link CreateHospitalizationResponse }
+     * Create an instance of {@link StationaryReceived }
      * 
      */
-    public CreateHospitalizationResponse createCreateHospitalizationResponse() {
-        return new CreateHospitalizationResponse();
+    public StationaryReceived createStationaryReceived() {
+        return new StationaryReceived();
     }
 
     /**
-     * Create an instance of {@link Address }
+     * Create an instance of {@link StationaryLeaved }
      * 
      */
-    public Address createAddress() {
-        return new Address();
+    public StationaryLeaved createStationaryLeaved() {
+        return new StationaryLeaved();
+    }
+
+    /**
+     * Create an instance of {@link AddMovingResponse }
+     * 
+     */
+    public AddMovingResponse createAddMovingResponse() {
+        return new AddMovingResponse();
     }
 
 }
