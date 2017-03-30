@@ -28,6 +28,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
     "number",
     "deleted",
     "contract",
+    "author",
     "sum",
     "parent"
 })
@@ -67,6 +68,13 @@ public class Invoice implements Serializable
     @JsonPropertyDescription("\u0414\u043e\u0433\u043e\u0432\u043e\u0440 \u043d\u0430 \u043b\u0435\u0447\u0435\u043d\u0438\u0435 (\u043a\u043e\u043d\u0442\u0440\u0430\u043a\u0442)")
     private Contract contract;
     /**
+     * Описание сотрудника МИС ()
+     * 
+     */
+    @JsonProperty("author")
+    @JsonPropertyDescription("\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0441\u043e\u0442\u0440\u0443\u0434\u043d\u0438\u043a\u0430 \u041c\u0418\u0421 ()")
+    private Employee author;
+    /**
      * сумма счета
      * 
      */
@@ -84,7 +92,7 @@ public class Invoice implements Serializable
     private Invoice parent;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = -715190695582313256L;
+    private final static long serialVersionUID = 6725687489561864197L;
 
     /**
      * Идентифкатор
@@ -167,6 +175,24 @@ public class Invoice implements Serializable
     }
 
     /**
+     * Описание сотрудника МИС ()
+     * 
+     */
+    @JsonProperty("author")
+    public Employee getAuthor() {
+        return author;
+    }
+
+    /**
+     * Описание сотрудника МИС ()
+     * 
+     */
+    @JsonProperty("author")
+    public void setAuthor(Employee author) {
+        this.author = author;
+    }
+
+    /**
      * сумма счета
      * 
      */
@@ -223,7 +249,7 @@ public class Invoice implements Serializable
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(number).append(deleted).append(contract).append(sum).append(parent).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(id).append(number).append(deleted).append(contract).append(author).append(sum).append(parent).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -235,7 +261,7 @@ public class Invoice implements Serializable
             return false;
         }
         Invoice rhs = ((Invoice) other);
-        return new EqualsBuilder().append(id, rhs.id).append(number, rhs.number).append(deleted, rhs.deleted).append(contract, rhs.contract).append(sum, rhs.sum).append(parent, rhs.parent).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(id, rhs.id).append(number, rhs.number).append(deleted, rhs.deleted).append(contract, rhs.contract).append(author, rhs.author).append(sum, rhs.sum).append(parent, rhs.parent).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

@@ -1,0 +1,43 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/Employee.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Описание сотрудника МИС ()",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.Employee",
+  "properties": {
+    "id": {
+      "description": "Идентифкатор МИС",
+      "type": "integer",
+      "minimum": 0
+    },
+    "lastName": {
+      "description": "Фамилия",
+      "type": "string"
+    },
+    "firstName": {
+      "description": "Имя",
+      "type": "string"
+    },
+    "patrName": {
+      "description": "Отчество",
+      "type": "string"
+    },
+    "sex": {
+      "description": "Пол",
+      "$ref": "./refbook/enum/Sex.json"
+    },
+    "birthDate": {
+      "description": "дата рождения",
+      "type": "string",
+      "format": "date-time"
+    },
+    "uuid": {
+      "description": "Dashed string UUID",
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+    }
+  },
+  "required": [
+    "id", 
+    "uuid"
+  ]
+}

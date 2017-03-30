@@ -16,12 +16,12 @@
       "$ref": "../base/refbook/enum/ActionStatus.json"
     },
     "begDate": {
-      "description": "Дата начала работы",
+      "description": "Дата начала",
       "type": "string",
       "format": "date-time"
     },
     "endDate": {
-      "description": "Дата окончания работы",
+      "description": "Дата окончания",
       "type": "string",
       "format": "date-time"
     }

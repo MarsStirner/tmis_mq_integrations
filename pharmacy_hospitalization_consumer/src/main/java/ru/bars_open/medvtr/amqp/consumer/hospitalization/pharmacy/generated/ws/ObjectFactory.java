@@ -30,51 +30,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link CloseHospitalization }
+     * Create an instance of {@link AddMovingResponse }
      * 
      */
-    public CloseHospitalization createCloseHospitalization() {
-        return new CloseHospitalization();
-    }
-
-    /**
-     * Create an instance of {@link RbFinance }
-     * 
-     */
-    public RbFinance createRbFinance() {
-        return new RbFinance();
-    }
-
-    /**
-     * Create an instance of {@link Contract }
-     * 
-     */
-    public Contract createContract() {
-        return new Contract();
-    }
-
-    /**
-     * Create an instance of {@link StationaryMoving }
-     * 
-     */
-    public StationaryMoving createStationaryMoving() {
-        return new StationaryMoving();
-    }
-
-    /**
-     * Create an instance of {@link AddMoving }
-     * 
-     */
-    public AddMoving createAddMoving() {
-        return new AddMoving();
-    }
-
-    /**
-     * Create an instance of {@link VmpTicket }
-     * 
-     */
-    public VmpTicket createVmpTicket() {
-        return new VmpTicket();
+    public AddMovingResponse createAddMovingResponse() {
+        return new AddMovingResponse();
     }
 
     /**
@@ -86,83 +46,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Moves }
+     * Create an instance of {@link VmpTicket }
      * 
      */
-    public Moves createMoves() {
-        return new Moves();
+    public VmpTicket createVmpTicket() {
+        return new VmpTicket();
     }
 
     /**
-     * Create an instance of {@link CreateHospitalizationResponse }
+     * Create an instance of {@link CreateHospitalization }
      * 
      */
-    public CreateHospitalizationResponse createCreateHospitalizationResponse() {
-        return new CreateHospitalizationResponse();
-    }
-
-    /**
-     * Create an instance of {@link Contragent }
-     * 
-     */
-    public Contragent createContragent() {
-        return new Contragent();
-    }
-
-    /**
-     * Create an instance of {@link Event }
-     * 
-     */
-    public Event createEvent() {
-        return new Event();
-    }
-
-    /**
-     * Create an instance of {@link StationaryReceived }
-     * 
-     */
-    public StationaryReceived createStationaryReceived() {
-        return new StationaryReceived();
-    }
-
-    /**
-     * Create an instance of {@link Person }
-     * 
-     */
-    public Person createPerson() {
-        return new Person();
-    }
-
-    /**
-     * Create an instance of {@link AddMovingResponse }
-     * 
-     */
-    public AddMovingResponse createAddMovingResponse() {
-        return new AddMovingResponse();
-    }
-
-    /**
-     * Create an instance of {@link Address }
-     * 
-     */
-    public Address createAddress() {
-        return new Address();
-    }
-
-    /**
-     * Create an instance of {@link RbTreatment }
-     * 
-     */
-    public RbTreatment createRbTreatment() {
-        return new RbTreatment();
-    }
-
-    /**
-     * Create an instance of {@link CloseHospitalizationResponse }
-     * 
-     */
-    public CloseHospitalizationResponse createCloseHospitalizationResponse() {
-        return new CloseHospitalizationResponse();
+    public CreateHospitalization createCreateHospitalization() {
+        return new CreateHospitalization();
     }
 
     /**
@@ -174,6 +70,70 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link CloseHospitalization }
+     * 
+     */
+    public CloseHospitalization createCloseHospitalization() {
+        return new CloseHospitalization();
+    }
+
+    /**
+     * Create an instance of {@link RbTreatment }
+     * 
+     */
+    public RbTreatment createRbTreatment() {
+        return new RbTreatment();
+    }
+
+    /**
+     * Create an instance of {@link Moves }
+     * 
+     */
+    public Moves createMoves() {
+        return new Moves();
+    }
+
+    /**
+     * Create an instance of {@link StationaryReceived }
+     * 
+     */
+    public StationaryReceived createStationaryReceived() {
+        return new StationaryReceived();
+    }
+
+    /**
+     * Create an instance of {@link Event }
+     * 
+     */
+    public Event createEvent() {
+        return new Event();
+    }
+
+    /**
+     * Create an instance of {@link Contragent }
+     * 
+     */
+    public Contragent createContragent() {
+        return new Contragent();
+    }
+
+    /**
+     * Create an instance of {@link RbFinance }
+     * 
+     */
+    public RbFinance createRbFinance() {
+        return new RbFinance();
+    }
+
+    /**
+     * Create an instance of {@link Person }
+     * 
+     */
+    public Person createPerson() {
+        return new Person();
+    }
+
+    /**
      * Create an instance of {@link StationaryLeaved }
      * 
      */
@@ -182,11 +142,51 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link CreateHospitalization }
+     * Create an instance of {@link CloseHospitalizationResponse }
      * 
      */
-    public CreateHospitalization createCreateHospitalization() {
-        return new CreateHospitalization();
+    public CloseHospitalizationResponse createCloseHospitalizationResponse() {
+        return new CloseHospitalizationResponse();
+    }
+
+    /**
+     * Create an instance of {@link Contract }
+     * 
+     */
+    public Contract createContract() {
+        return new Contract();
+    }
+
+    /**
+     * Create an instance of {@link AddMoving }
+     * 
+     */
+    public AddMoving createAddMoving() {
+        return new AddMoving();
+    }
+
+    /**
+     * Create an instance of {@link StationaryMoving }
+     * 
+     */
+    public StationaryMoving createStationaryMoving() {
+        return new StationaryMoving();
+    }
+
+    /**
+     * Create an instance of {@link CreateHospitalizationResponse }
+     * 
+     */
+    public CreateHospitalizationResponse createCreateHospitalizationResponse() {
+        return new CreateHospitalizationResponse();
+    }
+
+    /**
+     * Create an instance of {@link Address }
+     * 
+     */
+    public Address createAddress() {
+        return new Address();
     }
 
 }

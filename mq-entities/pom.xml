@@ -58,6 +58,9 @@
                 <artifactId>jsonschema2pojo-maven-plugin</artifactId>
                 <version>0.4.29</version>
                 <configuration>
+                    <annotationStyle>jackson2</annotationStyle>
+                    <skip>${generation.skip}</skip>
+
                     <sourceDirectory>${basedir}/src/main/resources/json_schema/</sourceDirectory>
                     <targetPackage>ru.bars_open.medvtr.mq.entities</targetPackage>
                     <annotationStyle>jackson2</annotationStyle>

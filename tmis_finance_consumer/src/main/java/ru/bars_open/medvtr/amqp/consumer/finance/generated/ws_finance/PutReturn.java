@@ -24,6 +24,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="remove" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="invoice_id" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="parentInvoice_id" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="employeeID" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -39,7 +40,8 @@ import javax.xml.bind.annotation.XmlType;
     "sumReturn",
     "remove",
     "invoiceId",
-    "parentInvoiceId"
+    "parentInvoiceId",
+    "employeeID"
 })
 @XmlRootElement(name = "putReturn")
 public class PutReturn {
@@ -54,6 +56,7 @@ public class PutReturn {
     protected int invoiceId;
     @XmlElement(name = "parentInvoice_id")
     protected int parentInvoiceId;
+    protected int employeeID;
 
     /**
      * Gets the value of the parentNumInvoice property.
@@ -165,6 +168,22 @@ public class PutReturn {
      */
     public void setParentInvoiceId(int value) {
         this.parentInvoiceId = value;
+    }
+
+    /**
+     * Gets the value of the employeeID property.
+     * 
+     */
+    public int getEmployeeID() {
+        return employeeID;
+    }
+
+    /**
+     * Sets the value of the employeeID property.
+     * 
+     */
+    public void setEmployeeID(int value) {
+        this.employeeID = value;
     }
 
 }

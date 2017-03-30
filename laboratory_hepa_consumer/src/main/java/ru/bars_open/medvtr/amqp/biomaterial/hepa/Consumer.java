@@ -103,11 +103,13 @@ public class Consumer implements ChannelAwareMessageListener {
         log.debug("Message parsed");
         if (ROUTING_KEY_SEND.equals(ctx.getRoutingKey())) {
             final Person person = ctx.getClient();
-            final Client client = clientDao.findOrCreate(person.getLastName(),
-                                                         person.getFirstName(),
-                                                         person.getPatrName(),
-                                                         person.getBirthDate(),
-                                                         person.getSex()
+            final Client client = clientDao.findOrCreate(
+                    person.getId(),
+                    person.getLastName(),
+                    person.getFirstName(),
+                    person.getPatrName(),
+                    person.getBirthDate().toLocalDate(),
+                    person.getSex()
             );
             log.info("Client={}", client);
             final Tube tube = tubeDao.findOrCreate(client, ctx.getMqBiomaterial().getDatetimeTaken());
@@ -173,10 +175,11 @@ public class Consumer implements ChannelAwareMessageListener {
      */
     private BiologicalMaterialMessage parse(final Message message) throws MessageIsIncorrectException {
         //[B.1] Спарсить байтовый массив в структуры
-        final BiologicalMaterialMessage result = DeserializationFactory.parse(message.getBody(),
-                                                                              message.getMessageProperties().getContentType(),
-                                                                              message.getMessageProperties().getContentEncoding(),
-                                                                              BiologicalMaterialMessage.class
+        final BiologicalMaterialMessage result = DeserializationFactory.parse(
+                message.getBody(),
+                message.getMessageProperties().getContentType(),
+                message.getMessageProperties().getContentEncoding(),
+                BiologicalMaterialMessage.class
         );
         //[B.2] Валидация
         if (result == null) {

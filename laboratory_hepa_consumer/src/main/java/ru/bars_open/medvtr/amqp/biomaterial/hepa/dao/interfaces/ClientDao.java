@@ -4,7 +4,7 @@ import ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.interfaces.mapped.AbstractD
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.Client;
 import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  * Author: Upatov Egor <br>
@@ -14,5 +14,9 @@ import java.time.LocalDateTime;
  */
 public interface ClientDao extends AbstractDao<Client>{
 
-    Client findOrCreate(String lastName, String firstName, String patrName, LocalDateTime birthDate, final Sex sex);
+    Client findOrCreate(Integer externalId, String lastName, String firstName, String patrName, LocalDate birthDate, Sex sex);
+
+    Client getByNameAndBirthDate(String lastName, String firstName, String patrName, LocalDate birthDate, Sex sex);
+
+    Client getByExternalId(Integer externalId);
 }

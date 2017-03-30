@@ -45,18 +45,18 @@ public class Action implements Serializable
     @JsonProperty("status")
     private ActionStatus status;
     /**
-     * Дата начала работы
+     * Дата начала
      * 
      */
     @JsonProperty("begDate")
-    @JsonPropertyDescription("\u0414\u0430\u0442\u0430 \u043d\u0430\u0447\u0430\u043b\u0430 \u0440\u0430\u0431\u043e\u0442\u044b")
+    @JsonPropertyDescription("\u0414\u0430\u0442\u0430 \u043d\u0430\u0447\u0430\u043b\u0430")
     private LocalDateTime begDate;
     /**
-     * Дата окончания работы
+     * Дата окончания
      * 
      */
     @JsonProperty("endDate")
-    @JsonPropertyDescription("\u0414\u0430\u0442\u0430 \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u044f \u0440\u0430\u0431\u043e\u0442\u044b")
+    @JsonPropertyDescription("\u0414\u0430\u0442\u0430 \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u044f")
     private LocalDateTime endDate;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -93,7 +93,7 @@ public class Action implements Serializable
     }
 
     /**
-     * Дата начала работы
+     * Дата начала
      * 
      */
     @JsonProperty("begDate")
@@ -102,7 +102,7 @@ public class Action implements Serializable
     }
 
     /**
-     * Дата начала работы
+     * Дата начала
      * 
      */
     @JsonProperty("begDate")
@@ -111,7 +111,7 @@ public class Action implements Serializable
     }
 
     /**
-     * Дата окончания работы
+     * Дата окончания
      * 
      */
     @JsonProperty("endDate")
@@ -120,7 +120,7 @@ public class Action implements Serializable
     }
 
     /**
-     * Дата окончания работы
+     * Дата окончания
      * 
      */
     @JsonProperty("endDate")

@@ -35,6 +35,9 @@ public class Client extends IdentifiedEntity{
     @Column(name = "comment")
     private String comment;
 
+    @Column(name="id_mis")
+    private Integer externalId;
+
     public Client() {
     }
 
@@ -86,6 +89,16 @@ public class Client extends IdentifiedEntity{
         this.comment = comment;
     }
 
+    public Integer getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(final Integer externalId) {
+        this.externalId = externalId;
+    }
+
+
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Client[").append(id);
@@ -95,6 +108,7 @@ public class Client extends IdentifiedEntity{
         sb.append(", birthDate=").append(birthDate);
         sb.append(", sex=").append(sex);
         sb.append(", comment='").append(convertFromDb(comment)).append('\'');
+        sb.append(", externalId='").append(externalId).append('\'');
         sb.append('}');
         return sb.toString();
     }

@@ -22,6 +22,10 @@
       "description": "Контракт в рамках которого создан счет",
       "$ref": "Contract.json"
     },
+    "author": {
+      "description": "Сотрудник, создавший счет",
+      "$ref": "Employee.json"
+    },
     "sum": {
       "description": "сумма счета",
       "type": "number"

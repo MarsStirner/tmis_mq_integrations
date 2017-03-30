@@ -20,6 +20,8 @@
     </modules>
 
     <properties>
+        <generation.skip>false</generation.skip>
+        
         <logs.directory>./logs</logs.directory>
         <log.format>[%date{ISO8601}][%level][%thread][%logger{0}]: %message%n</log.format>
 

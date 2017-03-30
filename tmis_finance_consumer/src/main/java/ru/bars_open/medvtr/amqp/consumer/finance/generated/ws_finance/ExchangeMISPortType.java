@@ -34,6 +34,7 @@ public interface ExchangeMISPortType {
      * @param numTreatment
      * @param payerName
      * @param invoiceId
+     * @param employeeID
      * @param dateTreatment
      * @param remove
      * @param codePatient
@@ -67,7 +68,9 @@ public interface ExchangeMISPortType {
         @WebParam(name = "remove", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
         int remove,
         @WebParam(name = "invoice_id", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
-        int invoiceId);
+        int invoiceId,
+        @WebParam(name = "employeeID", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+        int employeeID);
 
     /**
      * 
@@ -76,6 +79,7 @@ public interface ExchangeMISPortType {
      * @param parentInvoiceId
      * @param sumReturn
      * @param invoiceId
+     * @param employeeID
      * @param remove
      * @return
      *     returns java.lang.String
@@ -96,6 +100,8 @@ public interface ExchangeMISPortType {
         @WebParam(name = "invoice_id", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
         int invoiceId,
         @WebParam(name = "parentInvoice_id", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
-        int parentInvoiceId);
+        int parentInvoiceId,
+        @WebParam(name = "employeeID", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+        int employeeID);
 
 }

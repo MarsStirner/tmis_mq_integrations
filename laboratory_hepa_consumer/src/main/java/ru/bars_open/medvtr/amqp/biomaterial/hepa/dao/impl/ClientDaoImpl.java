@@ -6,12 +6,7 @@ import ru.bars_open.medvtr.amqp.biomaterial.hepa.dao.interfaces.ClientDao;
 import ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.Client;
 import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 import static ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.listeners.StupidEncodingConverterListener.convertToDb;
 
@@ -27,12 +22,15 @@ import static ru.bars_open.medvtr.amqp.biomaterial.hepa.entities.listeners.Stupi
 public class ClientDaoImpl extends AbstractDaoImpl<Client> implements ClientDao {
 
 
-    public Client create(final String lastName, final String firstName, final String patrName, final LocalDateTime birthDate, final Sex sex) {
+    public Client create(
+            final Integer externalId, final String lastName, final String firstName, final String patrName, final LocalDate birthDate, final Sex sex
+    ) {
         final Client result = new Client();
+        result.setExternalId(externalId);
         result.setFirstName(convertToDb(firstName));
         result.setLastName(convertToDb(lastName));
         result.setPatrName(convertToDb(patrName));
-        result.setBirthDate(birthDate.toLocalDate());
+        result.setBirthDate(birthDate);
         switch (sex) {
             case MALE:
                 result.setSex(1);
@@ -51,45 +49,57 @@ public class ClientDaoImpl extends AbstractDaoImpl<Client> implements ClientDao 
 
 
     @Override
-    public Client findOrCreate(final String lastName, final String firstName, final String patrName, final LocalDateTime birthDate, final Sex sex) {
-        final Client result = getByNameAndBirthDate(lastName, firstName, patrName, birthDate, sex);
-        return result != null ? result : create(lastName, firstName, patrName, birthDate, sex);
-    }
-
-    private Client getByNameAndBirthDate(
-            final String lastName, final String firstName, final String patrName, final LocalDateTime birthDate, final Sex sex
+    public Client findOrCreate(
+            final Integer externalId,
+            final String lastName,
+            final String firstName,
+            final String patrName,
+            final LocalDate birthDate,
+            final Sex sex
     ) {
-        final CriteriaBuilder qb = em.getCriteriaBuilder();
-        final CriteriaQuery<Client> query = qb.createQuery(getEntityClass());
-        final Root<Client> root = query.from(getEntityClass());
-        query.select(root).where(
-                qb.and(
-                        qb.equal(root.get("lastName"), qb.parameter(String.class, "lastName")),
-                        qb.equal(root.get("firstName"), qb.parameter(String.class, "firstName")),
-                        qb.equal(root.get("patrName"), qb.parameter(String.class, "patrName")),
-                        qb.equal(root.get("birthDate"), qb.parameter(LocalDate.class, "birthDate"))
-                )
-        );
-        final List<Client> resultList = em.createQuery(query)
-                .setParameter("lastName", convertToDb(lastName))
-                .setParameter("firstName",convertToDb(firstName))
-                .setParameter("patrName", convertToDb(patrName))
-                .setParameter("birthDate", birthDate.toLocalDate())
-                .getResultList();
-        switch (resultList.size()) {
-            case 0: {
-                log.debug("Not found by FIO and BirthDate");
-                return null;
-            }
-            case 1: {
-                return resultList.iterator().next();
-            }
-            default: {
-                log.warn("By FIO and BirthDate founded {} rows. Return first", resultList.size());
-                return resultList.iterator().next();
+        Client result = getByExternalId(externalId);
+        if (result != null) {
+            log.debug("Found by externalId[{}] - {}", externalId, result.toShortString());
+            return result;
+        } else {
+            result = getByNameAndBirthDate(lastName, firstName, patrName, birthDate, sex);
+            if (result != null) {
+                log.debug("Found by FIO and BirthDay - {}", result.toShortString());
+                result.setExternalId(externalId);
+                result.setBirthDate(birthDate);
+                return em.merge(result);
             }
         }
+        return create(externalId, lastName, firstName, patrName, birthDate, sex);
     }
+
+
+    @Override
+    public Client getByNameAndBirthDate(final String lastName, final String firstName, final String patrName, final LocalDate birthDate, final Sex sex) {
+        return em.createQuery(
+                "SELECT c " +
+                        "FROM Client c " +
+                        "WHERE c.lastName = :lastName " +
+                        "AND c.firstName = :firstName " +
+                        "AND c.patrName = :patrName " +
+                        "AND (c.birthDate = :birthDate OR c.birthDate = :birthYear) " +
+                        "ORDER BY c.birthDate DESC",
+                Client.class
+        )
+                .setParameter("lastName", convertToDb(lastName))
+                .setParameter("firstName", convertToDb(firstName))
+                .setParameter("patrName", convertToDb(patrName))
+                .setParameter("birthDate", birthDate)
+                .setParameter("birthYear", birthDate.withDayOfYear(1))
+                .getResultList().stream().findFirst().orElse(null);
+    }
+
+    @Override
+    public Client getByExternalId(final Integer externalId) {
+        return em.createQuery("SELECT c FROM Client c WHERE c.externalId = :externalId", Client.class).setParameter("externalId", externalId)
+                .getResultList().stream().findFirst().orElse(null);
+    }
+
 
     @Override
     public Class<Client> getEntityClass() {

@@ -31,6 +31,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="payerName" type="{http://schemas.xmlsoap.org/soap/envelope}PersonName"/>
  *         &lt;element name="remove" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="invoice_id" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="employeeID" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -51,7 +52,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "codePayer",
     "payerName",
     "remove",
-    "invoiceId"
+    "invoiceId",
+    "employeeID"
 })
 @XmlRootElement(name = "putTreatment")
 public class PutTreatment {
@@ -76,6 +78,7 @@ public class PutTreatment {
     protected int remove;
     @XmlElement(name = "invoice_id")
     protected int invoiceId;
+    protected int employeeID;
 
     /**
      * Gets the value of the idTreatment property.
@@ -307,6 +310,22 @@ public class PutTreatment {
      */
     public void setInvoiceId(int value) {
         this.invoiceId = value;
+    }
+
+    /**
+     * Gets the value of the employeeID property.
+     * 
+     */
+    public int getEmployeeID() {
+        return employeeID;
+    }
+
+    /**
+     * Sets the value of the employeeID property.
+     * 
+     */
+    public void setEmployeeID(int value) {
+        this.employeeID = value;
     }
 
 }

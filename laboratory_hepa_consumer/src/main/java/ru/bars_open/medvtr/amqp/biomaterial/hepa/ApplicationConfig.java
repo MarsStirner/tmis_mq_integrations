@@ -1,6 +1,7 @@
 package ru.bars_open.medvtr.amqp.biomaterial.hepa;
 
 
+import ca.uhn.fhir.context.FhirContext;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.util.StatusPrinter;
 import com.typesafe.config.Config;
@@ -137,5 +138,11 @@ public class ApplicationConfig {
 
         log.info("{}", result);
         return result;
+    }
+
+
+    @Bean("fhirContext")
+    public FhirContext fhirContext(){
+        return FhirContext.forDstu3();
     }
 }

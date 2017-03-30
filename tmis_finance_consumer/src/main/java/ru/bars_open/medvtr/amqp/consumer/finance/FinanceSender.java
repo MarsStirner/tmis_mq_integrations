@@ -41,7 +41,8 @@ public class FinanceSender {
                 String.valueOf(payer.getId()),
                 wsFactory.createPersonName(payer),
                 deleted ? 1 : 0,
-                invoice.getId()
+                invoice.getId(),
+                invoice.getAuthor() != null ? invoice.getAuthor().getId() : 0
         );
         log.info("#{} WebService answer - {}", messageTag, result);
         return result.intValue();
@@ -57,7 +58,8 @@ public class FinanceSender {
                 invoice.getSum(),
                 invoice.getDeleted() ? 1 : 0,
                 invoice.getId(),
-                parentId
+                parentId,
+                invoice.getAuthor() != null ? invoice.getAuthor().getId() : 0
         );
         log.info("#{} WebService answer - {}", messageTag, result);
         return result;
