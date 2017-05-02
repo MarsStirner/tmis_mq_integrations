@@ -1,0 +1,10 @@
+{
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.ContactPointUse",
+  "enum": [
+    "home",
+    "work",
+    "temp",
+    "old",
+    "mobile"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.ContactPointSystem",
+  "description": "https://www.hl7.org/fhir/valueset-contact-point-system.html",
+  "enum": [
+    "phone",
+    "fax",
+    "email",
+    "pager",
+    "url",
+    "sms",
+    "other"
+  ]
+}

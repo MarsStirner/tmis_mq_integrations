@@ -36,6 +36,13 @@
       "items": {
         "$ref": "Address.json"
       }
+    },
+    "telecom": {
+      "description": "A contact detail (e.g. a telephone number or an email address) by which the individual may be contacted.",
+      "type": "array",
+      "items": {
+        "$ref": "./util/ContactPoint.json"
+      }
     }
   },
   "required": [

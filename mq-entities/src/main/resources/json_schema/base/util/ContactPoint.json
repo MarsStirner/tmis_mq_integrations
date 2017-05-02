@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Details for all kinds of technology-mediated contact points for a person or organization, including telephone, email, etc.",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.util.ContactPoint",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Идентификатор",
+      "minimum": 0
+    },
+    "system": {
+      "$ref": "./../refbook/enum/ContactPointSystem.json",
+      "description": "phone | fax | email | pager | url | sms | other"
+    },
+    "value": {
+      "description": "The actual contact point details",
+      "type": "string"
+    },
+    "use": {
+      "$ref": "./../refbook/enum/ContactPointUse.json",
+      "description": "home | work | temp | old | mobile - purpose of this contact point"
+    }
+  },
+  "required": [
+    "id",
+    "system",
+    "use"
+  ]
+}
