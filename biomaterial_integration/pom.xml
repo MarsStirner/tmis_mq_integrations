@@ -5,7 +5,7 @@
     <parent>
         <artifactId>tmis_mq_integrations</artifactId>
         <groupId>ru.bars_open.medvtr</groupId>
-        <version>LATEST</version>
+        <version>1.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -49,7 +49,7 @@
             <!-- Сущности для AMQP -->
             <groupId>ru.bars_open.medvtr</groupId>
             <artifactId>mq-entities</artifactId>
-            <version>LATEST</version>
+            <version>1.2</version>
         </dependency>
 
         <!-- Spring -->

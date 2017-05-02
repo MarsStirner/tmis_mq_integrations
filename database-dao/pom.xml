@@ -6,14 +6,14 @@
     <parent>
         <artifactId>tmis_mq_integrations</artifactId>
         <groupId>ru.bars_open.medvtr</groupId>
-        <version>LATEST</version>
+        <version>1.2</version>
         <relativePath>../</relativePath>
     </parent>
 
     <artifactId>database-dao</artifactId>
     <name>[database-dao] Spring-annotated DAO</name>
     <description>Define Spring DAO Repositories</description>
-    <version>1.0</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>ru.bars_open.medvtr</groupId>
             <artifactId>db-entities</artifactId>
-            <version>LATEST</version>
+            <version>1.2</version>
         </dependency>
 
         <!-- Транзакционные аннотации -->

@@ -6,7 +6,7 @@
     <parent>
         <artifactId>tmis_mq_integrations</artifactId>
         <groupId>ru.bars_open.medvtr</groupId>
-        <version>LATEST</version>
+        <version>1.2</version>
         <relativePath>../</relativePath>
     </parent>
 
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>ru.bars_open.medvtr</groupId>
             <artifactId>business-dao</artifactId>
-            <version>LATEST</version>
+            <version>1.2</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -38,7 +38,7 @@
         <dependency>
             <groupId>wsdl4j</groupId>
             <artifactId>wsdl4j</artifactId>
-            <version>LATEST</version>
+            <version>1.6.3</version>
         </dependency>
     </dependencies>
 
