@@ -1,23 +1,19 @@
 
 package ru.bars_open.medvtr.mq.entities.base;
 
+import com.fasterxml.jackson.annotation.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex;
+import ru.bars_open.medvtr.mq.entities.base.util.ContactPoint;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex;
 
 
 /**
@@ -32,7 +28,8 @@ import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.Sex;
     "patrName",
     "sex",
     "birthDate",
-    "addresses"
+    "addresses",
+    "telecom"
 })
 public class Person implements Serializable
 {
@@ -82,9 +79,16 @@ public class Person implements Serializable
     @JsonProperty("addresses")
     @JsonPropertyDescription("\u0410\u0434\u0440\u0435\u0441\u0430 \u043f\u0430\u0446\u0438\u0435\u043d\u0442\u0430 (\u0442\u0438\u043f \u0430\u0434\u0440\u0435\u0441\u0430 \u0432\u043d\u0443\u0442\u0440\u0438 \u044d\u043b\u0435\u043c\u0435\u043d\u0442\u0430)")
     private List<Address> addresses = new ArrayList<Address>();
+    /**
+     * A contact detail (e.g. a telephone number or an email address) by which the individual may be contacted.
+     * 
+     */
+    @JsonProperty("telecom")
+    @JsonPropertyDescription("A contact detail (e.g. a telephone number or an email address) by which the individual may be contacted.")
+    private List<ContactPoint> telecom = new ArrayList<ContactPoint>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = -5066195088784190865L;
+    private final static long serialVersionUID = -6834912741567453257L;
 
     /**
      * Идентифкатор МИС
@@ -206,6 +210,24 @@ public class Person implements Serializable
         this.addresses = addresses;
     }
 
+    /**
+     * A contact detail (e.g. a telephone number or an email address) by which the individual may be contacted.
+     * 
+     */
+    @JsonProperty("telecom")
+    public List<ContactPoint> getTelecom() {
+        return telecom;
+    }
+
+    /**
+     * A contact detail (e.g. a telephone number or an email address) by which the individual may be contacted.
+     * 
+     */
+    @JsonProperty("telecom")
+    public void setTelecom(List<ContactPoint> telecom) {
+        this.telecom = telecom;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -223,7 +245,7 @@ public class Person implements Serializable
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(lastName).append(firstName).append(patrName).append(sex).append(birthDate).append(addresses).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(id).append(lastName).append(firstName).append(patrName).append(sex).append(birthDate).append(addresses).append(telecom).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -235,7 +257,7 @@ public class Person implements Serializable
             return false;
         }
         Person rhs = ((Person) other);
-        return new EqualsBuilder().append(id, rhs.id).append(lastName, rhs.lastName).append(firstName, rhs.firstName).append(patrName, rhs.patrName).append(sex, rhs.sex).append(birthDate, rhs.birthDate).append(addresses, rhs.addresses).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(id, rhs.id).append(lastName, rhs.lastName).append(firstName, rhs.firstName).append(patrName, rhs.patrName).append(sex, rhs.sex).append(birthDate, rhs.birthDate).append(addresses, rhs.addresses).append(telecom, rhs.telecom).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }
