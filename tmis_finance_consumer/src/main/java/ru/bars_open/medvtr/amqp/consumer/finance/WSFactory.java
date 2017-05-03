@@ -33,7 +33,7 @@ import java.util.Map;
  * Description:
  */
 @Repository
-public class WSFactory{
+public class WSFactory {
 
     private static final Logger log = LoggerFactory.getLogger(WSFactory.class);
     private final static ObjectFactory OBJECT_FACTORY = new ObjectFactory();
@@ -72,7 +72,7 @@ public class WSFactory{
     }
 
 
-    public ExchangeMISPortType getWebService()  {
+    public ExchangeMISPortType getWebService() {
         return webservice;
     }
 
@@ -85,19 +85,23 @@ public class WSFactory{
     }
 
     public XMLGregorianCalendar wrapDate(final LocalDateTime date) {
+        if (date == null) {
+            return null;
+        }
         final GregorianCalendar calendar = GregorianCalendar.from(date.atZone(ZoneId.systemDefault()));
         return new XMLGregorianCalendarImpl(calendar);
     }
 
-    public PersonName createPersonName(final String family, final String given, final String partName) {
+    public PersonName createPersonName(final String family, final String given, final String partName, final LocalDateTime birthDate) {
         final PersonName result = OBJECT_FACTORY.createPersonName();
         result.setFamily(family);
         result.setGiven(given);
         result.setPartName(partName);
+        result.setBirthDay(wrapDate(birthDate));
         return result;
     }
 
     public PersonName createPersonName(final Person person) {
-        return createPersonName(person.getLastName(), person.getFirstName(), person.getPatrName());
+        return createPersonName(person.getLastName(), person.getFirstName(), person.getPatrName(), person.getBirthDate());
     }
 }

@@ -7,9 +7,13 @@ import org.springframework.stereotype.Component;
 import ru.bars_open.medvtr.mq.entities.base.Event;
 import ru.bars_open.medvtr.mq.entities.base.Invoice;
 import ru.bars_open.medvtr.mq.entities.base.Person;
+import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.ContactPointSystem;
+import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.ContactPointUse;
+import ru.bars_open.medvtr.mq.entities.base.util.ContactPoint;
 import ru.bars_open.medvtr.mq.entities.message.InvoiceMessage;
 
 import java.math.BigInteger;
+import java.util.Optional;
 
 /**
  * Author: Upatov Egor <br>
@@ -30,6 +34,8 @@ public class FinanceSender {
         final Invoice invoice = message.getInvoice();
         final Person client = message.getEvent().getClient();
         final Person payer = invoice.getContract().getPayer().getPerson();
+        final Optional<ContactPoint> emailStruct = payer.getTelecom().stream().filter(x -> ContactPointSystem.EMAIL == x.getSystem()).findFirst();
+        final Optional<ContactPoint> phoneStruct = payer.getTelecom().stream().filter(x -> ContactPointSystem.PHONE == x.getSystem() && ContactPointUse.MOBILE == x.getUse()).findFirst();
         final BigInteger result = wsFactory.getWebService().putTreatment(
                 event.getId(),
                 wsFactory.wrapDate(event.getSetDate()),
@@ -42,7 +48,9 @@ public class FinanceSender {
                 wsFactory.createPersonName(payer),
                 deleted ? 1 : 0,
                 invoice.getId(),
-                invoice.getAuthor() != null ? invoice.getAuthor().getId() : 0
+                invoice.getAuthor() != null ? invoice.getAuthor().getId() : 0,
+                emailStruct.isPresent() ? emailStruct.get().getValue() : "",
+                phoneStruct.isPresent() ? phoneStruct.get().getValue() : ""
         );
         log.info("#{} WebService answer - {}", messageTag, result);
         return result.intValue();
@@ -50,16 +58,21 @@ public class FinanceSender {
 
     public String sendRefund(final long messageTag, final InvoiceMessage message) {
         final Invoice invoice = message.getInvoice();
-        final String parentNumber = invoice.getParent() != null  ? invoice.getParent().getNumber() : "";
-        final int parentId = invoice.getParent() != null  ? invoice.getParent().getId() : -1;
-        final String result =  wsFactory.getWebService().putReturn(
+        final String parentNumber = invoice.getParent() != null ? invoice.getParent().getNumber() : "";
+        final int parentId = invoice.getParent() != null ? invoice.getParent().getId() : -1;
+        final Person payer = invoice.getContract().getPayer().getPerson();
+        final Optional<ContactPoint> emailStruct = payer.getTelecom().stream().filter(x -> ContactPointSystem.EMAIL == x.getSystem()).findFirst();
+        final Optional<ContactPoint> phoneStruct = payer.getTelecom().stream().filter(x -> ContactPointSystem.PHONE == x.getSystem() && ContactPointUse.MOBILE == x.getUse()).findFirst();
+        final String result = wsFactory.getWebService().putReturn(
                 parentNumber,
                 invoice.getNumber(),
                 invoice.getSum(),
                 invoice.getDeleted() ? 1 : 0,
                 invoice.getId(),
                 parentId,
-                invoice.getAuthor() != null ? invoice.getAuthor().getId() : 0
+                invoice.getAuthor() != null ? invoice.getAuthor().getId() : 0,
+                emailStruct.isPresent() ? emailStruct.get().getValue() : "",
+                phoneStruct.isPresent() ? phoneStruct.get().getValue() : ""
         );
         log.info("#{} WebService answer - {}", messageTag, result);
         return result;

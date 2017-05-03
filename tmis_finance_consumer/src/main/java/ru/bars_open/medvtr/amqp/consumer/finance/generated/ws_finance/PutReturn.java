@@ -25,6 +25,8 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="invoice_id" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="parentInvoice_id" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="employeeID" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="email" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="phoneNumber" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -41,7 +43,9 @@ import javax.xml.bind.annotation.XmlType;
     "remove",
     "invoiceId",
     "parentInvoiceId",
-    "employeeID"
+    "employeeID",
+    "email",
+    "phoneNumber"
 })
 @XmlRootElement(name = "putReturn")
 public class PutReturn {
@@ -57,6 +61,10 @@ public class PutReturn {
     @XmlElement(name = "parentInvoice_id")
     protected int parentInvoiceId;
     protected int employeeID;
+    @XmlElement(required = true)
+    protected String email;
+    @XmlElement(required = true)
+    protected String phoneNumber;
 
     /**
      * Gets the value of the parentNumInvoice property.
@@ -184,6 +192,54 @@ public class PutReturn {
      */
     public void setEmployeeID(int value) {
         this.employeeID = value;
+    }
+
+    /**
+     * Gets the value of the email property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * Sets the value of the email property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setEmail(String value) {
+        this.email = value;
+    }
+
+    /**
+     * Gets the value of the phoneNumber property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    /**
+     * Sets the value of the phoneNumber property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setPhoneNumber(String value) {
+        this.phoneNumber = value;
     }
 
 }

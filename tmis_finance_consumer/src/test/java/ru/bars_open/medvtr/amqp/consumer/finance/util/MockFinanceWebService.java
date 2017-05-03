@@ -24,33 +24,12 @@ public class MockFinanceWebService implements ExchangeMISPortType {
 
 
     @Override
-    public BigInteger putTreatment(
-            @WebParam(name = "idTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int idTreatment,
-            @WebParam(name = "dateTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final XMLGregorianCalendar dateTreatment,
-            @WebParam(name = "numTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final String numTreatment,
-            @WebParam(name = "numInvoice", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final String numInvoice,
-            @WebParam(name = "sumInvoice", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final double sumInvoice,
-            @WebParam(name = "codePatient", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final String codePatient,
-            @WebParam(name = "patientName", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final PersonName patientName,
-            @WebParam(name = "codePayer", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final String codePayer,
-            @WebParam(name = "payerName", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final PersonName payerName,
-            @WebParam(name = "remove", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int remove,
-            @WebParam(name = "invoice_id", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int invoiceId,
-            @WebParam(name = "employeeID", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") int employeeID
-    ) {
+    public BigInteger putTreatment(@WebParam(name = "idTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") int idTreatment, @WebParam(name = "dateTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") XMLGregorianCalendar dateTreatment, @WebParam(name = "numTreatment", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") String numTreatment, @WebParam(name = "numInvoice", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") String numInvoice, @WebParam(name = "sumInvoice", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") double sumInvoice, @WebParam(name = "codePatient", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") String codePatient, @WebParam(name = "patientName", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") PersonName patientName, @WebParam(name = "codePayer", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") String codePayer, @WebParam(name = "payerName", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") PersonName payerName, @WebParam(name = "remove", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") int remove, @WebParam(name = "invoice_id", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") int invoiceId, @WebParam(name = "employeeID", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") int employeeID, @WebParam(name = "email", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") String email, @WebParam(name = "phoneNumber", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") String phoneNumber) {
         return BigInteger.valueOf(idTreatment);
     }
 
     @Override
-    public String putReturn(
-            @WebParam(name = "parentNumInvoice", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final String parentNumInvoice,
-            @WebParam(name = "numInvoice", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final String numInvoice,
-            @WebParam(name = "sumReturn", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final double sumReturn,
-            @WebParam(name = "remove", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int remove,
-            @WebParam(name = "invoice_id", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int invoiceId,
-            @WebParam(name = "parentInvoice_id", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") final int parentInvoiceId,
-            @WebParam(name = "employeeID", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") int employeeID
-    ) {
+    public String putReturn(@WebParam(name = "parentNumInvoice", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") String parentNumInvoice, @WebParam(name = "numInvoice", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") String numInvoice, @WebParam(name = "sumReturn", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") double sumReturn, @WebParam(name = "remove", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") int remove, @WebParam(name = "invoice_id", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") int invoiceId, @WebParam(name = "parentInvoice_id", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") int parentInvoiceId, @WebParam(name = "employeeID", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") int employeeID, @WebParam(name = "email", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") String email, @WebParam(name = "phoneNumber", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope") String phoneNumber) {
         return numInvoice;
     }
 }

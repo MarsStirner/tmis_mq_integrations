@@ -4,7 +4,9 @@ package ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 
 /**
@@ -20,6 +22,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="family" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="given" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="partName" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="BirthDay" type="{http://www.w3.org/2001/XMLSchema}date"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -32,7 +35,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "PersonName", propOrder = {
     "family",
     "given",
-    "partName"
+    "partName",
+    "birthDay"
 })
 public class PersonName {
 
@@ -42,6 +46,9 @@ public class PersonName {
     protected String given;
     @XmlElement(required = true)
     protected String partName;
+    @XmlElement(name = "BirthDay", required = true)
+    @XmlSchemaType(name = "date")
+    protected XMLGregorianCalendar birthDay;
 
     /**
      * Gets the value of the family property.
@@ -113,6 +120,30 @@ public class PersonName {
      */
     public void setPartName(String value) {
         this.partName = value;
+    }
+
+    /**
+     * Gets the value of the birthDay property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link XMLGregorianCalendar }
+     *     
+     */
+    public XMLGregorianCalendar getBirthDay() {
+        return birthDay;
+    }
+
+    /**
+     * Sets the value of the birthDay property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link XMLGregorianCalendar }
+     *     
+     */
+    public void setBirthDay(XMLGregorianCalendar value) {
+        this.birthDay = value;
     }
 
 }

@@ -21,6 +21,8 @@
                                 type="xs:string"/>
                     <xs:element name="partName"
                                 type="xs:string"/>
+                    <xs:element name="BirthDay"
+                                type="xs:date"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="ServiceCompleteInfo">
@@ -70,6 +72,10 @@
                                     type="xs:int"/>
                         <xs:element name="employeeID"
                                     type="xs:int"/>
+                        <xs:element name="email"
+                                    type="xs:string"/>
+                        <xs:element name="phoneNumber"
+                                    type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -98,6 +104,10 @@
                                     type="xs:int"/>
                         <xs:element name="employeeID"
                                     type="xs:int"/>
+                        <xs:element name="email"
+                                    type="xs:string"/>
+                        <xs:element name="phoneNumber"
+                                    type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>

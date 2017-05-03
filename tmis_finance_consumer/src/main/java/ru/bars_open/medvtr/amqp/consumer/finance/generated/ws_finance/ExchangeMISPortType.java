@@ -27,16 +27,18 @@ public interface ExchangeMISPortType {
 
     /**
      * 
-     * @param sumInvoice
      * @param patientName
      * @param numInvoice
+     * @param employeeID
+     * @param dateTreatment
+     * @param remove
+     * @param sumInvoice
+     * @param phoneNumber
      * @param idTreatment
      * @param numTreatment
      * @param payerName
      * @param invoiceId
-     * @param employeeID
-     * @param dateTreatment
-     * @param remove
+     * @param email
      * @param codePatient
      * @param codePayer
      * @return
@@ -70,17 +72,23 @@ public interface ExchangeMISPortType {
         @WebParam(name = "invoice_id", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
         int invoiceId,
         @WebParam(name = "employeeID", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
-        int employeeID);
+        int employeeID,
+        @WebParam(name = "email", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+        String email,
+        @WebParam(name = "phoneNumber", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+        String phoneNumber);
 
     /**
      * 
      * @param numInvoice
+     * @param phoneNumber
      * @param parentNumInvoice
      * @param parentInvoiceId
      * @param sumReturn
      * @param invoiceId
      * @param employeeID
      * @param remove
+     * @param email
      * @return
      *     returns java.lang.String
      */
@@ -102,6 +110,10 @@ public interface ExchangeMISPortType {
         @WebParam(name = "parentInvoice_id", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
         int parentInvoiceId,
         @WebParam(name = "employeeID", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
-        int employeeID);
+        int employeeID,
+        @WebParam(name = "email", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+        String email,
+        @WebParam(name = "phoneNumber", targetNamespace = "http://schemas.xmlsoap.org/soap/envelope")
+        String phoneNumber);
 
 }
