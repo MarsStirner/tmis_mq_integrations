@@ -32,7 +32,7 @@ import ru.bars_open.medvtr.mq.entities.base.refbook.enumerator.ActionStatus;
     "begDate",
     "endDate",
     "orgStructStay",
-    "orgStructDirection"
+    "orgStructTransfer"
 })
 public class StationaryReceived implements Serializable
 {
@@ -75,12 +75,12 @@ public class StationaryReceived implements Serializable
      * Отделение больницы
      * 
      */
-    @JsonProperty("orgStructDirection")
+    @JsonProperty("orgStructTransfer")
     @JsonPropertyDescription("\u041e\u0442\u0434\u0435\u043b\u0435\u043d\u0438\u0435 \u0431\u043e\u043b\u044c\u043d\u0438\u0446\u044b")
-    private OrgStructure orgStructDirection;
+    private OrgStructure orgStructTransfer;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = 2549415913611953866L;
+    private final static long serialVersionUID = -3810559112263433664L;
 
     /**
      * Идентификатор экшена
@@ -174,9 +174,9 @@ public class StationaryReceived implements Serializable
      * Отделение больницы
      * 
      */
-    @JsonProperty("orgStructDirection")
-    public OrgStructure getOrgStructDirection() {
-        return orgStructDirection;
+    @JsonProperty("orgStructTransfer")
+    public OrgStructure getOrgStructTransfer() {
+        return orgStructTransfer;
     }
 
     /**
@@ -185,9 +185,9 @@ public class StationaryReceived implements Serializable
      * Отделение больницы
      * 
      */
-    @JsonProperty("orgStructDirection")
-    public void setOrgStructDirection(OrgStructure orgStructDirection) {
-        this.orgStructDirection = orgStructDirection;
+    @JsonProperty("orgStructTransfer")
+    public void setOrgStructTransfer(OrgStructure orgStructTransfer) {
+        this.orgStructTransfer = orgStructTransfer;
     }
 
     @Override
@@ -207,7 +207,7 @@ public class StationaryReceived implements Serializable
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(status).append(begDate).append(endDate).append(orgStructStay).append(orgStructDirection).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(id).append(status).append(begDate).append(endDate).append(orgStructStay).append(orgStructTransfer).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -219,7 +219,7 @@ public class StationaryReceived implements Serializable
             return false;
         }
         StationaryReceived rhs = ((StationaryReceived) other);
-        return new EqualsBuilder().append(id, rhs.id).append(status, rhs.status).append(begDate, rhs.begDate).append(endDate, rhs.endDate).append(orgStructStay, rhs.orgStructStay).append(orgStructDirection, rhs.orgStructDirection).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(id, rhs.id).append(status, rhs.status).append(begDate, rhs.begDate).append(endDate, rhs.endDate).append(orgStructStay, rhs.orgStructStay).append(orgStructTransfer, rhs.orgStructTransfer).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

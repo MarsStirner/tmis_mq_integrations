@@ -198,8 +198,8 @@ public class ValidationFactory {
         checkNotNull(source.getId(), prefix, ".id", result);
         checkNotNull(source.getBegDate(), prefix, ".begDate", result);
         result.addAll(getErrors(source.getOrgStructStay(), prefix + ".OrgStructStay"));
-        if (source.getOrgStructDirection() != null) {
-            result.addAll(getErrors(source.getOrgStructDirection(), prefix + ".[optional]OrgStructDirection"));
+        if (source.getOrgStructTransfer() != null) {
+            result.addAll(getErrors(source.getOrgStructTransfer(), prefix + ".[optional]OrgStructTransfer"));
         }
         return result;
     }

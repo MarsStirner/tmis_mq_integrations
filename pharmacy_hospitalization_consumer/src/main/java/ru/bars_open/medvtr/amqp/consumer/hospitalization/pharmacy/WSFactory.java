@@ -144,7 +144,8 @@ public class WSFactory {
         result.setStatus(wrapStatus(source.getStatus().value()));
         result.setBegDate(wrapDate(source.getBegDate()));
         result.setEndDate(wrapDate(source.getEndDate()));
-        result.setOrgStructDirection(createOrgStructure(source.getOrgStructDirection()));
+        //UX: разные названия из-за того что изначально в ФНКЦ (мы так называли поля постулпения, а в ГНЦ переделали)
+        result.setOrgStructDirection(createOrgStructure(source.getOrgStructTransfer()));
         result.setOrgStructStay(createOrgStructure(source.getOrgStructStay()));
         return result;
     }

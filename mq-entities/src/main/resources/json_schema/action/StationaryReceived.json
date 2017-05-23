@@ -30,7 +30,7 @@
       "$ref": "../base/OrgStructure.json",
       "description": "Отделение поступления"
     },
-    "orgStructDirection": {
+    "orgStructTransfer": {
       "type": "object",
       "$ref": "../base/OrgStructure.json",
       "description": "Направлен в отделение"
