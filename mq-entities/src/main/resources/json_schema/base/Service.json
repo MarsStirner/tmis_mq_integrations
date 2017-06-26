@@ -1,0 +1,37 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/Service.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Service",
+  "description": "Счет на оплату",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.Service",
+  "properties": {
+    "id": {
+      "description": "Идентификатор",
+      "type": "integer"
+    },
+    "code": {
+      "description": "номенклатурный номер услуги",
+      "type": "string"
+    },
+    "name": {
+      "description": "наименование услуги",
+      "type": "string"
+    },
+    "isAccumulativePrice":{
+      "description": "стоимость услуги является накопительной; для комплексных услуг итоговая стоимость может рассчитываться по стоимостям услуг, входящих в эту группу услуг, по соответствующим позициям прайс-листа",
+      "type": "boolean"
+    },
+    "service":{
+      "description": "стоимость услуги является накопительной; для комплексных услуг итоговая стоимость может рассчитываться по стоимостям услуг, входящих в эту группу услуг, по соответствующим позициям прайс-листа",
+      "$ref": "./refbook/RbService.json"
+    }
+  },
+  "required": [
+    "id",
+    "code",
+    "name",
+    "isAccumulativePrice",
+    "service"
+  ]
+}

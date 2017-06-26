@@ -2,36 +2,43 @@
   "id": "http://bars-open.ru/medvtr/json-schema/base/InvoiceItem.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "InvoiceItem",
-  "description": "Счет на оплату",
+  "description": "Позиция счета",
   "type": "object",
   "javaType": "ru.bars_open.medvtr.mq.entities.base.InvoiceItem",
   "properties": {
     "id": {
-      "description": "Идентифкатор позиции счета",
+      "description": "Идентификатор позиции счета",
       "type": "integer"
     },
-    "n_number": {
-      "description": "номенклатурный номер услуги",
-      "type": "string"
+    "parent_id": {
+      "description": "идентификатор родительской позиции счета",
+      "type": "integer"
+    },
+    "service": {
+      "description": "конкретный экземпляр услуги",
+      "$ref": "Service.json"
     },
     "price": {
-      "description": "цена оказанной услуги (за штуку, без учета скидок)",
+      "description": "цена оказанной позиции счета (за штуку, без учета скидок)",
       "type": "number"
     },
     "amount": {
       "description": "количество оказанных услуг (целое)",
       "type": "integer"
     },
-    "full_name": {
-      "description": "наименование услуги",
-      "type": "string"
+    "sum_discount": {
+      "description": "общая сумма скидок на позицию счета",
+      "type": "number"
+    },
+    "sum_total": {
+      "description": "общая стоимость позиции счета",
+      "type": "number"
     }
   },
   "required": [
     "id",
-    "n_number",
+    "service",
     "price",
-    "amount",
-    "full_name"
+    "amount"
   ]
 }

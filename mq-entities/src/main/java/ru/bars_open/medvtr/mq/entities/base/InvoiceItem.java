@@ -19,43 +19,54 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 /**
  * InvoiceItem
  * <p>
- * Счет на оплату
+ * Позиция счета
  * 
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "id",
-    "n_number",
+    "parent_id",
+    "service",
     "price",
     "amount",
-    "full_name"
+    "sum_discount",
+    "sum_total"
 })
 public class InvoiceItem implements Serializable
 {
 
     /**
-     * Идентифкатор позиции счета
+     * Идентификатор позиции счета
      * (Required)
      * 
      */
     @JsonProperty("id")
-    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u043a\u0430\u0442\u043e\u0440 \u043f\u043e\u0437\u0438\u0446\u0438\u0438 \u0441\u0447\u0435\u0442\u0430")
+    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u043f\u043e\u0437\u0438\u0446\u0438\u0438 \u0441\u0447\u0435\u0442\u0430")
     private Integer id;
     /**
-     * номенклатурный номер услуги
+     * идентификатор родительской позиции счета
+     * 
+     */
+    @JsonProperty("parent_id")
+    @JsonPropertyDescription("\u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0440\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u0441\u043a\u043e\u0439 \u043f\u043e\u0437\u0438\u0446\u0438\u0438 \u0441\u0447\u0435\u0442\u0430")
+    private Integer parentId;
+    /**
+     * Service
+     * <p>
+     * Счет на оплату
      * (Required)
      * 
      */
-    @JsonProperty("n_number")
-    @JsonPropertyDescription("\u043d\u043e\u043c\u0435\u043d\u043a\u043b\u0430\u0442\u0443\u0440\u043d\u044b\u0439 \u043d\u043e\u043c\u0435\u0440 \u0443\u0441\u043b\u0443\u0433\u0438")
-    private String nNumber;
+    @JsonProperty("service")
+    @JsonPropertyDescription("\u0421\u0447\u0435\u0442 \u043d\u0430 \u043e\u043f\u043b\u0430\u0442\u0443")
+    private Service service;
     /**
-     * цена оказанной услуги (за штуку, без учета скидок)
+     * цена оказанной позиции счета (за штуку, без учета скидок)
      * (Required)
      * 
      */
     @JsonProperty("price")
-    @JsonPropertyDescription("\u0446\u0435\u043d\u0430 \u043e\u043a\u0430\u0437\u0430\u043d\u043d\u043e\u0439 \u0443\u0441\u043b\u0443\u0433\u0438 (\u0437\u0430 \u0448\u0442\u0443\u043a\u0443, \u0431\u0435\u0437 \u0443\u0447\u0435\u0442\u0430 \u0441\u043a\u0438\u0434\u043e\u043a)")
+    @JsonPropertyDescription("\u0446\u0435\u043d\u0430 \u043e\u043a\u0430\u0437\u0430\u043d\u043d\u043e\u0439 \u043f\u043e\u0437\u0438\u0446\u0438\u0438 \u0441\u0447\u0435\u0442\u0430 (\u0437\u0430 \u0448\u0442\u0443\u043a\u0443, \u0431\u0435\u0437 \u0443\u0447\u0435\u0442\u0430 \u0441\u043a\u0438\u0434\u043e\u043a)")
     private Double price;
     /**
      * количество оказанных услуг (целое)
@@ -66,19 +77,25 @@ public class InvoiceItem implements Serializable
     @JsonPropertyDescription("\u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043e\u043a\u0430\u0437\u0430\u043d\u043d\u044b\u0445 \u0443\u0441\u043b\u0443\u0433 (\u0446\u0435\u043b\u043e\u0435)")
     private Integer amount;
     /**
-     * наименование услуги
-     * (Required)
+     * общая сумма скидок на позицию счета
      * 
      */
-    @JsonProperty("full_name")
-    @JsonPropertyDescription("\u043d\u0430\u0438\u043c\u0435\u043d\u043e\u0432\u0430\u043d\u0438\u0435 \u0443\u0441\u043b\u0443\u0433\u0438")
-    private String fullName;
+    @JsonProperty("sum_discount")
+    @JsonPropertyDescription("\u043e\u0431\u0449\u0430\u044f \u0441\u0443\u043c\u043c\u0430 \u0441\u043a\u0438\u0434\u043e\u043a \u043d\u0430 \u043f\u043e\u0437\u0438\u0446\u0438\u044e \u0441\u0447\u0435\u0442\u0430")
+    private Double sumDiscount;
+    /**
+     * общая стоимость позиции счета
+     * 
+     */
+    @JsonProperty("sum_total")
+    @JsonPropertyDescription("\u043e\u0431\u0449\u0430\u044f \u0441\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u044c \u043f\u043e\u0437\u0438\u0446\u0438\u0438 \u0441\u0447\u0435\u0442\u0430")
+    private Double sumTotal;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = 6852728634288344815L;
+    private final static long serialVersionUID = -7357851256213947479L;
 
     /**
-     * Идентифкатор позиции счета
+     * Идентификатор позиции счета
      * (Required)
      * 
      */
@@ -88,7 +105,7 @@ public class InvoiceItem implements Serializable
     }
 
     /**
-     * Идентифкатор позиции счета
+     * Идентификатор позиции счета
      * (Required)
      * 
      */
@@ -98,27 +115,49 @@ public class InvoiceItem implements Serializable
     }
 
     /**
-     * номенклатурный номер услуги
-     * (Required)
+     * идентификатор родительской позиции счета
      * 
      */
-    @JsonProperty("n_number")
-    public String getNNumber() {
-        return nNumber;
+    @JsonProperty("parent_id")
+    public Integer getParentId() {
+        return parentId;
     }
 
     /**
-     * номенклатурный номер услуги
-     * (Required)
+     * идентификатор родительской позиции счета
      * 
      */
-    @JsonProperty("n_number")
-    public void setNNumber(String nNumber) {
-        this.nNumber = nNumber;
+    @JsonProperty("parent_id")
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 
     /**
-     * цена оказанной услуги (за штуку, без учета скидок)
+     * Service
+     * <p>
+     * Счет на оплату
+     * (Required)
+     * 
+     */
+    @JsonProperty("service")
+    public Service getService() {
+        return service;
+    }
+
+    /**
+     * Service
+     * <p>
+     * Счет на оплату
+     * (Required)
+     * 
+     */
+    @JsonProperty("service")
+    public void setService(Service service) {
+        this.service = service;
+    }
+
+    /**
+     * цена оказанной позиции счета (за штуку, без учета скидок)
      * (Required)
      * 
      */
@@ -128,7 +167,7 @@ public class InvoiceItem implements Serializable
     }
 
     /**
-     * цена оказанной услуги (за штуку, без учета скидок)
+     * цена оказанной позиции счета (за штуку, без учета скидок)
      * (Required)
      * 
      */
@@ -158,23 +197,39 @@ public class InvoiceItem implements Serializable
     }
 
     /**
-     * наименование услуги
-     * (Required)
+     * общая сумма скидок на позицию счета
      * 
      */
-    @JsonProperty("full_name")
-    public String getFullName() {
-        return fullName;
+    @JsonProperty("sum_discount")
+    public Double getSumDiscount() {
+        return sumDiscount;
     }
 
     /**
-     * наименование услуги
-     * (Required)
+     * общая сумма скидок на позицию счета
      * 
      */
-    @JsonProperty("full_name")
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    @JsonProperty("sum_discount")
+    public void setSumDiscount(Double sumDiscount) {
+        this.sumDiscount = sumDiscount;
+    }
+
+    /**
+     * общая стоимость позиции счета
+     * 
+     */
+    @JsonProperty("sum_total")
+    public Double getSumTotal() {
+        return sumTotal;
+    }
+
+    /**
+     * общая стоимость позиции счета
+     * 
+     */
+    @JsonProperty("sum_total")
+    public void setSumTotal(Double sumTotal) {
+        this.sumTotal = sumTotal;
     }
 
     @Override
@@ -194,7 +249,7 @@ public class InvoiceItem implements Serializable
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(nNumber).append(price).append(amount).append(fullName).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(id).append(parentId).append(service).append(price).append(amount).append(sumDiscount).append(sumTotal).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -206,7 +261,7 @@ public class InvoiceItem implements Serializable
             return false;
         }
         InvoiceItem rhs = ((InvoiceItem) other);
-        return new EqualsBuilder().append(id, rhs.id).append(nNumber, rhs.nNumber).append(price, rhs.price).append(amount, rhs.amount).append(fullName, rhs.fullName).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(id, rhs.id).append(parentId, rhs.parentId).append(service, rhs.service).append(price, rhs.price).append(amount, rhs.amount).append(sumDiscount, rhs.sumDiscount).append(sumTotal, rhs.sumTotal).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }
