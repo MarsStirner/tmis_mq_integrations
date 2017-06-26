@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.Services;
 import ru.bars_open.medvtr.mq.entities.base.Event;
 import ru.bars_open.medvtr.mq.entities.base.Invoice;
 import ru.bars_open.medvtr.mq.entities.base.Person;
@@ -36,6 +37,7 @@ public class FinanceSender {
         final Person payer = invoice.getContract().getPayer().getPerson();
         final Optional<ContactPoint> emailStruct = payer.getTelecom().stream().filter(x -> ContactPointSystem.EMAIL == x.getSystem()).findFirst();
         final Optional<ContactPoint> phoneStruct = payer.getTelecom().stream().filter(x -> ContactPointSystem.PHONE == x.getSystem() && ContactPointUse.MOBILE == x.getUse()).findFirst();
+        final Services services = wsFactory.getServices(invoice.getItems());
         final BigInteger result = wsFactory.getWebService().putTreatment(
                 event.getId(),
                 wsFactory.wrapDate(event.getSetDate()),
@@ -49,8 +51,9 @@ public class FinanceSender {
                 deleted ? 1 : 0,
                 invoice.getId(),
                 invoice.getAuthor() != null ? invoice.getAuthor().getId() : 0,
-                emailStruct.isPresent() ? emailStruct.get().getValue() : "",
-                phoneStruct.isPresent() ? phoneStruct.get().getValue() : ""
+                emailStruct.map(ContactPoint::getValue).orElse(""),
+                phoneStruct.map(ContactPoint::getValue).orElse(""),
+                services
         );
         log.info("#{} WebService answer - {}", messageTag, result);
         return result.intValue();
@@ -63,6 +66,7 @@ public class FinanceSender {
         final Person payer = invoice.getContract().getPayer().getPerson();
         final Optional<ContactPoint> emailStruct = payer.getTelecom().stream().filter(x -> ContactPointSystem.EMAIL == x.getSystem()).findFirst();
         final Optional<ContactPoint> phoneStruct = payer.getTelecom().stream().filter(x -> ContactPointSystem.PHONE == x.getSystem() && ContactPointUse.MOBILE == x.getUse()).findFirst();
+        final Services services = wsFactory.getServices(invoice.getItems());
         final String result = wsFactory.getWebService().putReturn(
                 parentNumber,
                 invoice.getNumber(),
@@ -71,8 +75,9 @@ public class FinanceSender {
                 invoice.getId(),
                 parentId,
                 invoice.getAuthor() != null ? invoice.getAuthor().getId() : 0,
-                emailStruct.isPresent() ? emailStruct.get().getValue() : "",
-                phoneStruct.isPresent() ? phoneStruct.get().getValue() : ""
+                emailStruct.map(ContactPoint::getValue).orElse(""),
+                phoneStruct.map(ContactPoint::getValue).orElse(""),
+                services
         );
         log.info("#{} WebService answer - {}", messageTag, result);
         return result;

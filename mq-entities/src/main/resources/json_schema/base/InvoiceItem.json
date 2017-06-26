@@ -1,0 +1,37 @@
+{
+  "id": "http://bars-open.ru/medvtr/json-schema/base/InvoiceItem.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "InvoiceItem",
+  "description": "Счет на оплату",
+  "type": "object",
+  "javaType": "ru.bars_open.medvtr.mq.entities.base.InvoiceItem",
+  "properties": {
+    "id": {
+      "description": "Идентифкатор позиции счета",
+      "type": "integer"
+    },
+    "n_number": {
+      "description": "номенклатурный номер услуги",
+      "type": "string"
+    },
+    "price": {
+      "description": "цена оказанной услуги (за штуку, без учета скидок)",
+      "type": "number"
+    },
+    "amount": {
+      "description": "количество оказанных услуг (целое)",
+      "type": "integer"
+    },
+    "full_name": {
+      "description": "наименование услуги",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "n_number",
+    "price",
+    "amount",
+    "full_name"
+  ]
+}

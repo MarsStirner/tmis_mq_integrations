@@ -2,7 +2,9 @@
 package ru.bars_open.medvtr.mq.entities.base;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -30,7 +32,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
     "contract",
     "author",
     "sum",
-    "parent"
+    "parent",
+    "items"
 })
 public class Invoice implements Serializable
 {
@@ -90,9 +93,16 @@ public class Invoice implements Serializable
     @JsonProperty("parent")
     @JsonPropertyDescription("\u0421\u0447\u0435\u0442 \u043d\u0430 \u043e\u043f\u043b\u0430\u0442\u0443")
     private Invoice parent;
+    /**
+     * Позиции счета
+     * 
+     */
+    @JsonProperty("items")
+    @JsonPropertyDescription("\u041f\u043e\u0437\u0438\u0446\u0438\u0438 \u0441\u0447\u0435\u0442\u0430")
+    private List<InvoiceItem> items = new ArrayList<InvoiceItem>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = 6725687489561864197L;
+    private final static long serialVersionUID = 923395643563390618L;
 
     /**
      * Идентифкатор
@@ -232,6 +242,24 @@ public class Invoice implements Serializable
         this.parent = parent;
     }
 
+    /**
+     * Позиции счета
+     * 
+     */
+    @JsonProperty("items")
+    public List<InvoiceItem> getItems() {
+        return items;
+    }
+
+    /**
+     * Позиции счета
+     * 
+     */
+    @JsonProperty("items")
+    public void setItems(List<InvoiceItem> items) {
+        this.items = items;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -249,7 +277,7 @@ public class Invoice implements Serializable
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(id).append(number).append(deleted).append(contract).append(author).append(sum).append(parent).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(id).append(number).append(deleted).append(contract).append(author).append(sum).append(parent).append(items).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -261,7 +289,7 @@ public class Invoice implements Serializable
             return false;
         }
         Invoice rhs = ((Invoice) other);
-        return new EqualsBuilder().append(id, rhs.id).append(number, rhs.number).append(deleted, rhs.deleted).append(contract, rhs.contract).append(author, rhs.author).append(sum, rhs.sum).append(parent, rhs.parent).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(id, rhs.id).append(number, rhs.number).append(deleted, rhs.deleted).append(contract, rhs.contract).append(author, rhs.author).append(sum, rhs.sum).append(parent, rhs.parent).append(items, rhs.items).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

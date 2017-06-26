@@ -27,6 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="employeeID" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="email" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="phoneNumber" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="services" type="{http://schemas.xmlsoap.org/soap/envelope}Services"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -45,7 +46,8 @@ import javax.xml.bind.annotation.XmlType;
     "parentInvoiceId",
     "employeeID",
     "email",
-    "phoneNumber"
+    "phoneNumber",
+    "services"
 })
 @XmlRootElement(name = "putReturn")
 public class PutReturn {
@@ -65,6 +67,8 @@ public class PutReturn {
     protected String email;
     @XmlElement(required = true)
     protected String phoneNumber;
+    @XmlElement(required = true)
+    protected Services services;
 
     /**
      * Gets the value of the parentNumInvoice property.
@@ -240,6 +244,30 @@ public class PutReturn {
      */
     public void setPhoneNumber(String value) {
         this.phoneNumber = value;
+    }
+
+    /**
+     * Gets the value of the services property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Services }
+     *     
+     */
+    public Services getServices() {
+        return services;
+    }
+
+    /**
+     * Sets the value of the services property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Services }
+     *     
+     */
+    public void setServices(Services value) {
+        this.services = value;
     }
 
 }

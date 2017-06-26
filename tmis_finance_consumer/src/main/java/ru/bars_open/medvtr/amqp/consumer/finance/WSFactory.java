@@ -5,11 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.ExchangeMIS;
-import ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.ExchangeMISPortType;
-import ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.ObjectFactory;
-import ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.PersonName;
+import ru.bars_open.medvtr.amqp.consumer.finance.generated.ws_finance.*;
 import ru.bars_open.medvtr.amqp.consumer.finance.util.SHandler;
+import ru.bars_open.medvtr.mq.entities.base.InvoiceItem;
 import ru.bars_open.medvtr.mq.entities.base.Person;
 import ru.bars_open.medvtr.mq.util.ConfigurationHolder;
 
@@ -20,10 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.GregorianCalendar;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -103,5 +98,23 @@ public class WSFactory {
 
     public PersonName createPersonName(final Person person) {
         return createPersonName(person.getLastName(), person.getFirstName(), person.getPatrName(), person.getBirthDate());
+    }
+
+    public Services getServices(List<InvoiceItem> items) {
+        final Services result = OBJECT_FACTORY.createServices();
+        for (InvoiceItem item : items) {
+            result.getService().add(createService(item));
+        }
+        return result;
+    }
+
+    private Service createService(InvoiceItem item) {
+        final Service result = OBJECT_FACTORY.createService();
+        result.setAmount(item.getAmount());
+        result.setIdService(item.getId());
+        result.setPrice(item.getPrice());
+        result.setFullName(item.getFullName());
+        result.setNNumber(item.getNNumber());
+        return result;
     }
 }

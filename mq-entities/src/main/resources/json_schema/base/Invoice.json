@@ -33,6 +33,13 @@
     "parent": {
       "description": "Счет-родитель (текущий счет перевыставлен для счета ...)",
       "$ref": "Invoice.json"
+    },
+    "items": {
+      "description": "Позиции счета",
+      "type": "array",
+      "items": {
+        "$ref": "InvoiceItem.json"
+      }
     }
   },
   "required": [
