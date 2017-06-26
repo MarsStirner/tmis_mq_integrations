@@ -33,12 +33,12 @@ public class RbBiomaterialType implements Serializable
 {
 
     /**
-     * Идентифкатор МИС
+     * Идентификатор МИС
      * (Required)
      * 
      */
     @JsonProperty("id")
-    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u043a\u0430\u0442\u043e\u0440 \u041c\u0418\u0421")
+    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u041c\u0418\u0421")
     private Integer id;
     /**
      * Код записи справочника
@@ -75,7 +75,7 @@ public class RbBiomaterialType implements Serializable
     private final static long serialVersionUID = -2591050232072133110L;
 
     /**
-     * Идентифкатор МИС
+     * Идентификатор МИС
      * (Required)
      * 
      */
@@ -85,7 +85,7 @@ public class RbBiomaterialType implements Serializable
     }
 
     /**
-     * Идентифкатор МИС
+     * Идентификатор МИС
      * (Required)
      * 
      */

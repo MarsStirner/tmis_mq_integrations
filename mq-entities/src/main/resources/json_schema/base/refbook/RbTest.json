@@ -6,7 +6,7 @@
   "properties": {
     "id": {
       "type": "integer",
-      "description": "Идентифкатор МИС (rbTest.id)",
+      "description": "Идентификатор МИС (rbTest.id)",
       "minimum": 0
     },
     "code": {

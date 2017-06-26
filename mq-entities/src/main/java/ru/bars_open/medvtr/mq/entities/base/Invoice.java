@@ -39,11 +39,11 @@ public class Invoice implements Serializable
 {
 
     /**
-     * Идентифкатор
+     * Идентификатор
      * 
      */
     @JsonProperty("id")
-    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u043a\u0430\u0442\u043e\u0440")
+    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440")
     private Integer id;
     /**
      * номер счета
@@ -105,7 +105,7 @@ public class Invoice implements Serializable
     private final static long serialVersionUID = 923395643563390618L;
 
     /**
-     * Идентифкатор
+     * Идентификатор
      * 
      */
     @JsonProperty("id")
@@ -114,7 +114,7 @@ public class Invoice implements Serializable
     }
 
     /**
-     * Идентифкатор
+     * Идентификатор
      * 
      */
     @JsonProperty("id")

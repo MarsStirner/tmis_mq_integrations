@@ -30,12 +30,12 @@ public class RbTest implements Serializable
 {
 
     /**
-     * Идентифкатор МИС (rbTest.id)
+     * Идентификатор МИС (rbTest.id)
      * (Required)
      * 
      */
     @JsonProperty("id")
-    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u043a\u0430\u0442\u043e\u0440 \u041c\u0418\u0421 (rbTest.id)")
+    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u041c\u0418\u0421 (rbTest.id)")
     private Integer id;
     /**
      * Код записи справочника (rbTest.code)
@@ -57,7 +57,7 @@ public class RbTest implements Serializable
     private final static long serialVersionUID = 2151748427483394421L;
 
     /**
-     * Идентифкатор МИС (rbTest.id)
+     * Идентификатор МИС (rbTest.id)
      * (Required)
      * 
      */
@@ -67,7 +67,7 @@ public class RbTest implements Serializable
     }
 
     /**
-     * Идентифкатор МИС (rbTest.id)
+     * Идентификатор МИС (rbTest.id)
      * (Required)
      * 
      */

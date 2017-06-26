@@ -36,12 +36,12 @@ public class VMPTicket implements Serializable
 {
 
     /**
-     * Идентифкатор МИС
+     * Идентификатор МИС
      * (Required)
      * 
      */
     @JsonProperty("id")
-    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u043a\u0430\u0442\u043e\u0440 \u041c\u0418\u0421")
+    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u041c\u0418\u0421")
     private Integer id;
     /**
      * номер талона
@@ -79,7 +79,7 @@ public class VMPTicket implements Serializable
     private final static long serialVersionUID = 2961150635178832381L;
 
     /**
-     * Идентифкатор МИС
+     * Идентификатор МИС
      * (Required)
      * 
      */
@@ -89,7 +89,7 @@ public class VMPTicket implements Serializable
     }
 
     /**
-     * Идентифкатор МИС
+     * Идентификатор МИС
      * (Required)
      * 
      */

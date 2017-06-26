@@ -7,7 +7,7 @@
   "javaType": "ru.bars_open.medvtr.mq.entities.base.Contragent",
   "properties": {
     "id": {
-      "description": "Идентифкатор",
+      "description": "Идентификатор",
       "type": "integer"
     },
     "type":{

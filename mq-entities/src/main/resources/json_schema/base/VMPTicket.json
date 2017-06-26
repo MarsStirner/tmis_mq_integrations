@@ -8,7 +8,7 @@
   "properties": {
     "id": {
       "type": "integer",
-      "description": "Идентифкатор МИС",
+      "description": "Идентификатор МИС",
       "minimum": 0
     },
     "number": {

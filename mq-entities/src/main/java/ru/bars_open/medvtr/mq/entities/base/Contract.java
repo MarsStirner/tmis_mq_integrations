@@ -38,12 +38,12 @@ public class Contract implements Serializable
 {
 
     /**
-     * Идентифкатор
+     * Идентификатор
      * (Required)
      * 
      */
     @JsonProperty("id")
-    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u043a\u0430\u0442\u043e\u0440")
+    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440")
     private Integer id;
     /**
      * Contract
@@ -98,7 +98,7 @@ public class Contract implements Serializable
     private final static long serialVersionUID = -5405440341103564892L;
 
     /**
-     * Идентифкатор
+     * Идентификатор
      * (Required)
      * 
      */
@@ -108,7 +108,7 @@ public class Contract implements Serializable
     }
 
     /**
-     * Идентифкатор
+     * Идентификатор
      * (Required)
      * 
      */

@@ -5,7 +5,7 @@
   "javaType": "ru.bars_open.medvtr.mq.entities.base.Event",
   "properties": {
     "id": {
-      "description": "Идентифкатор МИС",
+      "description": "Идентификатор МИС",
       "type": "integer",
       "minimum": 0
     },

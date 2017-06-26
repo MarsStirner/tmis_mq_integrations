@@ -7,7 +7,7 @@
   "javaType": "ru.bars_open.medvtr.mq.entities.base.Contract",
   "properties": {
     "id": {
-      "description": "Идентифкатор",
+      "description": "Идентификатор",
       "type": "integer"
     },
     "payer": {

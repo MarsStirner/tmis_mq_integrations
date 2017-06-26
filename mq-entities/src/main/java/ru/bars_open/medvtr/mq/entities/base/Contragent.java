@@ -35,12 +35,12 @@ public class Contragent implements Serializable
 {
 
     /**
-     * Идентифкатор
+     * Идентификатор
      * (Required)
      * 
      */
     @JsonProperty("id")
-    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u043a\u0430\u0442\u043e\u0440")
+    @JsonPropertyDescription("\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440")
     private Integer id;
     /**
      * Тип контрагента
@@ -71,7 +71,7 @@ public class Contragent implements Serializable
     private final static long serialVersionUID = -835229873130467886L;
 
     /**
-     * Идентифкатор
+     * Идентификатор
      * (Required)
      * 
      */
@@ -81,7 +81,7 @@ public class Contragent implements Serializable
     }
 
     /**
-     * Идентифкатор
+     * Идентификатор
      * (Required)
      * 
      */
