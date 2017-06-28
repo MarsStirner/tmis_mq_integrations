@@ -60,12 +60,10 @@
 				</xs:sequence>
 			</xs:complexType>
 			<xs:complexType name="Services">
-				<xs:sequence>
-					<xs:element name="service"
-							type="tns:Service"
-							maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:complexType>
+			<xs:sequence>
+				<xs:element name="service" type="tns:Service" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
 			<xs:element name="putTreatment">
 				<xs:complexType>
 					<xs:sequence>

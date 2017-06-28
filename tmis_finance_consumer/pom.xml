@@ -13,7 +13,7 @@
     <name>[tmis_finance_consumer] AMQP finance consumer </name>
     <description>AMQP consumer for 1C Finance: transform message and send it to SOAP webservice</description>
     <artifactId>tmis_finance_consumer</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
     <packaging>jar</packaging>
 
     <properties>

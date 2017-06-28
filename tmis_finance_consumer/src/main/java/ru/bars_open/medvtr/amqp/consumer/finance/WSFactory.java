@@ -103,7 +103,9 @@ public class WSFactory {
     public Services getServices(List<InvoiceItem> items) {
         final Services result = OBJECT_FACTORY.createServices();
         for (InvoiceItem item : items) {
-            result.getService().add(createService(item));
+            if(!item.getService().getIsAccumulativePrice() && !item.getService().getService().getIsComplex()) {
+                result.getService().add(createService(item));
+            }
         }
         return result;
     }
@@ -111,10 +113,10 @@ public class WSFactory {
     private Service createService(InvoiceItem item) {
         final Service result = OBJECT_FACTORY.createService();
         result.setAmount(item.getAmount());
-        result.setIdService(item.getId());
+        result.setIdService(item.getService().getId());
         result.setPrice(item.getPrice());
-        result.setFullName(item.getFullName());
-        result.setNNumber(item.getNNumber());
+        result.setFullName(item.getService().getName());
+        result.setNNumber(item.getService().getCode());
         return result;
     }
 }
