@@ -44,6 +44,7 @@ public class ApplicationConfig extends WsConfigurerAdapter {
     public void addInterceptors(List<EndpointInterceptor> interceptors) {
         final SoapEnvelopeLoggingInterceptor loggingInterceptor = new SoapEnvelopeLoggingInterceptor();
         loggingInterceptor.setLoggerName("SOAP");
+        interceptors.add(loggingInterceptor);
         super.addInterceptors(interceptors);
     }
 }
