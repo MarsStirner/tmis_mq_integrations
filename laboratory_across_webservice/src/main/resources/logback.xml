@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+    <jmxConfigurator/>
+    <contextName>LisResultService</contextName>
+
+    <!--APPENDERS-->
+
+    <!-- Основные настройки для консоли-->
+    <appender name="STDOUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${log.format}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/service.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="APPENDER_CONFIG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${log.format}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/config.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>${log.maxHistory}</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- для действий пользователя (url+auth) -->
+    <appender name="APPENDER_ACCESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${log.format}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/access.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>${log.maxHistory}</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!--LOGGERS-->
+    <logger name="CONFIG" level="DEBUG" additivity="true">
+        <appender-ref ref="APPENDER_CONFIG"/>
+    </logger>
+    <!--Логгер для действий пользователя (url+auth)-->
+    <logger name="ACCESS" level="DEBUG" additivity="true">
+        <appender-ref ref="APPENDER_ACCESS"/>
+    </logger>
+    <root level="${log.level}">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

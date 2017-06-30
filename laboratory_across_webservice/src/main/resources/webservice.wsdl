@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://www.bars.group.ru"
+             name="LisResultWebServiceService"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             targetNamespace="http://www.bars.group.ru"
+>
+    <types>
+        <xs:schema xmlns:tns="http://www.bars.group.ru"
+                   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   elementFormDefault="qualified"
+                   version="1.0"
+                   targetNamespace="http://www.bars.group.ru">
+            <xs:element name="setAnalysisResults" type="tns:setAnalysisResults"/>
+            <xs:element name="setAnalysisResultsResponse" type="tns:setAnalysisResultsResponse"/>
+            <xs:complexType name="setAnalysisResults">
+                <xs:sequence>
+                    <xs:element name="orderMisId" type="xs:string" minOccurs="0"/>
+                    <xs:element name="orderBarCode" type="xs:int"/>
+                    <xs:element name="orderPrefBarCode" type="xs:int"/>
+                    <xs:element name="referralIsFinished" type="xs:boolean"/>
+                    <xs:element name="results" type="tns:analysisResult" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="biomaterialDefects" type="xs:string" minOccurs="0"/>
+                    <xs:element name="ResultDoctorLisId" type="xs:int" minOccurs="0"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="analysisResult">
+                <xs:sequence>
+                    <xs:element name="indicatorName" type="xs:string" minOccurs="0"/>
+                    <xs:element name="indicatorCode" type="xs:string"/>
+                    <xs:element name="deviceName" type="xs:string" minOccurs="0"/>
+                    <xs:element name="valueType" type="xs:int"/>
+                    <xs:element name="resultValueText" type="xs:string"/>
+                    <xs:element name="imageValues" type="tns:imageValue"
+                                nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="microValues" type="tns:microOrganismResult"
+                                nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="microSensitivity" type="tns:antibioticSensitivity"
+                                nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="resultNormString" type="xs:string" minOccurs="0"/>
+                    <xs:element name="resultNormalityIndex" type="xs:float" minOccurs="0"/>
+                    <xs:element name="resultUnit" type="xs:string" minOccurs="0"/>
+                    <xs:element name="resultSignDate" type="xs:dateTime"/>
+                    <xs:element name="resultStatus" type="xs:string" minOccurs="0"/>
+                    <xs:element name="resultComment" type="xs:string" minOccurs="0"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="imageValue">
+                <xs:sequence>
+                    <xs:element name="imageString" type="xs:string" minOccurs="0"/>
+                    <xs:element name="imageData" type="xs:string" minOccurs="0"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="microOrganismResult">
+                <xs:sequence>
+                    <xs:element name="organismLisId" type="xs:string" minOccurs="0"/>
+                    <xs:element name="organismName" type="xs:string" minOccurs="0"/>
+                    <xs:element name="organismConcetration" type="xs:string" minOccurs="0"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="antibioticSensitivity">
+                <xs:sequence>
+                    <xs:element name="antibioticLisId" type="xs:string" minOccurs="0"/>
+                    <xs:element name="antibioticName" type="xs:string" minOccurs="0"/>
+                    <xs:element name="MIC" type="xs:string" minOccurs="0"/>
+                    <xs:element name="antibioticActivityValue" type="xs:string" minOccurs="0"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="setAnalysisResultsResponse">
+                <xs:sequence>
+                    <xs:element name="return" type="xs:int" form="unqualified"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </types>
+    <message name="setAnalysisResults">
+        <part name="parameters" element="tns:setAnalysisResults"/>
+    </message>
+    <message name="setAnalysisResultsResponse">
+        <part name="parameters" element="tns:setAnalysisResultsResponse"/>
+    </message>
+    <portType name="LisResultWebServiceService_PortType">
+        <operation name="setAnalysisResults">
+            <input message="tns:setAnalysisResults"/>
+            <output message="tns:setAnalysisResultsResponse"/>
+        </operation>
+    </portType>
+    <binding name="LisResultWebServiceService_Binding" type="tns:LisResultWebServiceService_PortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <operation name="setAnalysisResults">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="LisResultWebServiceService">
+        <port name="LisResultWebServiceService_Port" binding="tns:LisResultWebServiceService_Binding">
+            <soap:address location="/LisResultWebService"/>
+        </port>
+    </service>
+</definitions>
