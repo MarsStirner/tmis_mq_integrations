@@ -37,17 +37,7 @@ public class SoapLoggingHandler implements SOAPHandler<SOAPMessageContext> {
     @Override
     public boolean handleMessage(SOAPMessageContext soapMessageContext) {
         final boolean isOut = (Boolean) soapMessageContext.get(SOAPMessageContext.MESSAGE_OUTBOUND_PROPERTY);
-        final SOAPMessage message = soapMessageContext.getMessage();
-        final StringWriter sw = new StringWriter();
-
-        try {
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-            transformer.transform(new DOMSource(message.getSOAPPart()), new StreamResult(sw));
-        } catch (TransformerException e) {
-            throw new RuntimeException(e);
-        }
+        final StringWriter sw = writeSoapMessageToStringWriter(soapMessageContext);
         log.info("{}\n{}", isOut ? ">>>>>>> OUTPUT SOAP >>>>>>>" : "<<<<<<< INPUT  SOAP <<<<<<<", sw.toString());
         return true;
     }
@@ -55,6 +45,12 @@ public class SoapLoggingHandler implements SOAPHandler<SOAPMessageContext> {
     @Override
     public boolean handleFault(SOAPMessageContext soapMessageContext) {
         final boolean isOut = (Boolean) soapMessageContext.get(SOAPMessageContext.MESSAGE_OUTBOUND_PROPERTY);
+        final StringWriter sw = writeSoapMessageToStringWriter(soapMessageContext);
+        log.info("{}\n{}", isOut ? ">>>>>>> OUTPUT FAULT >>>>>>>" : "<<<<<<< INPUT  FAULT <<<<<<<", sw.toString());
+        return true;
+    }
+
+    private StringWriter writeSoapMessageToStringWriter(SOAPMessageContext soapMessageContext) {
         final SOAPMessage message = soapMessageContext.getMessage();
         final StringWriter sw = new StringWriter();
 
@@ -66,8 +62,7 @@ public class SoapLoggingHandler implements SOAPHandler<SOAPMessageContext> {
         } catch (TransformerException e) {
             throw new RuntimeException(e);
         }
-        log.info("{}\n{}", isOut ? ">>>>>>> OUTPUT FAULT >>>>>>>" : "<<<<<<< INPUT  FAULT <<<<<<<", sw.toString());
-        return true;
+        return sw;
     }
 
     @Override
